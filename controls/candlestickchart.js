@@ -35,6 +35,10 @@ var CandleStickChart = function (options) {
 		height: options.height,
 	});
 
+	var chartTitleGroup = s.group().attr("class", "title");
+	var tickerText = s.text(options.width/2 - 200, options.height/2, options.data.ticker);
+	chartTitleGroup.add(tickerText);
+
 
 	var xAxisGroup = s.group().attr("class", "x-axis");
 	var path = s.path(axisSeries.xAxis.pathStr)
