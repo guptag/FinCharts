@@ -1,4 +1,5 @@
 var PlotSeries = require('./candlestickseries'),
+	VolumeSeries = require('./volumeseries'),
 	AxisSeries =require('./axisseries'),
 	Q = require('q'),
 	_ = require('lodash');
@@ -12,6 +13,12 @@ var CandleStickChart = function (options) {
 		Snap: reference to Snap object (todo change to require)
 	*/
 	var p = new PlotSeries({
+		width: options.width,
+		height: options.height,
+		data: options.data
+	});
+
+	var vol = new VolumeSeries({
 		width: options.width,
 		height: options.height,
 		data: options.data
@@ -58,6 +65,16 @@ var CandleStickChart = function (options) {
 		yAxisGroup.add(path);
 	});
 
+	var volumeGroup = s.group().attr("class", "volume");
+	_.forEach(vol.bars, function(bar) {
+		var path = s.path(bar.pathStr)
+					 .attr({
+					 	fill: bar.fill,
+					 	stroke: bar.stroke,
+					 	"stroke-width": "1",
+					 	"opacity" : 0.25 });
+		volumeGroup.add(path);
+	});
 
 
 	var candlesGroup = s.group().attr("class", "candles");
@@ -69,6 +86,8 @@ var CandleStickChart = function (options) {
 					 	"stroke-width": "1" });
 		candlesGroup.add(path);
 	});
+
+
 
 }
 
