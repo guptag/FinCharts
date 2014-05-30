@@ -17,7 +17,7 @@ PriceSeries.prototype.add = function (record) {
 		date: Date.parse(record[0]),
 		open: +parseFloat(record[1]).toFixed(2),
 		high: +parseFloat(record[2]).toFixed(2),
-		low:+parseFloat(record[3]).toFixed(2),
+		low: +parseFloat(record[3]).toFixed(2),
 		close: +parseFloat(record[4]).toFixed(2),
 		volume: +parseFloat(record[5]).toFixed(2),
 		adjClose: +parseFloat(record[6]).toFixed(2),
