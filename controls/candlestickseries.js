@@ -1,6 +1,6 @@
 var _ = require("lodash");
 
-function PlotModel(options) {
+function CandleStickSeries(options) {
 	/* {
 			width: plot width
 			height: plot height
@@ -17,7 +17,7 @@ function PlotModel(options) {
 	this.xUnitScale = options.width / options.data.series.length;
 	this.yUnitScale = (this.extendedMax - this.extendedMin)/options.height;
 	this.candleWidth = (this.xUnitScale * 70/100.0); //candle takes 70% of the total space allowed (for now)
-    this.candleLeftMargin = (this.xUnitScale * 15/100.0);  //center the candle in the available space (100-70/2)
+    this.candleLeftMargin = (this.xUnitScale * 15/100.0); //center the candle in the available space (100-70/2)
 
     // console.log(options.data.series.max, options.data.series.min, options.height, this.yUnitScale);
     this.candles = _.chain(options.data.series)
@@ -53,11 +53,11 @@ function PlotModel(options) {
 }
 
 
-PlotModel.prototype.toPlotX = function (dataX) {
+CandleStickSeries.prototype.toPlotX = function (dataX) {
 	return formatNumber(this.xUnitScale * dataX + this.candleLeftMargin);
 }
 
-PlotModel.prototype.toPlotY = function (dataY) {
+CandleStickSeries.prototype.toPlotY = function (dataY) {
 	return formatNumber(this.options.height - ((dataY - this.extendedMin) / this.yUnitScale))
 }
 
@@ -65,5 +65,5 @@ function formatNumber(number) {
     return +number.toFixed(3);
 }
 
-module.exports = PlotModel;
+module.exports = CandleStickSeries;
 
