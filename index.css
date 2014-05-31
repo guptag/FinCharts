@@ -2,3 +2,11 @@ body {
     margin: 0;
     padding: 0;
 }
+
+.title {
+  font-family: 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Verdana;
+  font-size: 200px;
+  fill: #E5628C;
+  text-transform: uppercase;
+  opacity: 0.1;
+}
