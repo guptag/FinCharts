@@ -1,7 +1,8 @@
 
 
-function PriceSeries() {
+function PriceSeries(ticker) {
 	this.series = [];
+	this.ticker = ticker;
 	this.series.min = Infinity;
 	this.series.max = -Infinity;
 	this.series.minVolume = Infinity;
