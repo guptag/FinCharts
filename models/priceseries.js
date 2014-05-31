@@ -4,6 +4,8 @@ function PriceSeries() {
 	this.series = [];
 	this.series.min = Infinity;
 	this.series.max = -Infinity;
+	this.series.minVolume = Infinity;
+	this.series.maxVolume = -Infinity;
 }
 
 PriceSeries.prototype.add = function (record) {
@@ -30,6 +32,12 @@ PriceSeries.prototype.add = function (record) {
 
 	if (data.high > this.series.max)
 		this.series.max = data.high;
+
+	if (data.volume < this.series.minVolume)
+		this.series.minVolume = data.volume;
+
+	if (data.volume > this.series.maxVolume)
+		this.series.maxVolume = data.volume;
 }
 
 module.exports = PriceSeries;
