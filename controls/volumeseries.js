@@ -17,16 +17,17 @@ function VolumeSeries(options) {
     this.barWidth = (this.xUnitScale * 86/100.0); //candle takes 86% of the total space allowed (for now)
     this.barLeftMargin = (this.xUnitScale * 7/100.0);  //center the candle in the available space (100-86/2)
 
+    console.log(options.data.series.minVolume, options.data.series.maxVolume);
 
     this.bars = _.chain(options.data.series)
                         .map(function(data, index) {
 
                             var path = [];
-                            path.push("M" + self.toPlotX(index) + "," + self.toPlotY(data.volume * self.yUnitScale));
-                            path.push("L" + formatNumber(self.toPlotX(index) + self.barWidth) + "," + self.toPlotY(data.volume * self.yUnitScale)); //top edge
+                            path.push("M" + self.toPlotX(index) + "," + self.toPlotY(data.volume));
+                            path.push("L" + formatNumber(self.toPlotX(index) + self.barWidth) + "," + self.toPlotY(data.volume)); //top edge
                             path.push("L" + formatNumber(self.toPlotX(index) + self.barWidth) + "," + self.toPlotY(0)); //right edge
                             path.push("L" + self.toPlotX(index) + "," + self.toPlotY(0)); //bottom edge
-                            path.push("L" + self.toPlotX(index) + "," + self.toPlotY(data.volume * self.yUnitScale)); //left edge
+                            path.push("L" + self.toPlotX(index) + "," + self.toPlotY(data.volume)); //left edge
 
                             return {
                                 pathStr : path.join(""),
@@ -43,7 +44,7 @@ VolumeSeries.prototype.toPlotX = function (dataX) {
 }
 
 VolumeSeries.prototype.toPlotY = function (dataY) {
-    return formatNumber(this.options.height - dataY);
+     return formatNumber(this.options.height - dataY * this.yUnitScale);
 }
 
 function formatNumber(number) {
