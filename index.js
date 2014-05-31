@@ -4,15 +4,19 @@ var HistoricalPrices = require('./lib/historicalprices'),
 	$ = require('jquery');
 
 
-function renderChart () {
-	HistoricalPrices.getDataForTicker("ge")
+function renderChart (ticker) {
+	ticker = ticker.trim();
+
+	if (!ticker) return;
+
+	HistoricalPrices.getDataForTicker(ticker)
 	.then(function (data) {
 	 	console.log(CandleStickChart);
 	 	console.log("width", $(window).width(), "height", $(window).height());
 	 	new CandleStickChart({
 	 		data: data,
-	 		width: $(window).width(),
-	 		height: $(window).height() - 5,
+	 		width: $("#plot").width(),
+	 		height: $("#plot").height() - 5,
 	 		selector: "#plot",
 	 		Snap: Snap
 	 	});
@@ -22,6 +26,20 @@ function renderChart () {
 	})
 }
 
-renderChart();
+function bindControls() {
+  $("#ticker").keypress(function(event){
+		var keyCode = (event.keyCode ? event.keyCode : event.which);
+		if(keyCode == 13){
+			renderChart(this.value);
+		}
+	});
+}
+
+$( document ).ready(function() {
+   bindControls();
+	 renderChart($("#ticker").attr("data-default"));
+});
+
+
 
 
