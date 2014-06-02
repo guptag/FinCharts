@@ -12,11 +12,11 @@ function renderChart (ticker) {
 	HistoricalPrices.getDataForTicker(ticker)
 	.then(function (data) {
 	 	console.log(CandleStickChart);
-	 	console.log("width", $(window).width(), "height", $(window).height());
+	 	console.log("width", $("#plot").width(), "height", $("#plot").height());
 	 	new CandleStickChart({
 	 		data: data,
 	 		width: $("#plot").width(),
-	 		height: $("#plot").height() - 5,
+	 		height: $("#plot").height(),
 	 		selector: "#plot",
 	 		Snap: Snap
 	 	});
