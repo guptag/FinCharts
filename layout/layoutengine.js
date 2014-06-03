@@ -8,7 +8,7 @@ var domCache = {};
 
 function LayoutEngine() { }
 
-/* measureCb -> function (W, H) { return {width: x, height: x, top: x, bottom} } */
+/* measureCb -> function (W, H) { return {width: x, height: x, top: x, left: x} } */
 LayoutEngine.prototype.addLayout = function (name, measureCb, parentLayout, dependsOn) {
     if (defnitions[name]) throw new Error(util.format("Layout with name %s already exists.", name));
     if (!measureCb) throw new Error("measureCb is null");
@@ -35,7 +35,17 @@ LayoutEngine.prototype.apply = function () {
 
     // apply the layout dimentions on the dom elements
     _.forEach(generated, function (layout) {
-        var $element = domCache[layout.name] || $('[data-layout='+layout.name+']')
+        if (!domCache[layout.name]) {
+            domCache[layout.name] = $('[data-layout='+layout.name+']');
+        }
+
+        var $element = domCache[layout.name];
+        $element.css({
+            "width": generated.width,
+            "height": generated.height,
+            "top": generated.top,
+            "left": generated.left,
+        });
     })
 
 
