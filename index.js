@@ -1,4 +1,4 @@
-var HistoricalPrices = require('./lib/historicalprices'),
+var HistoricalPrices = require('./data/historicalprices'),
 	CandleStickChart = require('./controls/candlestickchart'),
 	Q = require('q'),
 	$ = require('jquery');
