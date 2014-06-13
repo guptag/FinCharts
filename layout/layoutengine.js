@@ -14,14 +14,14 @@ LayoutEngine.prototype.addLayout = function (name, measureCb, parentLayout, depe
     if (!measureCb) throw new Error("measureCb is null");
 
     defnitions.push({
-        name: name.
+        name: name,
         measureCb : measureCb,
         parentLayout: parentLayout,
-        dependsOn: dependsOn.length ? dependsOn : []
+        dependsOn: dependsOn
     });
 }
 
-LayoutEngine.prototype.apply = function () {
+LayoutEngine.prototype.applyLayouts = function () {
     var $window = $(window);
     var windowW = $window.width();
     var windowH = $window.height();
@@ -30,21 +30,22 @@ LayoutEngine.prototype.apply = function () {
 
     // Resolve all the layouts
     _.forEach(defnitions, function (layout) {
-        resolveLayout(layout, {}, windowW, windowH);
+        resolveLayout(layout, [], windowW, windowH);
     });
 
     // apply the layout dimentions on the dom elements
-    _.forEach(generated, function (layout) {
-        if (!domCache[layout.name]) {
-            domCache[layout.name] = $('[data-layout='+layout.name+']');
+    _.forEach(generated, function (layout, name) {
+        if (!domCache[name]) {
+            domCache[name] = $('[data-layout='+name+']');
         }
 
-        var $element = domCache[layout.name];
+        var $element = domCache[name];
         $element.css({
-            "width": generated.width,
-            "height": generated.height,
-            "top": generated.top,
-            "left": generated.left,
+            "position": "absolute",
+            "width": layout.width,
+            "height": layout.height,
+            "top": layout.top,
+            "left": layout.left,
         });
     })
 
@@ -59,6 +60,7 @@ LayoutEngine.prototype.clear = function () {
 
 
 function resolveLayout (layout, cache, windowW, windowH) {
+    debugger;
     if (!layout.parentLayout && !layout.dependsOn) {
         generated[layout.name] = layout.measureCb(windowW, windowH);
         cache = [];
@@ -79,14 +81,14 @@ function resolveLayout (layout, cache, windowW, windowH) {
     }
 
     // if any of the dependencies are not resolved yet
-    _.forEach(layout.dependsOn, function (layoutName) {
+    _.forEach(layout.dependsOn || [], function (layoutName) {
         if (!generated[layoutName]) {
             resolveLayout(layoutName, windowW, windowH);
         }
     });
 
     var parent = generated[layout.parentLayout];
-    generated[layout.name] = layout.measureCb(parent.Width, parent.Height);
+    generated[layout.name] = layout.measureCb(parent.width, parent.height);
     cache = [];
     return;
 }
