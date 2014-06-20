@@ -20,6 +20,6 @@
     "height": 700,
     "toolbar": true,
     "position": "center",
-    "resizable": false
+    "resizable": true
   }
 }

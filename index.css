@@ -6,6 +6,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Verdana;
+    overflow:hidden;
 }
 
 .title {
@@ -15,6 +16,7 @@ body {
   text-transform: uppercase;
   opacity: 0.1;
 }
+
 
 #topbar {
   overflow: hidden;
@@ -28,4 +30,8 @@ body {
   -webkit-appearance: none;
   padding: 0 5px;
   font-size: 0.8em;
+}
+
+#plot {
+  overflow: hidden;
 }
