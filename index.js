@@ -45,7 +45,6 @@ function attachEvents() {
 	}, 100));
 }
 
-
 function bindControls() {
   $("#ticker").keypress(function(event){
 		var keyCode = (event.keyCode ? event.keyCode : event.which);
