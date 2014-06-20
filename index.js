@@ -2,10 +2,22 @@ var HistoricalPrices = require('./data/historicalprices'),
 	CandleStickChart = require('./controls/candlestickchart'),
 	LayoutEngine =  require('./layout/layoutengine'),
 	Q = require('q'),
-	$ = require('jquery');
+	$ = require('jquery'),
+	_ = require("lodash");
 
 
 function init() {
+	defineLayouts();
+
+	$( document ).ready(function() {
+	   LayoutEngine.applyLayouts();
+	   bindControls();
+	   renderChart($("#ticker").attr("data-default"));
+	   attachEvents();
+	});
+}
+
+function defineLayouts() {
 	LayoutEngine.addLayout("topbarlayout", function(w, h) {
 		return {
 			width: w,
@@ -23,6 +35,14 @@ function init() {
 			left: 0
 		};
 	});
+}
+
+function attachEvents() {
+	// resize event
+	$(window).on("resize", _.debounce(function () {
+		LayoutEngine.applyLayouts();
+		renderChart($("#ticker").attr("data-default"));
+	}, 100));
 }
 
 
@@ -60,11 +80,6 @@ function renderChart (ticker) {
 
 init();
 
-$( document ).ready(function() {
-   LayoutEngine.applyLayouts();
-   bindControls();
-   renderChart($("#ticker").attr("data-default"));
-});
 
 
 
