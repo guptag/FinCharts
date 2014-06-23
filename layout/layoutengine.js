@@ -60,7 +60,6 @@ LayoutEngine.prototype.clear = function () {
 
 
 function resolveLayout (layout, cache, windowW, windowH) {
-    debugger;
     if (!layout.parentLayout && !layout.dependsOn) {
         generated[layout.name] = layout.measureCb(windowW, windowH);
         cache = [];

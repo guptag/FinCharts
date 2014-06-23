@@ -6,9 +6,10 @@ Run this from the root:
 Todo list
 ---------
 * Labels (X, Y axis)
-* Candlestick selections should highlight Date and Price
+* mouseover should highlight Date and Price
 * Timeframe (3m, 6m, 1y, 3y, 5y, all)
 * Daily, Weekly, Monthly
+* Scales - Linear, Log
 * Types of charts - Line, Area, OHL, OHLC
 * Multiple Charts Layout
 * Multi ticker overlay
