@@ -42,7 +42,7 @@ function attachEvents() {
 	$(window).on("resize", _.debounce(function () {
 		LayoutEngine.applyLayouts();
 		renderChart($("#ticker").attr("data-default"));
-	}, 100));
+	}, 30));
 }
 
 function bindControls() {
