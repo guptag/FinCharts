@@ -51,7 +51,7 @@ function bindControls() {
 		if(keyCode == 13){
 			renderChart(this.value);
 		}
-	});
+	}).focus();
 }
 
 
