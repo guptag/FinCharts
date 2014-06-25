@@ -10,12 +10,16 @@ function CandleStickSeries(options) {
 	var self = this;
 	this.options = options;
 
+    this.margin = _.defaults(options.margin, {left: 0, right: 0, top: 0, bottom: 0});
+    this.canvasWidth = options.width - this.margin.left - this.margin.right;
+    this.canvasHeight = options.height - this.margin.top - this.margin.bottom;
+
     // Stretch the min and max by certain amounts to give enough space at the top and bottom of the price plot
     this.extendedMin = options.data.series.min - (2.5 * (options.data.series.min) / 100);
     this.extendedMax = options.data.series.max + (1 * (options.data.series.max) / 100);
 
-	this.xUnitScale = options.width / options.data.series.length;
-	this.yUnitScale = (this.extendedMax - this.extendedMin)/options.height;
+	this.xUnitScale = this.canvasWidth / options.data.series.length;
+	this.yUnitScale = (this.extendedMax - this.extendedMin)/this.canvasHeight;
 	this.candleWidth = (this.xUnitScale * 70/100.0); //candle takes 70% of the total space allowed (for now)
     this.candleLeftMargin = (this.xUnitScale * 15/100.0); //center the candle in the available space (100-70/2)
 
@@ -54,11 +58,11 @@ function CandleStickSeries(options) {
 
 
 CandleStickSeries.prototype.toPlotX = function (dataX) {
-	return formatNumber(this.xUnitScale * dataX + this.candleLeftMargin);
+	return formatNumber(this.margin.left + (this.xUnitScale * dataX) + this.candleLeftMargin);
 }
 
 CandleStickSeries.prototype.toPlotY = function (dataY) {
-	return formatNumber(this.options.height - ((dataY - this.extendedMin) / this.yUnitScale))
+	return formatNumber(this.margin.top + this.canvasHeight - ((dataY - this.extendedMin) / this.yUnitScale));
 }
 
 function formatNumber(number) {

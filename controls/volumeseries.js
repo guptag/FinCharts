@@ -11,13 +11,19 @@ function VolumeSeries(options) {
     this.options = options;
 
 
-    this.barHeight = 200;
-    this.xUnitScale = options.width / options.data.series.length;
+    this.margin = _.defaults(options.margin, {left: 0, right: 0, top: 0, bottom: 0});
+    this.canvasWidth = options.width - this.margin.left - this.margin.right;
+    this.canvasHeight = options.height - this.margin.top - this.margin.bottom;
+
+    this.barHeight = formatNumber(this.canvasHeight * 30 / 100);
+
+    this.xUnitScale = this.canvasWidth / options.data.series.length;
     this.yUnitScale = this.barHeight/options.data.series.maxVolume;
+
     this.barWidth = (this.xUnitScale * 86/100.0); //candle takes 86% of the total space allowed (for now)
     this.barLeftMargin = (this.xUnitScale * 7/100.0);  //center the candle in the available space (100-86/2)
 
-    console.log(options.data.series.minVolume, options.data.series.maxVolume);
+    //console.log(options.data.series.minVolume, options.data.series.maxVolume);
 
     this.bars = _.chain(options.data.series)
                         .map(function(data, index) {
@@ -40,11 +46,11 @@ function VolumeSeries(options) {
 
 
 VolumeSeries.prototype.toPlotX = function (dataX) {
-    return formatNumber(this.xUnitScale * dataX + this.barLeftMargin);
+    return formatNumber(this.margin.left + (this.xUnitScale * dataX + this.barLeftMargin));
 }
 
 VolumeSeries.prototype.toPlotY = function (dataY) {
-     return formatNumber(this.options.height - dataY * this.yUnitScale);
+    return formatNumber(this.margin.top + this.canvasHeight - dataY * this.yUnitScale);
 }
 
 function formatNumber(number) {
