@@ -41,7 +41,7 @@ function AxisSeriesModel(options) {
 
                             var path = [];
                             path.push("M" + self.margin.left + "," + self.toPlotY(self.extendedMin + priceRatio * (index + 1)));
-                            path.push("L" + (self.margin.left + self.canvasWidth) + "," + self.toPlotY(self.extendedMin + priceRatio * (index + 1))); //x-axis tick
+                            path.push("L" + (self.margin.left + self.canvasWidth + 8) + "," + self.toPlotY(self.extendedMin + priceRatio * (index + 1))); //x-axis tick
 
                             return {
                                 pathStr : path.join(""),
@@ -66,7 +66,7 @@ function AxisSeriesModel(options) {
                             if (index % 5 === 0) {
                                 var path = [];
                                 path.push("M" + self.toPlotX(index) + "," + self.margin.top);
-                                path.push("L" + self.toPlotX(index) + "," + (self.margin.top + self.canvasHeight)); //y-axis tick
+                                path.push("L" + self.toPlotX(index) + "," + (self.margin.top + self.canvasHeight + 8)); //y-axis tick
 
                                 return {
                                     pathStr : path.join(""),
