@@ -16,21 +16,21 @@ var CandleStickChart = function (options) {
 		width: options.width,
 		height: options.height,
 		data: options.data,
-		margin: {top: 0, bottom: 20, left: 2, right: 40}
+		margin: {top: 0, bottom: 25, left: 2, right: 40}
 	});
 
 	var vol = new VolumeSeries({
 		width: options.width,
 		height: options.height,
 		data: options.data,
-		margin: {top: 0, bottom: 20, left: 2, right: 40}
+		margin: {top: 0, bottom: 25, left: 2, right: 40}
 	});
 
 	var axisSeries = new AxisSeries({
 		width: options.width,
 		height: options.height,
 		data: options.data,
-		margin: {top: 0, bottom: 20, left: 2, right: 40}
+		margin: {top: 0, bottom: 25, left: 2, right: 40}
 	});
 
 	var s = options.Snap(options.selector).attr({
