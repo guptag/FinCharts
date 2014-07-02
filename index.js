@@ -39,10 +39,10 @@ function defineLayouts() {
 
 function attachEvents() {
 	// resize event
-	$(window).on("resize", _.debounce(function () {
+	$(window).on("resize", _.throttle(function () {
 		LayoutEngine.applyLayouts();
 		renderChart($("#ticker").attr("data-default"));
-	}, 30));
+	}, 100));
 }
 
 function bindControls() {
