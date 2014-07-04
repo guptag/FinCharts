@@ -1,4 +1,5 @@
-var _ = require("lodash");
+var _ = require("lodash"),
+    PriceLabels = require("../labels/pricelabels");;
 
 function AxisSeriesModel(options) {
     /* {
@@ -15,44 +16,46 @@ function AxisSeriesModel(options) {
     this.canvasHeight = options.height - this.margin.top - this.margin.bottom;
 
     // Stretch the min and max by certain amounts to give enough space at the top and bottom of the price plot
-    this.extendedMin = options.data.series.min - (2.5 * (options.data.series.min) / 100);
-    this.extendedMax = options.data.series.max + (1 * (options.data.series.max) / 100);
+    var priceLabels = PriceLabels.generate(options.data.series.min, options.data.series.max, this.canvasHeight);
+    this.extendedMin = priceLabels[0];
+    this.extendedMax = priceLabels[priceLabels.length - 1];
 
     this.xUnitScale = this.canvasWidth / options.data.series.length;
-    this.yUnitScale = (this.extendedMax - this.extendedMin)/options.height;
+    this.yUnitScale = (this.extendedMax - this.extendedMin)/this.canvasHeight;
     this.tickMargin = (this.xUnitScale/2);
+
+    console.log("AxisSeriesModel: y-scale", this.yUnitScale, this.extendedMin);
 
 
     //console.log(options.data.series.max, options.data.series.min, options.height, this.yUnitScale);
 
     // X-axis bar
     var path = [];
-    path.push("M" + "0" + "," + this.margin.top + this.canvasHeight);
-    path.push("L" + options.width + "," + this.margin.top + this.canvasHeight);
+    path.push("M" + "0" + "," + (this.margin.top + this.canvasHeight));
+    path.push("L" + options.width + "," + (this.margin.top + this.canvasHeight));
     this.xAxis = {
                     pathStr : path.join(""),
                     stroke: "black"
                 };
 
     // X-axis ticks (represents price)
-    var yTickCount = 10;
+    var yTickCount = priceLabels.length;
     var priceRatio = (this.extendedMax - this.extendedMin)/ yTickCount;
     this.xAxisTicks = _.times(yTickCount, function(index) {
-
                             var path = [];
-                            path.push("M" + self.margin.left + "," + self.toPlotY(self.extendedMin + priceRatio * (index + 1)));
-                            path.push("L" + (self.margin.left + self.canvasWidth + 8 /* ext for label */) + "," + self.toPlotY(self.extendedMin + priceRatio * (index + 1))); //x-axis tick
+                            path.push("M" + self.margin.left + "," + self.toPlotY(self.extendedMin + (priceRatio * index)));
+                            path.push("L" + (self.margin.left + self.canvasWidth + 8 /* ext for label */) + "," + self.toPlotY(self.extendedMin + (priceRatio * index))); //x-axis tick
 
                             return {
                                 pathStr : path.join(""),
-                                stroke : "#bdbdc1"
+                                stroke : "red"
                             }
                         });
 
 
     // Y-axis bar
     var path = [];
-    path.push("M" + (this.margin.left + this.canvasWidth) + "," + options.height);
+    path.push("M" + (this.margin.left + this.canvasWidth) + "," + options.height); //only place to use options.height
     path.push("L" + (this.margin.left + this.canvasWidth) + "," + "0");
     this.yAxis = {
                     pathStr : path.join(""),

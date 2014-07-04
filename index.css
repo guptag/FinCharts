@@ -1,3 +1,22 @@
+/*html { font-size: 62.5%; }
+body { font-size: 1em;}
+
+@media (min-width: 300px) {
+    html { font-size: 80%; }
+}
+
+@media (min-width: 500px) {
+    html { font-size: 80%; }
+}
+
+@media (min-width: 700px) {
+    html { font-size: 120%; }
+}
+
+@media (min-width: 1200px) {
+    html { font-size: 200%; }
+}*/
+
 * {
   box-sizing: border-box;
 }
@@ -7,6 +26,7 @@ body {
     padding: 0;
     font-family: 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Verdana;
     overflow:hidden;
+    font-size: 1em;
 }
 
 .title {

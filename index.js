@@ -62,7 +62,6 @@ function renderChart (ticker) {
 
 	HistoricalPrices.getDataForTicker(ticker)
 	.then(function (data) {
-	 	console.log(CandleStickChart);
 	 	console.log("width", $("#plot").width(), "height", $("#plot").height());
 	 	new CandleStickChart({
 	 		data: data,
