@@ -12,5 +12,15 @@ Todo list
 * Scales - Linear, Log
 * Types of charts - Line, Area, OHL, OHLC
 * Multiple Charts Layout
+* Save Layouts
 * Multi ticker overlay
 * Themes
+
+
+Technicals
+-----------
+
+* Moving Averages
+* RSI
+* Bollingar Bands
+* ADX
