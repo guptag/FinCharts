@@ -39,16 +39,18 @@ function AxisSeriesModel(options) {
                 };
 
     // X-axis ticks (represents price)
-    var yTickCount = priceLabels.length;
-    var priceRatio = (this.extendedMax - this.extendedMin)/ yTickCount;
-    this.xAxisTicks = _.times(yTickCount, function(index) {
+    this.xAxisTicks =   _.map(priceLabels, function(price) {
                             var path = [];
-                            path.push("M" + self.margin.left + "," + self.toPlotY(self.extendedMin + (priceRatio * index)));
-                            path.push("L" + (self.margin.left + self.canvasWidth + 8 /* ext for label */) + "," + self.toPlotY(self.extendedMin + (priceRatio * index))); //x-axis tick
-
+                            path.push("M" + self.margin.left + "," + self.toPlotY(price));
+                            path.push("L" + (self.margin.left + self.canvasWidth + 8 /* ext for label */) + "," + self.toPlotY(price)); //x-axis tick
                             return {
                                 pathStr : path.join(""),
-                                stroke : "red"
+                                stroke : "#bdbdc1",
+                                label : {
+                                    x: self.margin.left + self.canvasWidth + 10,
+                                    y: self.toPlotY(price),
+                                    text: +price.toFixed(3)
+                                }
                             }
                         });
 

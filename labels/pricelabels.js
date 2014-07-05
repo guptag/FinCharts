@@ -21,8 +21,8 @@ var PriceLabels = {
                     increment = increments[i];
                     break;
                 } else if (i > 0 && diffUnit < increments[i] && diffUnit > increments[i-1]) {
-                    //var mid = (increments[i-1] + increments[i]) / 2;
-                    //increment = diffUnit > mid ? increments[i] : increments[i-1];
+                    var mid = (increments[i-1] + increments[i]) / 2;
+                    increment = diffUnit > mid ? increments[i] : increments[i-1];
                     increment = increments[i];
                     break;
                 }
