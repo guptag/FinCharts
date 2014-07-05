@@ -1,21 +1,21 @@
-/*html { font-size: 62.5%; }
+html { font-size: 62.5%; }
 body { font-size: 1em;}
 
 @media (min-width: 300px) {
-    html { font-size: 80%; }
+    html { font-size: 60%; }
 }
 
 @media (min-width: 500px) {
-    html { font-size: 80%; }
+    html { font-size: 70%; }
 }
 
 @media (min-width: 700px) {
-    html { font-size: 120%; }
+    html { font-size: 80%; }
 }
 
 @media (min-width: 1200px) {
-    html { font-size: 200%; }
-}*/
+    html { font-size: 120%; }
+}
 
 * {
   box-sizing: border-box;
@@ -30,11 +30,14 @@ body {
 }
 
 .title {
-  font-family: 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Verdana;
-  font-size: 200px;
+  font-size: 10em;
   fill: #E5628C;
   text-transform: uppercase;
   opacity: 0.1;
+}
+
+.pricelabel {
+  font-size: 0.5em;
 }
 
 
@@ -49,7 +52,7 @@ body {
   width: 200px;
   -webkit-appearance: none;
   padding: 0 5px;
-  font-size: 0.8em;
+  font-size: 0.9em;
 }
 
 #plot {

@@ -41,7 +41,7 @@ function attachEvents() {
 	// resize event
 	$(window).on("resize", _.throttle(function () {
 		LayoutEngine.applyLayouts();
-		renderChart($("#ticker").attr("data-default"));
+		renderChart($("#ticker").val() || $("#ticker").attr("data-default"));
 	}, 100));
 }
 

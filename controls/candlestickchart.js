@@ -16,21 +16,21 @@ var CandleStickChart = function (options) {
 		width: options.width,
 		height: options.height,
 		data: options.data,
-		margin: {top: 100, bottom: Math.floor(options.height * 3/100), left: 2, right: Math.floor(options.width * 2/100)}
+		margin: {top: 5, bottom: Math.floor(options.height * 3/100), left: 2, right: Math.floor(options.width * 2/100)}
 	});
 
 	var vol = new VolumeSeries({
 		width: options.width,
 		height: options.height,
 		data: options.data,
-		margin: {top: 100, bottom: Math.floor(options.height * 3/100), left: 2, right: Math.floor(options.width * 2/100)}
+		margin: {top: 5, bottom: Math.floor(options.height * 3/100), left: 2, right: Math.floor(options.width * 2/100)}
 	});
 
 	var axisSeries = new AxisSeries({
 		width: options.width,
 		height: options.height,
 		data: options.data,
-		margin: {top: 100, bottom: Math.floor(options.height * 3/100), left: 2, right: Math.floor(options.width * 2/100)}
+		margin: {top: 5, bottom: Math.floor(options.height * 3/100), left: 2, right: Math.floor(options.width * 2/100)}
 	});
 
 	var s = options.Snap(options.selector).attr({
@@ -41,25 +41,31 @@ var CandleStickChart = function (options) {
 	s.clear();
 
 	var chartTitleGroup = s.group().attr("class", "title");
-	var tickerText = s.text(options.width/2 - 200, options.height/2, options.data.ticker);
+	var tickerText = s.text(options.width/2 - 100, options.height/2, options.data.ticker);
 	chartTitleGroup.add(tickerText);
 
 
+	// x-axis line
 	var xAxisGroup = s.group().attr("class", "x-axis");
 	var path = s.path(axisSeries.xAxis.pathStr)
 					 .attr({
 					 	stroke: axisSeries.xAxis.stroke,
 					 	"stroke-width": "1" });
 	xAxisGroup.add(path);
+	// price bars
 	_.forEach(axisSeries.xAxisTicks, function(tick) {
 		var path = s.path(tick.pathStr)
 					 .attr({
 					 	stroke: tick.stroke,
 					 	"stroke-width": "1" });
+		var label = s.text(tick.label.x, tick.label.y, tick.label.text)
+								.attr("class", "pricelabel");
 		xAxisGroup.add(path);
+		xAxisGroup.add(label);
 	});
 
 
+	// date
 	var yAxisGroup = s.group().attr("class", "y-axis");
 	var path = s.path(axisSeries.yAxis.pathStr)
 					 .attr({
