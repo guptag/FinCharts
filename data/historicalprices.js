@@ -13,8 +13,8 @@ var  historicalPrices  = new function() {
 };
 
 
-function fetchData(chartInput) {
-	var fetchDeferred = Q.defer(), ticker = chartInput.ticker;
+function fetchData(chartInputs) {
+	var fetchDeferred = Q.defer(), ticker = chartInputs.ticker;
 
 	fs.exists(util.format(".tmp/%s.csv", ticker), function (exists) {
 		console.log(exists);
@@ -33,10 +33,10 @@ function fetchData(chartInput) {
 	return fetchDeferred.promise;
 }
 
-//Jan12 - Jan7 - daily - http://finance.yahoo.com/q/hp?s=YHOO&a=00&b=12&c=1996&d=00&e=7&f=2014&g=d
-//Dec12 - Dec7 - daily - http://finance.yahoo.com/q/hp?s=YHOO&a=11&b=12&c=1996&d=11&e=7&f=2014&g=d
-//Dec12 - Dec7 - weekly - http://finance.yahoo.com/q/hp?s=YHOO&a=11&b=12&c=1996&d=11&e=7&f=2014&g=w
-//Dec12 - Dec7 - montly - http://finance.yahoo.com/q/hp?s=YHOO&a=11&b=12&c=1996&d=11&e=7&f=2014&g=m
+// Jan12 - Jan7 - daily - http://finance.yahoo.com/q/hp?s=YHOO&a=00&b=12&c=1996&d=00&e=7&f=2014&g=d
+// Dec12 - Dec7 - daily - http://finance.yahoo.com/q/hp?s=YHOO&a=11&b=12&c=1996&d=11&e=7&f=2014&g=d
+// Dec12 - Dec7 - weekly - http://finance.yahoo.com/q/hp?s=YHOO&a=11&b=12&c=1996&d=11&e=7&f=2014&g=w
+// Dec12 - Dec7 - montly - http://finance.yahoo.com/q/hp?s=YHOO&a=11&b=12&c=1996&d=11&e=7&f=2014&g=m
 
 
 

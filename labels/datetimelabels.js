@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 /*
 
     Some data scenarios:
@@ -101,7 +103,7 @@
             - Get remaining list
             - Start picking labels one in labelsPerPoints until we hit total labels
 
-    HOURLY:
+    HOURLY (not supported):
         labelsPerPoints < 0 - add labels for all points
         ELSE
             - Show labels for Year crossovers (JAN)
@@ -120,7 +122,7 @@
             - Start picking labels one in labelsPerPoints until we hit total labels
 
 
-    MINUTE:
+    MINUTE (not supported):
         labelsPerPoints < 0 - add labels for all points
         ELSE
             - Show labels for Year crossovers (JAN)
@@ -141,8 +143,75 @@
 
             - Get remaining list
             - Start picking labels one in labelsPerPoints until we hit total labels
-
-
-
-
 */
+
+
+var _ = require('lodash');
+var shortMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+var DateTimeLabels = {
+    generate : function (data, timeFrame, width) {
+        var minColWidth = 75,
+            totalColumns = Math.floor(width / minColWidth),
+            columnPerPoints = data.series.lengh / totalColumns,
+            dateTimeLabels = [];
+
+        switch (timeFrame.toLowerCase()) {
+            case "yearly":
+                dateTimeLabels = _.chain(data.series).map(function(data, index) {
+                    if (columnPerPoints <= 0 || index % columnPerPoints === 0) {
+                        return {
+                            dataItemIndex: index,
+                            label : data.date.getFullYear()
+                        };
+                    }
+                }).compact().value();
+                break;
+
+            case "montly":
+                dateTimeLabels = _.chain(data.series).map(function(data, index) {
+                    // show one for every 5 data points
+                    if (columnPerPoints <= 0 || index % columnPerPoints === 0) {
+                        return {
+                            dataItemIndex: index,
+                            label: shortMonths[data.date.getMonth()]
+                        };
+                    } else
+                    if (data.date.getUTCMonth() === 0 && data.date.getUTCDate() === 1) {
+                        return {
+                            dataItemIndex: index,
+                            data: data,
+                            label: data.date.getFullYear()
+                        };
+                    }
+                }).compact().value();
+                break;
+
+            case "daily":
+                dateTimeLabels = _.chain(data.series).map(function(data, index) {
+                    // show one for every 5 data points
+                    if (columnPerPoints <= 0 || index % columnPerPoints === 0) {
+                        return {
+                            dataItemIndex: index,
+                            label: data.date.getDate()]
+                        };
+                    } else
+                    if (data.date.getUTCMonth() === 0 && data.date.getUTCDate() === 1) {
+                        return {
+                            dataItemIndex: index,
+                            label: data.date.getFullYear()
+                        };
+                    } else
+                    if (data.date.getUTCDate() === 1) {
+                        return {
+                            dataItemIndex: index,
+                            label: shortMonths[data.date.getMonth()]
+                        };
+                    }
+                }).compact().value();
+                break;
+        }
+    }
+}
+
+module.exports = PriceLabels;
