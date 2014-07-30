@@ -153,16 +153,17 @@ var DateTimeLabels = {
     generate : function (data, timeFrame, width) {
         var minColWidth = 75,
             totalColumns = Math.floor(width / minColWidth),
-            columnPerPoints = data.series.lengh / totalColumns,
+            columnPerPoints = Math.floor(data.series.length / totalColumns),
             dateTimeLabels = [];
 
         switch (timeFrame.toLowerCase()) {
             case "yearly":
                 dateTimeLabels = _.chain(data.series).map(function(data, index) {
+                    var dateObj = new Date(data.date);
                     if (columnPerPoints <= 0 || index % columnPerPoints === 0) {
                         return {
                             dataItemIndex: index,
-                            label : data.date.getFullYear()
+                            label : dateObj.getFullYear()
                         };
                     }
                 }).compact().value();
@@ -170,18 +171,19 @@ var DateTimeLabels = {
 
             case "montly":
                 dateTimeLabels = _.chain(data.series).map(function(data, index) {
+                    var dateObj = new Date(data.date);
                     // show one for every 5 data points
-                    if (columnPerPoints <= 0 || index % columnPerPoints === 0) {
-                        return {
-                            dataItemIndex: index,
-                            label: shortMonths[data.date.getMonth()]
-                        };
-                    } else
-                    if (data.date.getUTCMonth() === 0 && data.date.getUTCDate() === 1) {
+                    if (dateObj.getMonth() === 0 && dateObj.getDate() === 1) {
                         return {
                             dataItemIndex: index,
                             data: data,
-                            label: data.date.getFullYear()
+                            label: dateObj.getFullYear()
+                        };
+                    } else
+                    if (columnPerPoints <= 0 || index % columnPerPoints === 0) {
+                        return {
+                            dataItemIndex: index,
+                            label: shortMonths[dateObj.getMonth()]
                         };
                     }
                 }).compact().value();
@@ -189,29 +191,32 @@ var DateTimeLabels = {
 
             case "daily":
                 dateTimeLabels = _.chain(data.series).map(function(data, index) {
+                    var dateObj = new Date(data.date);
                     // show one for every 5 data points
+                    if (dateObj.getMonth() === 0 && dateObj.getDate() === 1) {
+                        return {
+                            dataItemIndex: index,
+                            label: dateObj.getFullYear()
+                        };
+                    } else
+                    if (dateObj.getDate() === 1) {
+                        return {
+                            dataItemIndex: index,
+                            label: shortMonths[dateObj.getMonth()]
+                        };
+                    } else
                     if (columnPerPoints <= 0 || index % columnPerPoints === 0) {
                         return {
                             dataItemIndex: index,
-                            label: data.date.getDate()]
-                        };
-                    } else
-                    if (data.date.getUTCMonth() === 0 && data.date.getUTCDate() === 1) {
-                        return {
-                            dataItemIndex: index,
-                            label: data.date.getFullYear()
-                        };
-                    } else
-                    if (data.date.getUTCDate() === 1) {
-                        return {
-                            dataItemIndex: index,
-                            label: shortMonths[data.date.getMonth()]
+                            label: dateObj.getDate()
                         };
                     }
                 }).compact().value();
                 break;
         }
+
+        return dateTimeLabels;
     }
 }
 
-module.exports = PriceLabels;
+module.exports = DateTimeLabels;
