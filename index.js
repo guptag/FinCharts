@@ -62,7 +62,7 @@ function renderChart (ticker) {
 
 	//new Date(year, month (0-11), day (1-31), hours (0-23), minutes(0-59), seconds, milliseconds);
 
-	var chartInput = {
+	var chartInputs = {
 		ticker: ticker,
 		From: new Date(2013, 9, 1),
 		To: new Date(2014, 5, 31),
@@ -71,7 +71,7 @@ function renderChart (ticker) {
 		chartType: "candlestick" //candlestick, OHLC, HLC, Line, Area
 	};
 
-	HistoricalPrices.getDataForTicker(chartInput)
+	HistoricalPrices.getDataForTicker(chartInputs)
 	.then(function (data) {
 	 	console.log("width", $("#plot").width(), "height", $("#plot").height());
 	 	new CandleStickChart({
