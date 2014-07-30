@@ -77,7 +77,10 @@ var CandleStickChart = function (options) {
 					 .attr({
 					 	stroke: tick.stroke,
 					 	"stroke-width": "1" });
+	  var label = s.text(tick.label.x, tick.label.y, tick.label.text)
+				.attr("class", "datetimelabel");
 		yAxisGroup.add(path);
+		yAxisGroup.add(label);
 	});
 
 	var volumeGroup = s.group().attr("class", "volume");

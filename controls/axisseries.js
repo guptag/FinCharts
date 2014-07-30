@@ -1,5 +1,6 @@
 var _ = require("lodash"),
-    PriceLabels = require("../labels/pricelabels");;
+    PriceLabels = require("../labels/pricelabels"),
+    DateTimeLabels = require("../labels/datetimelabels");
 
 function AxisSeriesModel(options) {
     /* {
@@ -19,6 +20,9 @@ function AxisSeriesModel(options) {
     var priceLabels = PriceLabels.generate(options.data.series.min, options.data.series.max, this.canvasHeight);
     this.extendedMin = priceLabels[0];
     this.extendedMax = priceLabels[priceLabels.length - 1];
+
+    var dateTimeLabels = DateTimeLabels.generate(options.data, "daily", this.canvasWidth);
+    console.log(dateTimeLabels);
 
     this.xUnitScale = this.canvasWidth / options.data.series.length;
     this.yUnitScale = (this.extendedMax - this.extendedMin)/this.canvasHeight;
@@ -42,13 +46,13 @@ function AxisSeriesModel(options) {
     this.xAxisTicks =   _.map(priceLabels, function(price) {
                             var path = [];
                             path.push("M" + self.margin.left + "," + self.toPlotY(price));
-                            path.push("L" + (self.margin.left + self.canvasWidth + 8 /* ext for label */) + "," + self.toPlotY(price)); //x-axis tick
+                            path.push("L" + (self.margin.left + self.canvasWidth + 6 /* ext for label */) + "," + self.toPlotY(price)); //x-axis tick
                             return {
                                 pathStr : path.join(""),
                                 stroke : "#bdbdc1",
                                 label : {
-                                    x: self.margin.left + self.canvasWidth + 10,
-                                    y: self.toPlotY(price),
+                                    x: self.margin.left + self.canvasWidth + 8,
+                                    y: self.toPlotY(price) + 2,
                                     text: +price.toFixed(3)
                                 }
                             }
@@ -65,17 +69,21 @@ function AxisSeriesModel(options) {
                 };
 
     // each tick represents a day (in daily chart)
-    this.yAxisTicks =  _.chain(options.data.series)
-                        .map(function(data, index) {
-                            // show one for every 5 data points
-                            if (index % 5 === 0) {
-                                var path = [];
-                                path.push("M" + self.toPlotX(index) + "," + self.margin.top);
-                                path.push("L" + self.toPlotX(index) + "," + (self.margin.top + self.canvasHeight + 8 /* ext for label */)); //y-axis tick
+    this.yAxisTicks =  _.chain(dateTimeLabels)
+                        .map(function(labelItem) {
+                            var dataIndex = labelItem.dataItemIndex;
 
-                                return {
-                                    pathStr : path.join(""),
-                                    stroke : "#bdbdc1"
+                            var path = [];
+                            path.push("M" + self.toPlotX(dataIndex) + "," + self.margin.top);
+                            path.push("L" + self.toPlotX(dataIndex) + "," + (self.margin.top + self.canvasHeight + 8 /* ext for label */)); //y-axis tick
+
+                            return {
+                                pathStr : path.join(""),
+                                stroke : "#bdbdc1",
+                                label : {
+                                    x: self.toPlotX(dataIndex) - 7,
+                                    y: self.margin.top + self.canvasHeight + 20,
+                                    text: labelItem.label
                                 }
                             }
                         })

@@ -40,6 +40,10 @@ body {
   font-size: 0.5em;
 }
 
+.datetimelabel {
+  font-size: 0.5em;
+}
+
 
 #topbar {
   overflow: hidden;
