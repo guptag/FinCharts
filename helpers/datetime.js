@@ -19,6 +19,8 @@ var dateTimeHelper =  {
     },
 
     getYearCrossovers: function(beginDate, endDate) {
+        // diff between years + 1 if the begin date is jan 1st
+
         var val =  (endDate.getUTCFullYear() - beginDate.getUTCFullYear()) +
                        ((beginDate.getUTCMonth() === 0 && beginDate.getUTCDate() === 1) ? 1 : 0);
 
@@ -26,6 +28,9 @@ var dateTimeHelper =  {
     },
 
     getMonthCrossovers: function(beginDate, endDate) {
+         // (in between years * 12)
+               // + both dates are in same year ? (diff between dates) : (remaining months in begindate until dec + months passed in enddate)
+               // + 1 if the begin date is 1st of the month
         var inBetweenYears =  (endDate.getUTCFullYear() - beginDate.getUTCFullYear() - 1);
         var isSameYear = (endDate.getUTCFullYear() === beginDate.getUTCFullYear());
 

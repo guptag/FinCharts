@@ -169,48 +169,86 @@ var DateTimeLabels = {
                 }).compact().value();
                 break;
 
-            case "montly":
+            case "monthly":
+                var currentYear;
                 dateTimeLabels = _.chain(data.series).map(function(data, index) {
-                    var dateObj = new Date(data.date);
-                    // show one for every 5 data points
-                    if (dateObj.getMonth() === 0 && dateObj.getDate() === 1) {
-                        return {
-                            dataItemIndex: index,
-                            data: data,
-                            label: dateObj.getFullYear()
-                        };
-                    } else
+                    var dateObj = new Date(data.date), retVal;
+                    var addYearLabel = false, addMonthLabel = false;
+
+                    if (index === 0) {
+                        currentYear = dateObj.getUTCFullYear();
+                    }
+
+                    if (index === 0 && dateObj.getUTCMonth() === 0 &&
+                        (dateObj.getUTCDate() === 1 || dateObj.getUTCDate() === 2 || dateObj.getUTCDate() === 3)) {
+                        addYearLabel = true;
+                    }
+
+                    if (currentYear !== dateObj.getUTCFullYear()) {
+                        addYearLabel = true;
+                        currentYear = dateObj.getUTCFullYear();
+                    }
+
                     if (columnPerPoints <= 0 || index % columnPerPoints === 0) {
-                        return {
+                        addMonthLabel = true;
+                    }
+
+                    if (addYearLabel || addMonthLabel) {
+                        retVal = {
                             dataItemIndex: index,
-                            label: shortMonths[dateObj.getMonth()]
+                            label: addYearLabel ? dateObj.getUTCFullYear() : shortMonths[dateObj.getUTCMonth()]
                         };
                     }
+
+                    return retVal;
+
                 }).compact().value();
                 break;
 
             case "daily":
+                var currentYear, currentMonth;
                 dateTimeLabels = _.chain(data.series).map(function(data, index) {
-                    var dateObj = new Date(data.date);
-                    // show one for every 5 data points
-                    if (dateObj.getMonth() === 0 && dateObj.getDate() === 1) {
-                        return {
-                            dataItemIndex: index,
-                            label: dateObj.getFullYear()
-                        };
-                    } else
-                    if (dateObj.getDate() === 1) {
-                        return {
-                            dataItemIndex: index,
-                            label: shortMonths[dateObj.getMonth()]
-                        };
-                    } else
+                    var dateObj = new Date(data.date), retVal;
+                    var addYearLabel = false, addMonthLabel = false, addDayLabel = false;
+
+                    if (index === 0) {
+                        currentYear = dateObj.getUTCFullYear();
+                        currentMonth = dateObj.getUTCMonth();
+                    }
+
+                    if (index === 0 && dateObj.getUTCMonth() === 0 &&
+                        (dateObj.getUTCDate() === 1 || dateObj.getUTCDate() === 2 || dateObj.getUTCDate() === 3)) {
+                        addYearLabel = true;
+                    }
+
+                    if (currentYear !== dateObj.getUTCFullYear()) {
+                        addYearLabel = true;
+                        currentYear = dateObj.getUTCFullYear();
+                    }
+
+                    if (index === 0 &&
+                        (dateObj.getUTCDate() === 1 || dateObj.getUTCDate() === 2 || dateObj.getUTCDate() === 3)) {
+                        addMonthLabel = true;
+                    }
+
+                    if (currentMonth !== dateObj.getUTCMonth()) {
+                        addMonthLabel = true;
+                        currentMonth = dateObj.getUTCMonth();
+                    }
+
                     if (columnPerPoints <= 0 || index % columnPerPoints === 0) {
-                        return {
+                        addDayLabel = true;
+                    }
+
+                    if (addYearLabel || addMonthLabel || addDayLabel) {
+                        retVal = {
                             dataItemIndex: index,
-                            label: dateObj.getDate()
+                            label: addYearLabel ? dateObj.getUTCFullYear() : (addMonthLabel ? shortMonths[dateObj.getUTCMonth()] : dateObj.getUTCDate())
                         };
                     }
+
+                    return retVal;
+
                 }).compact().value();
                 break;
         }
