@@ -97,7 +97,7 @@ var DateTimeLabels = {
                     if (columnPerPoints <= 0 || index % columnPerPoints === 0) {
                         return {
                             dataItemIndex: index,
-                            label : dateObj.getFullYear()
+                            label : dateObj.getUTCFullYear()
                         };
                     }
                 }).compact().value();
@@ -121,35 +121,48 @@ var DateTimeLabels = {
                 */
                 var currentYear;
                 dateTimeLabels = _.chain(data.series).map(function(data, index) {
-                    var dateObj = new Date(data.date), retVal;
+                    var retVal;
+                    var dateObj = new Date(data.date);
                     var addYearLabel = false, addMonthLabel = false;
 
-                    if (index === 0) {
-                        currentYear = dateObj.getUTCFullYear();
+                    var date = dateObj.getUTCDate(),
+                        month = dateObj.getUTCMonth(),
+                        year = dateObj.getUTCFullYear();
+
+                    var isFirstPoint = (index === 0);
+                    var probableFirstWeekDayInMonth = (dateObj.getUTCDate() === 1 || dateObj.getUTCDate() === 2 || dateObj.getUTCDate() === 3);
+                    var isJanuary = (dateObj.getUTCMonth() === 0);
+
+                    var isYearChanged = (currentYear !== year);
+
+                    var isIndexMultipleOfColumnPerPoints = (columnPerPoints <= 0 || index % columnPerPoints === 0);
+
+                    if (isFirstPoint) {
+                        currentYear = year;
                     }
 
-                    if (index === 0 && dateObj.getUTCMonth() === 0 &&
-                        (dateObj.getUTCDate() === 1 || dateObj.getUTCDate() === 2 || dateObj.getUTCDate() === 3)) {
+                    if (isFirstPoint && isJanuary && probableFirstWeekDayInMonth) {
                         addYearLabel = true;
                     }
 
-                    if (currentYear !== dateObj.getUTCFullYear()) {
+                    if (isYearChanged) {
                         addYearLabel = true;
                         currentYear = dateObj.getUTCFullYear();
                     }
 
-                    if (columnPerPoints <= 0 || index % columnPerPoints === 0) {
+                    if (isIndexMultipleOfColumnPerPoints) {
                         addMonthLabel = true;
                     }
 
                     if (addYearLabel || addMonthLabel) {
                         retVal = {
                             dataItemIndex: index,
-                            label: (addYearLabel ? dateObj.getUTCFullYear() : shortMonths[dateObj.getUTCMonth()]) + ""
+                            label: (addYearLabel ? year : shortMonths[month]) + ""
                         };
                     }
 
                     return retVal;
+
 
                 }).compact().value();
                 break;
@@ -178,42 +191,54 @@ var DateTimeLabels = {
                 */
                 var currentYear, currentMonth;
                 dateTimeLabels = _.chain(data.series).map(function(data, index) {
-                    var dateObj = new Date(data.date), retVal;
+                    var retVal;
+                    var dateObj = new Date(data.date);
                     var addYearLabel = false, addMonthLabel = false, addDayLabel = false;
 
-                    if (index === 0) {
-                        currentYear = dateObj.getUTCFullYear();
-                        currentMonth = dateObj.getUTCMonth();
+                    var date = dateObj.getUTCDate(),
+                        month = dateObj.getUTCMonth(),
+                        year = dateObj.getUTCFullYear();
+
+                    var isFirstPoint = (index === 0);
+                    var probableFirstWeekDayInMonth = (dateObj.getUTCDate() === 1 || dateObj.getUTCDate() === 2 || dateObj.getUTCDate() === 3);
+                    var isJanuary = (dateObj.getUTCMonth() === 0);
+
+                    var isYearChanged = (currentYear !== year);
+                    var isMonthChanged =  (currentMonth !== dateObj.getUTCMonth());
+
+                    var isIndexMultipleOfColumnPerPoints = (columnPerPoints <= 0 || index % columnPerPoints === 0);
+
+                    if (isFirstPoint) {
+                        currentYear = year;
+                        currentMonth = month;
                     }
 
-                    if (index === 0 && dateObj.getUTCMonth() === 0 &&
-                        (dateObj.getUTCDate() === 1 || dateObj.getUTCDate() === 2 || dateObj.getUTCDate() === 3)) {
+                    if (isFirstPoint && isJanuary && probableFirstWeekDayInMonth) {
                         addYearLabel = true;
                     }
 
-                    if (currentYear !== dateObj.getUTCFullYear()) {
+                    if (isYearChanged) {
                         addYearLabel = true;
                         currentYear = dateObj.getUTCFullYear();
                     }
 
-                    if (index === 0 &&
-                        (dateObj.getUTCDate() === 1 || dateObj.getUTCDate() === 2 || dateObj.getUTCDate() === 3)) {
+                    if (isFirstPoint && probableFirstWeekDayInMonth) {
                         addMonthLabel = true;
                     }
 
-                    if (currentMonth !== dateObj.getUTCMonth()) {
+                    if (isMonthChanged) {
                         addMonthLabel = true;
                         currentMonth = dateObj.getUTCMonth();
                     }
 
-                    if (columnPerPoints <= 0 || index % columnPerPoints === 0) {
+                    if (isIndexMultipleOfColumnPerPoints) {
                         addDayLabel = true;
                     }
 
                     if (addYearLabel || addMonthLabel || addDayLabel) {
                         retVal = {
                             dataItemIndex: index,
-                            label: (addYearLabel ? dateObj.getUTCFullYear() : (addMonthLabel ? shortMonths[dateObj.getUTCMonth()] : dateObj.getUTCDate())) + ""
+                            label: (addYearLabel ? year : (addMonthLabel ? shortMonths[month] : date)) + ""
                         };
                     }
 
