@@ -65,84 +65,6 @@ var _ = require('lodash');
         2016
 
 
-
-    Logic:
-
-    total labels = width / 100 (1 label per 100px)
-
-    labelsPerPoints = total data points / total labels (1 label per N points)
-
-    YEARLY:
-        labelsPerPoints < 0 - add labels for all points
-        ELSE
-            _.forEach(datapoint, index)
-                 if (index % labelsPerPoints === 0)
-                        Show YEAR
-
-    MONTHLY:
-        labelsPerPoints < 0 - add labels for all points
-        ELSE
-            - Show label for Year crossovers (JAN)
-            - Mark #of labelsPerPoints before and after JAN as blacklist
-            - total labels = total labels - year markers
-            - Get remaining list
-            - Start picking labels one in labelsPerPoints until we hit total labels
-
-
-    DAILY:
-        labelsPerPoints < 0 - add labels for all points
-        ELSE
-            - Show labels for Year crossovers (JAN)
-            - Mark #of labelsPerPoints before and after JAN as blacklist
-            - total labels = total labels - year markers
-
-            - Show labels for Month crossovers (JAN, FEB, MAR...)
-            - Mark #of labelsPerPoints before and after month crossovers as blacklist
-            - total labels = total labels - year markers
-
-            - Get remaining list
-            - Start picking labels one in labelsPerPoints until we hit total labels
-
-    HOURLY (not supported):
-        labelsPerPoints < 0 - add labels for all points
-        ELSE
-            - Show labels for Year crossovers (JAN)
-            - Mark #of labelsPerPoints before and after JAN as blacklist
-            - total labels = total labels - year markers
-
-            - Show labels for Month crossovers (JAN, FEB, MAR...)
-            - Mark #of labelsPerPoints before and after month crossovers as blacklist
-            - total labels = total labels - year markers
-
-            - Show labels for Day crossovers (1, 2, 3, 4...)
-            - Mark #of labelsPerPoints before and after month crossovers as blacklist
-            - total labels = total labels - year markers
-
-            - Get remaining list
-            - Start picking labels one in labelsPerPoints until we hit total labels
-
-
-    MINUTE (not supported):
-        labelsPerPoints < 0 - add labels for all points
-        ELSE
-            - Show labels for Year crossovers (JAN)
-            - Mark #of labelsPerPoints before and after JAN as blacklist
-            - total labels = total labels - year markers
-
-            - Show labels for Month crossovers (JAN, FEB, MAR...)
-            - Mark #of labelsPerPoints before and after month crossovers as blacklist
-            - total labels = total labels - year markers
-
-            - Show labels for Day crossovers (1, 2, 3, 4...)
-            - Mark #of labelsPerPoints before and after month crossovers as blacklist
-            - total labels = total labels - year markers
-
-            - Show labels for Hour crossovers (12:00, 1:00, 2:00, 3:00...)
-            - Mark #of labelsPerPoints before and after month crossovers as blacklist
-            - total labels = total labels - year markers
-
-            - Get remaining list
-            - Start picking labels one in labelsPerPoints until we hit total labels
 */
 
 
@@ -152,11 +74,23 @@ var shortMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"
 var DateTimeLabels = {
     generate : function (data, timeFrame, width) {
         var minColWidth = 75,
+            dropColumnDistance = 3,
             totalColumns = Math.floor(width / minColWidth),
             columnPerPoints = Math.floor(data.series.length / totalColumns),
             dateTimeLabels = [];
 
         switch (timeFrame.toLowerCase()) {
+            /*
+                YEARLY:
+                    total labels = width / 100 (1 label per 100px)
+                    labelsPerPoints = total data points / total labels (1 label per N points)
+                    labelsPerPoints < 0 - add labels for all points
+                    ELSE
+                        _.forEach(datapoint, index)
+                             if (index % labelsPerPoints === 0)
+                                    Show YEAR
+
+            */
             case "yearly":
                 dateTimeLabels = _.chain(data.series).map(function(data, index) {
                     var dateObj = new Date(data.date);
@@ -170,6 +104,21 @@ var DateTimeLabels = {
                 break;
 
             case "monthly":
+                /*
+                MONTHLY:
+                    total labels = width / 100 (1 label per 100px)
+                    labelsPerPoints = total data points / total labels (1 label per N points)
+                    labelsPerPoints < 0 - add labels for all points
+                    ELSE
+                        If (firstdatapoint is of jan and dates are either 1 2 or 3)
+                            show YEAR
+
+                        if (year changes with this current data point)
+                            show YEAR
+
+                        if (current index % columnPerPoints === 0)
+                            show MONTH
+                */
                 var currentYear;
                 dateTimeLabels = _.chain(data.series).map(function(data, index) {
                     var dateObj = new Date(data.date), retVal;
@@ -196,7 +145,7 @@ var DateTimeLabels = {
                     if (addYearLabel || addMonthLabel) {
                         retVal = {
                             dataItemIndex: index,
-                            label: addYearLabel ? dateObj.getUTCFullYear() : shortMonths[dateObj.getUTCMonth()]
+                            label: (addYearLabel ? dateObj.getUTCFullYear() : shortMonths[dateObj.getUTCMonth()]) + ""
                         };
                     }
 
@@ -206,6 +155,27 @@ var DateTimeLabels = {
                 break;
 
             case "daily":
+                /*
+                DAILY:
+                    total labels = width / 100 (1 label per 100px)
+                    labelsPerPoints = total data points / total labels (1 label per N points)
+                    labelsPerPoints < 0 - add labels for all points
+                    ELSE
+                        If (firstdatapoint is of jan and dates are either 1 2 or 3)
+                            show YEAR
+
+                        if (year changes with this current data point)
+                            show YEAR
+
+                        If (firstdatapoint is of dates 1 2 or 3)
+                            show MONTH
+
+                        if (month changes with this current data point)
+                            show MONTH
+
+                        if (current index % columnPerPoints === 0)
+                            show DAY
+                */
                 var currentYear, currentMonth;
                 dateTimeLabels = _.chain(data.series).map(function(data, index) {
                     var dateObj = new Date(data.date), retVal;
@@ -243,7 +213,7 @@ var DateTimeLabels = {
                     if (addYearLabel || addMonthLabel || addDayLabel) {
                         retVal = {
                             dataItemIndex: index,
-                            label: addYearLabel ? dateObj.getUTCFullYear() : (addMonthLabel ? shortMonths[dateObj.getUTCMonth()] : dateObj.getUTCDate())
+                            label: (addYearLabel ? dateObj.getUTCFullYear() : (addMonthLabel ? shortMonths[dateObj.getUTCMonth()] : dateObj.getUTCDate())) + ""
                         };
                     }
 
@@ -253,7 +223,27 @@ var DateTimeLabels = {
                 break;
         }
 
-        return dateTimeLabels;
+        //remove some points closer to the special year/month markers
+        // 4 digit - year, 3 digit - month, 1 or 2 digits - day
+        var filteredDateTimeLabels = [];
+        for(var i = 1;i < dateTimeLabels.length - 1; ++i) /* ignore first and last */{
+            var isDayLabel = (dateTimeLabels[i].label.length === 1 || dateTimeLabels[i].label.length === 2);
+
+            var isPrevLabelWithinReach = !!(Math.abs(dateTimeLabels[i-1].dataItemIndex - dateTimeLabels[i].dataItemIndex) < dropColumnDistance);
+            var isPrevLabelSpecialMarker = (dateTimeLabels[i-1].label.length === 3 || dateTimeLabels[i-1].label.length === 4); //month or year
+
+            var isNextLabelWithinReach = !!(Math.abs(dateTimeLabels[i+1].dataItemIndex - dateTimeLabels[i].dataItemIndex) < dropColumnDistance);
+            var isNextLabelSpecialMarker = (dateTimeLabels[i+1].label.length === 3 || dateTimeLabels[i+1].label.length === 4); //month or year
+
+            var dropLabel = isDayLabel && ((isPrevLabelSpecialMarker && isPrevLabelWithinReach) || (isNextLabelSpecialMarker || isNextLabelWithinReach));
+
+            if (!dropLabel) {
+                filteredDateTimeLabels.push(dateTimeLabels[i]);
+            }
+
+        }
+
+        return filteredDateTimeLabels;
     }
 }
 
