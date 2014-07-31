@@ -120,51 +120,44 @@ var DateTimeLabels = {
                             show MONTH
                 */
                 var currentYear;
-                dateTimeLabels = _.chain(data.series).map(function(data, index) {
-                    var retVal;
-                    var dateObj = new Date(data.date);
-                    var addYearLabel = false, addMonthLabel = false;
+                dateTimeLabels = _.chain(data.series)
+                                  .map(function(data, index) {
+                                        var dateObj = new Date(data.date);
+                                        var addYearLabel = false, addMonthLabel = false;
 
-                    var date = dateObj.getUTCDate(),
-                        month = dateObj.getUTCMonth(),
-                        year = dateObj.getUTCFullYear();
+                                        var date = dateObj.getUTCDate(),
+                                            month = dateObj.getUTCMonth(),
+                                            year = dateObj.getUTCFullYear();
 
-                    var isFirstPoint = (index === 0);
-                    var probableFirstWeekDayInMonth = (dateObj.getUTCDate() === 1 || dateObj.getUTCDate() === 2 || dateObj.getUTCDate() === 3);
-                    var isJanuary = (dateObj.getUTCMonth() === 0);
+                                        var isFirstPoint = (index === 0);
+                                        var isJanuary = (dateObj.getUTCMonth() === 0);
+                                        var probableFirstWeekDayInMonth = (dateObj.getUTCDate() === 1 || dateObj.getUTCDate() === 2 || dateObj.getUTCDate() === 3);
 
-                    var isYearChanged = (currentYear !== year);
+                                        var isYearChanged = (currentYear !== year);
 
-                    var isIndexMultipleOfColumnPerPoints = (columnPerPoints <= 0 || index % columnPerPoints === 0);
+                                        var isIndexMultipleOfColumnPerPoints = (columnPerPoints <= 0 || index % columnPerPoints === 0);
 
-                    if (isFirstPoint) {
-                        currentYear = year;
-                    }
+                                        if (isFirstPoint) {
+                                            currentYear = year;
+                                        }
 
-                    if (isFirstPoint && isJanuary && probableFirstWeekDayInMonth) {
-                        addYearLabel = true;
-                    }
+                                        if ((isFirstPoint && isJanuary && probableFirstWeekDayInMonth) ||
+                                            (isYearChanged)) {
+                                            addYearLabel = true;
+                                            currentYear = dateObj.getUTCFullYear();
+                                        } else if (isIndexMultipleOfColumnPerPoints) {
+                                            addMonthLabel = true;
+                                        }
 
-                    if (isYearChanged) {
-                        addYearLabel = true;
-                        currentYear = dateObj.getUTCFullYear();
-                    }
+                                        if (addYearLabel || addMonthLabel) {
+                                            return {
+                                                dataItemIndex: index,
+                                                label: (addYearLabel ? year : shortMonths[month]) + ""
+                                            };
+                                        }
 
-                    if (isIndexMultipleOfColumnPerPoints) {
-                        addMonthLabel = true;
-                    }
-
-                    if (addYearLabel || addMonthLabel) {
-                        retVal = {
-                            dataItemIndex: index,
-                            label: (addYearLabel ? year : shortMonths[month]) + ""
-                        };
-                    }
-
-                    return retVal;
-
-
-                }).compact().value();
+                                })
+                                .compact().value();
                 break;
 
             case "daily":
@@ -190,61 +183,51 @@ var DateTimeLabels = {
                             show DAY
                 */
                 var currentYear, currentMonth;
-                dateTimeLabels = _.chain(data.series).map(function(data, index) {
-                    var retVal;
-                    var dateObj = new Date(data.date);
-                    var addYearLabel = false, addMonthLabel = false, addDayLabel = false;
+                dateTimeLabels = _.chain(data.series)
+                                .map(function(data, index) {
+                                    var dateObj = new Date(data.date);
+                                    var addYearLabel = false, addMonthLabel = false, addDayLabel = false;
 
-                    var date = dateObj.getUTCDate(),
-                        month = dateObj.getUTCMonth(),
-                        year = dateObj.getUTCFullYear();
+                                    var date = dateObj.getUTCDate(),
+                                        month = dateObj.getUTCMonth(),
+                                        year = dateObj.getUTCFullYear();
 
-                    var isFirstPoint = (index === 0);
-                    var probableFirstWeekDayInMonth = (dateObj.getUTCDate() === 1 || dateObj.getUTCDate() === 2 || dateObj.getUTCDate() === 3);
-                    var isJanuary = (dateObj.getUTCMonth() === 0);
+                                    var isFirstPoint = (index === 0);
+                                    var isJanuary = (dateObj.getUTCMonth() === 0);
+                                    var probableFirstWeekDayInMonth = (dateObj.getUTCDate() === 1 || dateObj.getUTCDate() === 2 || dateObj.getUTCDate() === 3);
 
-                    var isYearChanged = (currentYear !== year);
-                    var isMonthChanged =  (currentMonth !== dateObj.getUTCMonth());
+                                    var isYearChanged = (currentYear !== year);
+                                    var isMonthChanged =  (currentMonth !== dateObj.getUTCMonth());
 
-                    var isIndexMultipleOfColumnPerPoints = (columnPerPoints <= 0 || index % columnPerPoints === 0);
+                                    var isIndexMultipleOfColumnPerPoints = (columnPerPoints <= 0 || index % columnPerPoints === 0);
 
-                    if (isFirstPoint) {
-                        currentYear = year;
-                        currentMonth = month;
-                    }
+                                    if (isFirstPoint) {
+                                        currentYear = year;
+                                        currentMonth = month;
+                                    }
 
-                    if (isFirstPoint && isJanuary && probableFirstWeekDayInMonth) {
-                        addYearLabel = true;
-                    }
+                                    if ((isFirstPoint && isJanuary && probableFirstWeekDayInMonth) ||
+                                        (isYearChanged)) {
+                                        addYearLabel = true;
+                                        currentYear = dateObj.getUTCFullYear();
+                                    } else if ((isFirstPoint && probableFirstWeekDayInMonth) ||
+                                        (isMonthChanged)) {
+                                        addMonthLabel = true;
+                                        currentMonth = dateObj.getUTCMonth();
+                                    } else if (isIndexMultipleOfColumnPerPoints) {
+                                        addDayLabel = true;
+                                    }
 
-                    if (isYearChanged) {
-                        addYearLabel = true;
-                        currentYear = dateObj.getUTCFullYear();
-                    }
+                                    if (addYearLabel || addMonthLabel || addDayLabel) {
+                                        return {
+                                            dataItemIndex: index,
+                                            label: (addYearLabel ? year : (addMonthLabel ? shortMonths[month] : date)) + ""
+                                        };
+                                    }
 
-                    if (isFirstPoint && probableFirstWeekDayInMonth) {
-                        addMonthLabel = true;
-                    }
-
-                    if (isMonthChanged) {
-                        addMonthLabel = true;
-                        currentMonth = dateObj.getUTCMonth();
-                    }
-
-                    if (isIndexMultipleOfColumnPerPoints) {
-                        addDayLabel = true;
-                    }
-
-                    if (addYearLabel || addMonthLabel || addDayLabel) {
-                        retVal = {
-                            dataItemIndex: index,
-                            label: (addYearLabel ? year : (addMonthLabel ? shortMonths[month] : date)) + ""
-                        };
-                    }
-
-                    return retVal;
-
-                }).compact().value();
+                                })
+                            .compact()
+                            .value();
                 break;
         }
 
@@ -252,7 +235,7 @@ var DateTimeLabels = {
         // 4 digit - year, 3 digit - month, 1 or 2 digits - day
         var filteredDateTimeLabels = [];
         for(var i = 1;i < dateTimeLabels.length - 1; ++i) /* ignore first and last */{
-            var isDayLabel = (dateTimeLabels[i].label.length === 1 || dateTimeLabels[i].label.length === 2);
+            var isDayLabel = (dateTimeLabels[i].label.length === 1 || dateTimeLabels[i].label.length === 2 || dateTimeLabels[i].label.length === 3);
 
             var isPrevLabelWithinReach = !!(Math.abs(dateTimeLabels[i-1].dataItemIndex - dateTimeLabels[i].dataItemIndex) < dropColumnDistance);
             var isPrevLabelSpecialMarker = (dateTimeLabels[i-1].label.length === 3 || dateTimeLabels[i-1].label.length === 4); //month or year
@@ -260,7 +243,7 @@ var DateTimeLabels = {
             var isNextLabelWithinReach = !!(Math.abs(dateTimeLabels[i+1].dataItemIndex - dateTimeLabels[i].dataItemIndex) < dropColumnDistance);
             var isNextLabelSpecialMarker = (dateTimeLabels[i+1].label.length === 3 || dateTimeLabels[i+1].label.length === 4); //month or year
 
-            var dropLabel = isDayLabel && ((isPrevLabelSpecialMarker && isPrevLabelWithinReach) || (isNextLabelSpecialMarker || isNextLabelWithinReach));
+            var dropLabel = isDayLabel && ((isPrevLabelSpecialMarker && isPrevLabelWithinReach) || (isNextLabelSpecialMarker && isNextLabelWithinReach));
 
             if (!dropLabel) {
                 filteredDateTimeLabels.push(dateTimeLabels[i]);
