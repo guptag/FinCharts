@@ -43,16 +43,17 @@ function AxisSeriesModel(options) {
                 };
 
     // X-axis ticks (represents price)
+    priceLabels.shift(); //remove first price item which aligns on x-axis
     this.xAxisTicks =   _.map(priceLabels, function(price) {
                             var path = [];
                             path.push("M" + self.margin.left + "," + self.toPlotY(price));
-                            path.push("L" + (self.margin.left + self.canvasWidth + 6 /* ext for label */) + "," + self.toPlotY(price)); //x-axis tick
+                            path.push("L" + (self.margin.left + self.canvasWidth + Math.floor(self.canvasWidth * 0.5/100) /* ext for label */) + "," + self.toPlotY(price)); //x-axis tick
                             return {
                                 pathStr : path.join(""),
                                 stroke : "#bdbdc1",
                                 label : {
-                                    x: self.margin.left + self.canvasWidth + 8,
-                                    y: self.toPlotY(price) + 2,
+                                    x: self.margin.left + self.canvasWidth + Math.floor(self.canvasWidth * 0.65/100),
+                                    y: self.toPlotY(price) + 3.35,
                                     text: +price.toFixed(3)
                                 }
                             }
@@ -75,14 +76,22 @@ function AxisSeriesModel(options) {
 
                             var path = [];
                             path.push("M" + self.toPlotX(dataIndex) + "," + self.margin.top);
-                            path.push("L" + self.toPlotX(dataIndex) + "," + (self.margin.top + self.canvasHeight + 8 /* ext for label */)); //y-axis tick
+                            path.push("L" + self.toPlotX(dataIndex) + "," + (self.margin.top + self.canvasHeight + Math.floor(self.canvasHeight * 1/100) /* ext for label */)); //y-axis tick
+
+                            var labelPullBack;
+                            switch (labelItem.label.length) {
+                                case 4: labelPullBack = 14; break;
+                                case 3: labelPullBack = 10; break;
+                                case 2: labelPullBack = 7; break;
+                                case 1: labelPullBack = 2; break;
+                            };
 
                             return {
                                 pathStr : path.join(""),
                                 stroke : "#bdbdc1",
                                 label : {
-                                    x: self.toPlotX(dataIndex) - 7,
-                                    y: self.margin.top + self.canvasHeight + 20,
+                                    x: self.toPlotX(dataIndex) - labelPullBack /* based of length of chars */,
+                                    y: self.margin.top + self.canvasHeight + Math.floor(self.canvasHeight * 2.75/100),
                                     text: labelItem.label
                                 }
                             }
