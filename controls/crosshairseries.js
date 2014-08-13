@@ -14,8 +14,8 @@ function CrossHairSeries(options) {
     this.xAxis = {
                     pathStr : path.join(""),
                     stroke: "black",
-                    transformStr: "T0,0",
-                    "stroke-dasharray":"3, 3",
+                    transformStr: "T-50,-50",
+                    "stroke-dasharray":"2, 2",
                 };
 
     // y-axis cross-hair
@@ -25,8 +25,8 @@ function CrossHairSeries(options) {
     this.yAxis = {
                     pathStr : path.join(""),
                     stroke: "black",
-                    "stroke-dasharray":"3, 3",
-                    transformStr: "T0,0"
+                    "stroke-dasharray":"2, 2",
+                    transformStr: "T-50,-50"
                 };
 }
 
