@@ -62,3 +62,10 @@ body {
 #plot {
   overflow: hidden;
 }
+
+.crosshair-rect {
+  fill: none;
+  pointer-events: all;
+  fill-opacity:0;
+  stroke-opacity:0;
+}

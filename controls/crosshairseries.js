@@ -10,29 +10,29 @@ function CrossHairSeries(options) {
     // X-axis cross-hair
     var path = [];
     path.push("M" + "0" + "," + 0);
-    path.push("L" + options.width + "," + 0);
+    path.push("L" + this.canvasWidth + "," + 0);
     this.xAxis = {
                     pathStr : path.join(""),
                     stroke: "black",
-                    transformStr: "t0,40",
-                    "stroke-dasharray":"5, 5",
+                    transformStr: "T0,0",
+                    "stroke-dasharray":"3, 3",
                 };
 
     // y-axis cross-hair
     var path = [];
-    path.push("M" + 0 + "," + options.height);
+    path.push("M" + 0 + "," + this.canvasHeight);
     path.push("L" + 0 + "," + "0");
     this.yAxis = {
                     pathStr : path.join(""),
                     stroke: "black",
-                    "stroke-dasharray":"5, 5",
-                    transformStr: "t40,0"
+                    "stroke-dasharray":"3, 3",
+                    transformStr: "T0,0"
                 };
 }
 
 CrossHairSeries.prototype.updateTransform = function (mouseX, mouseY) {
-    this.xAxis.transformStr = "t0," + mouseY;
-    this.yAxis.transformStr = "t" + mouseX + ",0";
+    this.xAxis.transformStr = "T0," + mouseY;
+    this.yAxis.transformStr = "T" + mouseX + ",0";
 }
 
 CrossHairSeries.prototype.toPlotX = function (dataX) {

@@ -38,7 +38,7 @@ var CandleStickChart = function (options) {
 		width: options.width,
 		height: options.height,
 		data: options.data,
-		margin: {top: 5, bottom: Math.floor(options.height * 4/100), left: 2, right: Math.floor(options.width * 2.5/100)}
+		margin: {top: 0, bottom: Math.floor(options.height * 4.2/100), left: 0, right: Math.floor(options.width * 2.5/100)}
 	});
 	this.crossHairSeries = crossHairSeries;
 
@@ -47,10 +47,7 @@ var CandleStickChart = function (options) {
 		height: options.height,
 	});
 
-	this.boundMouseOver = _.bind(this.onMouseOver, this);
-
 	s.clear();
-	s.unmouseover(this.boundMouseOver);
 
 
 	var chartTitleGroup = s.group().attr("class", "title");
@@ -124,8 +121,13 @@ var CandleStickChart = function (options) {
 	});
 
 	// crosshair
-	s.mouseover(this.boundMouseOver);
+
 	var crossHairGroup = s.group().attr("class", "crosshair");
+
+	this.crossHairRect = s.rect(0,0, options.width, options.height)
+												.attr("class", "crosshair-rect");
+	this.crossHairRect.mousemove(_.bind(this.onMouseMove, this));
+
 	this.crossHairX = s.path(crossHairSeries.xAxis.pathStr)
 					 .attr({
 					 	stroke: crossHairSeries.xAxis.stroke,
@@ -140,21 +142,15 @@ var CandleStickChart = function (options) {
 
 	crossHairGroup.add(this.crossHairX);
 	crossHairGroup.add(this.crossHairY);
+	crossHairGroup.add(this.crossHairRect);
 }
 
-CandleStickChart.prototype.onMouseOver = function (ev) {
+CandleStickChart.prototype.onMouseMove = _.throttle(function (ev) {
 	console.log(ev.offsetX, ev.offsetY);
 	this.crossHairSeries.updateTransform(ev.offsetX, ev.offsetY);
 
-	//this.crossHairX.transform("");
 	this.crossHairX.transform(this.crossHairSeries.xAxis.transformStr);
-
-	//this.crossHairY.transform("");
 	this.crossHairY.transform(this.crossHairSeries.yAxis.transformStr);
-
-	console.log(this.crossHairSeries.xAxis.transformStr, this.crossHairSeries.yAxis.transformStr);
-	console.log(this.crossHairX.transform(), this.crossHairY.transform());
-
-};
+}, 75);
 
 module.exports = CandleStickChart;
