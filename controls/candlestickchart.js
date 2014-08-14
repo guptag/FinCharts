@@ -124,21 +124,52 @@ var CandleStickChart = function (options) {
 
 	var crossHairGroup = s.group().attr("class", "crosshair");
 
+	//overlay
 	this.crossHairRect = s.rect(0,0, options.width, options.height)
 												.attr("class", "crosshair-rect");
 	this.crossHairRect.mousemove(_.bind(this.onMouseMove, this));
 
-	this.crossHairX = s.path(crossHairSeries.xAxis.pathStr)
+	this.crossHairX = s.group().attr("class", "crosshairX");
+	this.crossHairX.add(s.path(crossHairSeries.xAxisGroup.path.pathStr)
 					 .attr({
-					 	stroke: crossHairSeries.xAxis.stroke,
-					 	"stroke-dasharray": crossHairSeries.xAxis["stroke-dasharray"] });
-	this.crossHairX.transform(crossHairSeries.xAxis.transformStr);
+					 	stroke: crossHairSeries.xAxisGroup.path.stroke,
+					 	"stroke-dasharray": crossHairSeries.xAxisGroup.path["stroke-dasharray"] }));
+	this.crossHairX.add(s.rect(crossHairSeries.xAxisGroup.rect.x,
+														crossHairSeries.xAxisGroup.rect.y,
+														crossHairSeries.xAxisGroup.rect.width,
+														crossHairSeries.xAxisGroup.rect.height)
+												.attr({
+					 										fill: "#000"
+					 							}));
+	this.crossHairX.add(s.text(crossHairSeries.xAxisGroup.label.x,
+														crossHairSeries.xAxisGroup.label.y,
+														crossHairSeries.xAxisGroup.label.text)
+												.attr({
+					 										class: "pricelabel",
+					 										fill: "#FFF"
+					 							}));
+	this.crossHairX.transform(crossHairSeries.xAxisGroup.path.transformStr);
 
-	this.crossHairY = s.path(crossHairSeries.yAxis.pathStr)
+	this.crossHairY = s.group().attr("class", "crosshairX");
+	this.crossHairY.add(s.path(crossHairSeries.yAxisGroup.path.pathStr)
 					 .attr({
-					 	stroke: crossHairSeries.yAxis.stroke,
-					 	"stroke-dasharray": crossHairSeries.yAxis["stroke-dasharray"] });
-	this.crossHairY.transform(crossHairSeries.yAxis.transformStr);
+					 	stroke: crossHairSeries.yAxisGroup.path.stroke,
+					 	"stroke-dasharray": crossHairSeries.yAxisGroup.path["stroke-dasharray"] }));
+	this.crossHairY.add(s.rect(crossHairSeries.yAxisGroup.rect.x,
+														crossHairSeries.yAxisGroup.rect.y,
+														crossHairSeries.yAxisGroup.rect.width,
+														crossHairSeries.yAxisGroup.rect.height)
+												.attr({
+					 										fill: "#000"
+					 							}));
+	this.crossHairY.add(s.text(crossHairSeries.yAxisGroup.label.x,
+														crossHairSeries.yAxisGroup.label.y,
+														crossHairSeries.yAxisGroup.label.text)
+												.attr({
+					 										class: "datetimelabel",
+					 										fill: "#FFF"
+					 							}));
+	this.crossHairY.transform(crossHairSeries.yAxisGroup.path.transformStr);
 
 	crossHairGroup.add(this.crossHairX);
 	crossHairGroup.add(this.crossHairY);
@@ -149,8 +180,8 @@ CandleStickChart.prototype.onMouseMove = _.throttle(function (ev) {
 	console.log(ev.offsetX, ev.offsetY);
 	this.crossHairSeries.updateTransform(ev.offsetX, ev.offsetY);
 
-	this.crossHairX.transform(this.crossHairSeries.xAxis.transformStr);
-	this.crossHairY.transform(this.crossHairSeries.yAxis.transformStr);
+	this.crossHairX.transform(this.crossHairSeries.xAxisGroup.path.transformStr);
+	this.crossHairY.transform(this.crossHairSeries.yAxisGroup.path.transformStr);
 }, 75);
 
 module.exports = CandleStickChart;
