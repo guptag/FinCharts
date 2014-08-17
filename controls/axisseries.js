@@ -25,7 +25,7 @@ function AxisSeriesModel(options) {
     console.log(dateTimeLabels);
 
     this.xUnitScale = this.canvasWidth / options.data.series.length;
-    this.yUnitScale = (this.extendedMax - this.extendedMin)/this.canvasHeight;
+    this.yUnitScale = this.canvasHeight / (this.extendedMax - this.extendedMin);
     this.tickMargin = (this.xUnitScale/2);
 
     console.log("AxisSeriesModel: y-scale", this.yUnitScale, this.extendedMin);
@@ -106,7 +106,7 @@ AxisSeriesModel.prototype.toPlotX = function (dataX) {
 }
 
 AxisSeriesModel.prototype.toPlotY = function (dataY) {
-    return formatNumber(this.margin.top + this.canvasHeight  - ((dataY - this.extendedMin) / this.yUnitScale));
+    return formatNumber(this.margin.top + this.canvasHeight  - ((dataY - this.extendedMin) * this.yUnitScale));
 }
 
 function formatNumber(number) {
