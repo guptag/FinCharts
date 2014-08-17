@@ -6,6 +6,9 @@ function CrossHairSeries(options) {
     this.margin = _.defaults(options.margin, {left: 0, right: 0, top: 0, bottom: 0});
     this.canvasWidth = options.width - this.margin.left - this.margin.right;
     this.canvasHeight = options.height - this.margin.top - this.margin.bottom;
+    this.priceMin = options.priceMin;
+    this.priceMax = options.priceMax;
+
 
     // X-axis cross-hair
     var path = [];
@@ -57,16 +60,39 @@ function CrossHairSeries(options) {
 }
 
 CrossHairSeries.prototype.updateTransform = function (mouseX, mouseY) {
-    this.xAxisGroup.path.transformStr = "T0," + mouseY;
+    // price
+    var price = this.toPrice(mouseY);
+    if (price > 0) {
+        this.xAxisGroup.path.transformStr = "T0," + mouseY;
+        this.xAxisGroup.label.text = this.toPrice(mouseY);
+    } else {
+        this.xAxisGroup.path.transformStr = "T0,-50";
+        this.xAxisGroup.label.text = "";
+    }
+
+    // date
     this.yAxisGroup.path.transformStr = "T" + mouseX + ",0";
+    this.yAxisGroup.label.text = mouseX;
+
 }
 
-CrossHairSeries.prototype.toPlotX = function (dataX) {
-    return formatNumber(this.margin.left + (this.xUnitScale * dataX) + this.candleLeftMargin);
+CrossHairSeries.prototype.toPrice = function (mouseY) {
+    // mouse pointer beyond chart boundaries
+    if (mouseY < this.margin.top || mouseY > (this.margin.top + this.canvasHeight)) {
+        return -1;
+    }
+
+    var pricePerPixel = (this.priceMax - this.priceMin) / this.canvasHeight;
+
+    // 10px from top (in drawing space) ---> 90px from bottom (in a 100x100 rect)
+    // price axis grows from bottom to top
+    var translatedPixel = (this.canvasHeight + this.margin.top + this.margin.bottom) - mouseY;
+
+    return formatNumber(this.priceMin + (translatedPixel * pricePerPixel));
 }
 
-CrossHairSeries.prototype.toPlotY = function (dataY) {
-    return formatNumber(this.margin.top + this.canvasHeight - ((dataY - this.extendedMin) / this.yUnitScale));
+CrossHairSeries.prototype.toDate = function (mouseX) {
+
 }
 
 function formatNumber(number) {

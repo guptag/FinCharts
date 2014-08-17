@@ -38,7 +38,9 @@ var CandleStickChart = function (options) {
 		width: options.width,
 		height: options.height,
 		data: options.data,
-		margin: {top: 0, bottom: Math.floor(options.height * 4.2/100), left: 0, right: Math.floor(options.width * 2.5/100)}
+		margin: {top: 0, bottom: Math.floor(options.height * 4.2/100), left: 0, right: Math.floor(options.width * 2.5/100)},
+		priceMin: p.extendedMin,
+		priceMax: p.extendedMax
 	});
 	this.crossHairSeries = crossHairSeries;
 
@@ -162,6 +164,7 @@ var CandleStickChart = function (options) {
 												.attr({
 					 										fill: "#000"
 					 							}));
+	// [2] -> text element
 	this.crossHairY.add(s.text(crossHairSeries.yAxisGroup.label.x,
 														crossHairSeries.yAxisGroup.label.y,
 														crossHairSeries.yAxisGroup.label.text)
@@ -181,7 +184,10 @@ CandleStickChart.prototype.onMouseMove = _.throttle(function (ev) {
 	this.crossHairSeries.updateTransform(ev.offsetX, ev.offsetY);
 
 	this.crossHairX.transform(this.crossHairSeries.xAxisGroup.path.transformStr);
+	this.crossHairX[2].attr("text", this.crossHairSeries.xAxisGroup.label.text);
+
 	this.crossHairY.transform(this.crossHairSeries.yAxisGroup.path.transformStr);
+	this.crossHairY[2].attr("text", this.crossHairSeries.yAxisGroup.label.text);
 }, 75);
 
 module.exports = CandleStickChart;
