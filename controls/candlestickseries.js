@@ -22,7 +22,7 @@ function CandleStickSeries(options) {
     this.extendedMax = labels[labels.length - 1];
 
 	this.xUnitScale = this.canvasWidth / options.data.series.length;
-	this.yUnitScale = (this.extendedMax - this.extendedMin)/this.canvasHeight;
+	this.yUnitScale = this.canvasHeight / (this.extendedMax - this.extendedMin);
     console.log("CandleStickSeries: y-scale", this.yUnitScale, this.extendedMin);
 	this.candleWidth = (this.xUnitScale * 70/100.0); //candle takes 70% of the total space allowed (for now)
     this.candleLeftMargin = (this.xUnitScale * 15/100.0); //center the candle in the available space (100-70/2)
@@ -66,7 +66,7 @@ CandleStickSeries.prototype.toPlotX = function (dataX) {
 }
 
 CandleStickSeries.prototype.toPlotY = function (dataY) {
-	return formatNumber(this.margin.top + this.canvasHeight - ((dataY - this.extendedMin) / this.yUnitScale));
+	return formatNumber(this.margin.top + this.canvasHeight - ((dataY - this.extendedMin) * this.yUnitScale));
 }
 
 function formatNumber(number) {
