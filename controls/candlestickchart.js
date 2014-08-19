@@ -38,7 +38,7 @@ var CandleStickChart = function (options) {
 		width: options.width,
 		height: options.height,
 		data: options.data,
-		margin: {top: 0, bottom: Math.floor(options.height * 4.2/100), left: 0, right: Math.floor(options.width * 2.5/100)},
+		margin: {top: 5, bottom: Math.floor(options.height * 4/100), left: 2, right: Math.floor(options.width * 2.5/100)},
 		priceMin: p.extendedMin,
 		priceMax: p.extendedMax
 	});

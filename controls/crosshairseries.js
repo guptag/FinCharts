@@ -86,9 +86,9 @@ CrossHairSeries.prototype.toPrice = function (mouseY) {
 
     // 10px from top (in drawing space) ---> 90px from bottom (in a 100x100 rect)
     // price axis grows from bottom to top
-    var translatedPixel = (this.canvasHeight + this.margin.top + this.margin.bottom) - mouseY;
+    var translateY = (this.canvasHeight + this.margin.top) - mouseY;
 
-    return formatNumber(this.priceMin + (translatedPixel * pricePerPixel));
+    return formatNumber(this.priceMin + (translateY * pricePerPixel));
 }
 
 CrossHairSeries.prototype.toDate = function (mouseX) {
@@ -96,7 +96,7 @@ CrossHairSeries.prototype.toDate = function (mouseX) {
 }
 
 function formatNumber(number) {
-    return +number.toFixed(3);
+    return +number.toFixed(2);
 }
 
 module.exports = CrossHairSeries;
