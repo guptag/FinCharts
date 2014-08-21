@@ -71,9 +71,14 @@ CrossHairSeries.prototype.updateTransform = function (mouseX, mouseY) {
     }
 
     // date
-    this.yAxisGroup.path.transformStr = "T" + mouseX + ",0";
-    this.yAxisGroup.label.text = mouseX;
-
+    var date = this.toDate(mouseX);
+    if (date) {
+        this.yAxisGroup.path.transformStr = "T" + mouseX + ",0";
+        this.yAxisGroup.label.text = mouseX;
+    } else {
+        this.yAxisGroup.path.transformStr = "T-50,0";
+        this.yAxisGroup.label.text = "";
+    }
 }
 
 CrossHairSeries.prototype.toPrice = function (mouseY) {
@@ -92,7 +97,12 @@ CrossHairSeries.prototype.toPrice = function (mouseY) {
 }
 
 CrossHairSeries.prototype.toDate = function (mouseX) {
+    // mouse pointer beyond chart boundaries
+    if (mouseX < this.margin.left || mouseX > (this.margin.left + this.canvasWidth)) {
+        return;
+    }
 
+    return mouseX;
 }
 
 function formatNumber(number) {
