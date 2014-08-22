@@ -9,8 +9,14 @@ function CrossHairSeries(options) {
     this.priceMin = options.priceMin;
     this.priceMax = options.priceMax;
 
+    this.data = options.data;
 
-    // X-axis cross-hair
+    this.xUnitScale = this.canvasWidth / this.data.series.length;
+    this.tickMargin = (this.xUnitScale/2);
+
+
+
+    // X-axis cross-hair (price)
     var path = [];
     path.push("M" + "0" + "," + 0);
     path.push("L" + this.canvasWidth + "," + 0);
@@ -28,13 +34,13 @@ function CrossHairSeries(options) {
                         height: 20
                     },
                     label: {
-                        x: this.canvasWidth,
+                        x: this.canvasWidth + 4,
                         y: 3,
                         text: "38.05"
                     }
                 };
 
-    // y-axis cross-hair
+    // y-axis cross-hair (date)
     var path = [];
     path.push("M" + 0 + "," + this.canvasHeight);
     path.push("L" + 0 + "," + "0");
@@ -46,14 +52,14 @@ function CrossHairSeries(options) {
                         transformStr: "T-50,-50"
                     },
                     rect: {
-                        x: -40,
-                        y: this.canvasHeight + 2,
-                        width: 80,
+                        x: -35,
+                        y: this.canvasHeight + 4,
+                        width: 70,
                         height: 20
                     },
                     label: {
-                        x: -35,
-                        y: this.canvasHeight + 15,
+                        x: -32,
+                        y: this.canvasHeight + 18,
                         text: "2014-01-25"
                     }
                 };
@@ -61,27 +67,27 @@ function CrossHairSeries(options) {
 
 CrossHairSeries.prototype.updateTransform = function (mouseX, mouseY) {
     // price
-    var price = this.toPrice(mouseY);
+    var price = this.getPrice(mouseY);
     if (price > 0) {
         this.xAxisGroup.path.transformStr = "T0," + mouseY;
-        this.xAxisGroup.label.text = this.toPrice(mouseY);
+        this.xAxisGroup.label.text = price;
     } else {
         this.xAxisGroup.path.transformStr = "T0,-50";
         this.xAxisGroup.label.text = "";
     }
 
     // date
-    var date = this.toDate(mouseX);
-    if (date) {
-        this.yAxisGroup.path.transformStr = "T" + mouseX + ",0";
-        this.yAxisGroup.label.text = mouseX;
+    var result = this.getDateAndAxisPosition(mouseX);
+    if (result) {
+        this.yAxisGroup.path.transformStr = "T" + result.position + ",0";
+        this.yAxisGroup.label.text = result.date;
     } else {
         this.yAxisGroup.path.transformStr = "T-50,0";
         this.yAxisGroup.label.text = "";
     }
 }
 
-CrossHairSeries.prototype.toPrice = function (mouseY) {
+CrossHairSeries.prototype.getPrice = function (mouseY) {
     // mouse pointer beyond chart boundaries
     if (mouseY < this.margin.top || mouseY > (this.margin.top + this.canvasHeight)) {
         return -1;
@@ -96,13 +102,22 @@ CrossHairSeries.prototype.toPrice = function (mouseY) {
     return formatNumber(this.priceMin + (translateY * pricePerPixel));
 }
 
-CrossHairSeries.prototype.toDate = function (mouseX) {
+CrossHairSeries.prototype.getDateAndAxisPosition = function (mouseX) {
     // mouse pointer beyond chart boundaries
     if (mouseX < this.margin.left || mouseX > (this.margin.left + this.canvasWidth)) {
         return;
     }
 
-    return mouseX;
+    var index = Math.floor( (mouseX - this.margin.left) / this.xUnitScale );
+    var date = new Date(this.data.series[index].date);
+    var dateStr = date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate();
+
+    var position = formatNumber(this.margin.left + (this.xUnitScale * index + this.tickMargin));
+
+    return {
+        position: position,
+        date: dateStr
+    }
 }
 
 function formatNumber(number) {
