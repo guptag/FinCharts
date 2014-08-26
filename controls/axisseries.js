@@ -47,13 +47,13 @@ function AxisSeriesModel(options) {
     this.xAxisTicks =   _.map(priceLabels, function(price) {
                             var path = [];
                             path.push("M" + self.margin.left + "," + self.toPlotY(price));
-                            path.push("L" + (self.margin.left + self.canvasWidth + Math.floor(self.canvasWidth * 0.5/100) /* ext for label */) + "," + self.toPlotY(price)); //x-axis tick
+                            path.push("L" + (self.margin.left + self.canvasWidth + 5 /* ext tick for label */) + "," + self.toPlotY(price)); //x-axis tick
                             return {
                                 pathStr : path.join(""),
                                 stroke : "#bdbdc1",
                                 label : {
-                                    x: self.margin.left + self.canvasWidth + Math.floor(self.canvasWidth * 0.65/100),
-                                    y: self.toPlotY(price) + 3.35,
+                                    x: self.margin.left + self.canvasWidth + 6.5 /* beyond extended tick */,
+                                    y: self.toPlotY(price) + 3.35 /* center vertically */,
                                     text: +price.toFixed(3)
                                 }
                             }
@@ -76,14 +76,14 @@ function AxisSeriesModel(options) {
 
                             var path = [];
                             path.push("M" + self.toPlotX(dataIndex) + "," + self.margin.top);
-                            path.push("L" + self.toPlotX(dataIndex) + "," + (self.margin.top + self.canvasHeight + Math.floor(self.canvasHeight * 1/100) /* ext for label */)); //y-axis tick
+                            path.push("L" + self.toPlotX(dataIndex) + "," + (self.margin.top + self.canvasHeight + 5/* ext for label */)); //y-axis tick
 
                             var labelPullBack;
                             switch (labelItem.label.length) {
                                 case 4: labelPullBack = 14; break;
                                 case 3: labelPullBack = 10; break;
                                 case 2: labelPullBack = 7; break;
-                                case 1: labelPullBack = 2; break;
+                                case 1: labelPullBack = 4; break;
                             };
 
                             return {
@@ -91,7 +91,7 @@ function AxisSeriesModel(options) {
                                 stroke : "#bdbdc1",
                                 label : {
                                     x: self.toPlotX(dataIndex) - labelPullBack /* based of length of chars */,
-                                    y: self.margin.top + self.canvasHeight + Math.floor(self.canvasHeight * 2.75/100),
+                                    y: self.margin.top + self.canvasHeight + 17,
                                     text: labelItem.label
                                 }
                             }

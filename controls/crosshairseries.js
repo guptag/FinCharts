@@ -28,9 +28,9 @@ function CrossHairSeries(options) {
                         "stroke-dasharray":"2, 2"
                     },
                     rect: {
-                        x: this.canvasWidth,
+                        x: this.canvasWidth + 2,
                         y: -10,
-                        width: this.margin.right,
+                        width: this.margin.right + 2,
                         height: 20
                     },
                     label: {
@@ -58,7 +58,7 @@ function CrossHairSeries(options) {
                         height: 20
                     },
                     label: {
-                        x: -32,
+                        x: -28,
                         y: this.canvasHeight + 18,
                         text: "2014-01-25"
                     }
