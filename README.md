@@ -11,17 +11,17 @@ Build
 
 Chart Components:
 -----------------
- - Axis, Labels
- - Y-axis (Prices, Percentages)
- - Scale (normal, log)
- - Grid Lines
- - Main chart (line, area, candlestick, OHL, OHLC)
- - Volume bars
- - Crosshairs
- - Split view (compare ticker, RSI, ADX etc)
- - Multi chart layout (3H, 3V)
- - Animate chart
- - Listing of added modules on the chart (with remove option)
+* Axis, Labels
+* Y-axis (Prices, Percentages)
+* Scale (normal, log)
+* Grid Lines
+* Main chart (line, area, candlestick, OHL, OHLC)
+* Volume bars
+* Crosshairs
+* Split view (compare ticker, RSI, ADX etc)
+* Multi chart layout (3H, 3V)
+* Animate chart
+* Listing of added modules on the chart (with remove option)
 
 Settings
 --------
