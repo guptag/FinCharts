@@ -1,19 +1,18 @@
 {
-  "name" : "StockChart",
+  "name" : "FinCharts",
   "version" : "0.0.1",
   "author" : "guptag",
-  "description" : "Stock Chart SVG control",
+  "description" : "Node webkit application for stock charts",
+  "main": "index.html",
   "devDependencies": {
-    "nodewebkit": "~0.8.4",
+    "nodewebkit": "~0.10.2",
     "lodash": "~2.4.1",
-    "snapsvg": "~0.1.0",
     "request": "~2.33",
     "gaze": "~0.5.1",
     "jquery": "~2.1.0",
     "csv": "~0.3.7",
     "q": "~1.0.0"
   },
-  "main": "index.html",
   "window": {
     "frame": true,
     "width": 1400,
