@@ -1,4 +1,4 @@
-Run this from the root:
+Run these commands from 'src':
  * npm install
  * node_modules/.bin/nodewebkit --remote-debugging-port=9222  .
 
