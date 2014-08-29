@@ -214,7 +214,7 @@ function bindUI() {
 	}, 100));
 
 	// active chart selection
-	$(".chartcontainer").click(function () {
+	$("#main").on("click", ".chartcontainer", function () {
 		var $this = $(this);
 		if (!$this.hasClass("active")) {
 			$(".chartcontainer.active").removeClass("active");
@@ -222,19 +222,68 @@ function bindUI() {
 		}
 	});
 
-	$(".layoutbutton").click(function () {
-		updateChartsLayout($(this).attr("data-layout"));
+	$(".layoutbutton").on("click.charts", function () {
+		console.log("clciked");
+		var $this = $(this);
+		updateChartsLayout($this.attr("data-layout"), $this.attr("data-chartcount"));
 	});
 }
 
-function updateChartsLayout(newLayoutId) {
-	
+function updateChartsLayout(newLayoutId, newChartCount) {
+	console.log("updateChartsLayout", newLayoutId, newChartCount);
+		// add new chart containers and adjust layoutids
+		if (newChartCount >= totalCharts) {
+			_.times(newChartCount, function(index) {
+					var chartId = "chart" + (index + 1);
+					var layoutId = newLayoutId + "_" + (index + 1);
+
+					if (!$("#" + chartId)[0]) {
+						var chartContainerHtml = chartTemplate(
+														{
+															 'chartId': chartId,
+														   'layoutId': layoutId
+														});
+						$("#main").append(chartContainerHtml);
+					} else {
+						$("#" + chartId).attr("data-layout", layoutId);
+					}
+			});
+		} else {
+				_.times(totalCharts, function(index) {
+
+					var chartId = "#chart" + (index + 1);
+					var layoutId = newLayoutId + "_" + (index + 1);
+
+					// remove the extra charts from DOM
+					if (index + 1 > newChartCount) {
+							$(chartId).remove();
+					}
+
+					$(chartId).attr("data-layout", layoutId);
+			});
+		}
+
+		if(!$(".chartcontainer.active")[0]) {
+			$(".chartcontainer").first().addClass("active");
+		}
+
+		// update global state
+		totalCharts = newChartCount;
+		currentChartsLayout = newLayoutId;
+
+		LayoutEngine.applyLayouts(true);
+		renderAllCharts();
+
+		Q.delay(0).then(function() {
+
+		});
+
 }
 
 function renderAllCharts() {
 	_.times(totalCharts, function(index) {
-		var chartId = "chart" + (index + 1);
-		var svgSelector = "#" + chartId + " svg";
+		var chartId = "#chart" + (index + 1);
+		var svgSelector = chartId + " svg";
 		loadChart(svgSelector);
 	});
 }
