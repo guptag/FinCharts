@@ -44,16 +44,16 @@ var CandleStickChart = function (options) {
 	});
 	this.crossHairSeries = crossHairSeries;
 
-	var s = options.Snap(options.selector).attr({
+	var s = options.Snap(options.selector)/*.attr({
 		width: options.width,
 		height: options.height,
-	});
+	})*/;
 
 	s.clear();
 
 
 	var chartTitleGroup = s.group().attr("class", "title");
-	var tickerText = s.text(options.width/2 - 100, options.height/2, options.data.ticker);
+	var tickerText = s.text(options.width/2 - 250, options.height/2, options.data.ticker);
 	chartTitleGroup.add(tickerText);
 
 
