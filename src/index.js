@@ -6,14 +6,24 @@ var HistoricalPrices = require('./data/historicalprices'),
 	_ = require("lodash");
 
 
+var totalCharts = 2;
+
+var defaultTicker = "MSFT";
+
+var currentsChartsLayout = "chartslayout_2b";
+
+// move to template
+var chartTemplate = _.template(
+					'<div id="<%= chartId %>" class="chartcontainer" data-layout="<%= layoutId%>">' +
+        					'<svg class="plot"></svg>' +
+      				'</div>');
+
 function init() {
 	defineLayouts();
 
 	$( document ).ready(function() {
-	   LayoutEngine.applyLayouts();
-	   bindControls();
-	   renderChart($("#ticker").attr("data-default"));
-	   attachEvents();
+	   renderUI();
+	   //renderChart($("#ticker").attr("data-default"));
 	});
 }
 
@@ -27,7 +37,7 @@ function defineLayouts() {
 		};
 	});
 
-	LayoutEngine.addLayout("plotlayout", function(w, h) {
+	LayoutEngine.addLayout("mainlayout", function(w, h) {
 		return {
 			width: w,
 			height: h - 40,
@@ -35,33 +45,118 @@ function defineLayouts() {
 			left: 0
 		};
 	});
+
+	LayoutEngine.addLayout("chartslayout_1a_1", function(w, h) {
+		return {
+			width: w,
+			height: h,
+			top: 0,
+			left: 0
+		};
+	}, "mainlayout");
+
+	LayoutEngine.addLayout("chartslayout_2a_1", function(w, h) {
+		return {
+			width: w/2,
+			height: h,
+			top: 0,
+			left: 0
+		};
+	}, "mainlayout");
+
+	LayoutEngine.addLayout("chartslayout_2a_2", function(w, h) {
+		return {
+			width: w/2,
+			height: h,
+			top: 0,
+			left: w/2
+		};
+	}, "mainlayout");
+
+	LayoutEngine.addLayout("chartslayout_2b_1", function(w, h) {
+		return {
+			width: w,
+			height: h/2,
+			top: 0,
+			left: 0
+		};
+	}, "mainlayout");
+
+	LayoutEngine.addLayout("chartslayout_2b_2", function(w, h) {
+		return {
+			width: w,
+			height: h/2,
+			top: h/2,
+			left: 0
+		};
+	}, "mainlayout");
 }
 
-function attachEvents() {
-	// resize event
-	$(window).on("resize", _.throttle(function () {
-		LayoutEngine.applyLayouts();
-		renderChart($("#ticker").val() || $("#ticker").attr("data-default"));
-	}, 100));
+
+function renderUI() {
+	_.times(totalCharts, function(index) {
+		var chartId = "chart" + (index + 1);
+		var layoutId = currentsChartsLayout + "_" + (index + 1);
+		var chartContainerHtml = chartTemplate(
+										{
+											'chartId': chartId,
+										    'layoutId': layoutId
+										});
+		$("#main").append(chartContainerHtml);
+
+		if (index === 0) {
+			$("#" + chartId).addClass("active");
+		}
+	});
+
+	LayoutEngine.applyLayouts();
+
+	renderAllCharts();
+
+	bindUI();
 }
 
-function bindControls() {
-  $("#ticker").keypress(function(event){
+function bindUI() {
+    $("#ticker").keypress(function(event){
 		var keyCode = (event.keyCode ? event.keyCode : event.which);
 		if(keyCode == 13){
-			renderChart(this.value);
+			loadChart(".chartcontainer.active svg", this.value);
 		}
 	}).focus();
+
+  	// resize event
+	$(window).on("resize", _.throttle(function () {
+		LayoutEngine.applyLayouts();
+		renderAllCharts();
+	}, 100));
+
+	// active chart selection
+	$(".chartcontainer").click(function () {
+		var $this = $(this);
+		if (!$this.hasClass("active")) {
+			$(".chartcontainer.active").removeClass("active");
+			$this.addClass("active");
+		}
+	});
+}
+
+function renderAllCharts() {
+	_.times(totalCharts, function(index) {
+		var chartId = "chart" + (index + 1);
+		var svgSelector = "#" + chartId + " svg";
+		loadChart(svgSelector);
+	});
 }
 
 
-function renderChart (ticker) {
-	ticker = ticker.trim();
+function loadChart(svgSelector, _ticker) {
+	var $svg = $(svgSelector);
+
+	var ticker = _ticker || $svg.attr("data-ticker") || defaultTicker;
 
 	if (!ticker) return;
 
 	//new Date(year, month (0-11), day (1-31), hours (0-23), minutes(0-59), seconds, milliseconds);
-
 	var chartInputs = {
 		ticker: ticker,
 		From: new Date(2013, 9, 1),
@@ -73,12 +168,15 @@ function renderChart (ticker) {
 
 	HistoricalPrices.getDataForTicker(chartInputs)
 	.then(function (data) {
-	 	console.log("width", $("#plot").width(), "height", $("#plot").height());
+	 	console.log("width", $svg.width(), "height", $svg.height());
+
+	 	$svg.attr("data-ticker", ticker);
+
 	 	new CandleStickChart({
 	 		data: data,
-	 		width: $("#plot").width(),
-	 		height: $("#plot").height(),
-	 		selector: "#plot",
+	 		width: $svg.width(),
+	 		height: $svg.height(),
+	 		selector: svgSelector,
 	 		Snap: Snap
 	 	});
 	 })
