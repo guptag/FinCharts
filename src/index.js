@@ -10,7 +10,7 @@ var totalCharts = 2;
 
 var defaultTicker = "MSFT";
 
-var currentsChartsLayout = "chartslayout_2b";
+var currentChartsLayout = "chartslayout_2b";
 
 // move to template
 var chartTemplate = _.template(
@@ -90,13 +90,96 @@ function defineLayouts() {
 			left: 0
 		};
 	}, "mainlayout");
+
+	LayoutEngine.addLayout("chartslayout_3a_1", function(w, h) {
+		return {
+			width: w/3,
+			height: h,
+			top: 0,
+			left: 0
+		};
+	}, "mainlayout");
+
+	LayoutEngine.addLayout("chartslayout_3a_2", function(w, h) {
+		return {
+			width: w/3,
+			height: h,
+			top: 0,
+			left: w/3
+		};
+	}, "mainlayout");
+
+	LayoutEngine.addLayout("chartslayout_3a_3", function(w, h) {
+		return {
+			width: w/3,
+			height: h,
+			top: 0,
+			left: 2 * w/3
+		};
+	}, "mainlayout");
+
+
+	LayoutEngine.addLayout("chartslayout_3b_1", function(w, h) {
+		return {
+			width: w,
+			height: h/3,
+			top: 0,
+			left: 0
+		};
+	}, "mainlayout");
+
+	LayoutEngine.addLayout("chartslayout_3b_2", function(w, h) {
+		return {
+			width: w,
+			height: h/3,
+			top: h/3,
+			left: 0
+		};
+	}, "mainlayout");
+
+	LayoutEngine.addLayout("chartslayout_3b_3", function(w, h) {
+		return {
+			width: w,
+			height: h/3,
+			top: 2 * h/3,
+			left: 0
+		};
+	}, "mainlayout");
+
+	LayoutEngine.addLayout("chartslayout_3c_1", function(w, h) {
+		return {
+			width: w/2,
+			height: h,
+			top: 0,
+			left: 0
+		};
+	}, "mainlayout");
+
+	LayoutEngine.addLayout("chartslayout_3c_2", function(w, h) {
+		return {
+			width: w/2,
+			height: h/2,
+			top: 0,
+			left: w/2
+		};
+	}, "mainlayout");
+
+	LayoutEngine.addLayout("chartslayout_3c_3", function(w, h) {
+		return {
+			width: w/2,
+			height: h/2,
+			top: h/2,
+			left: w/2
+		};
+	}, "mainlayout");
+
 }
 
 
 function renderUI() {
 	_.times(totalCharts, function(index) {
 		var chartId = "chart" + (index + 1);
-		var layoutId = currentsChartsLayout + "_" + (index + 1);
+		var layoutId = currentChartsLayout + "_" + (index + 1);
 		var chartContainerHtml = chartTemplate(
 										{
 											'chartId': chartId,
@@ -138,6 +221,14 @@ function bindUI() {
 			$this.addClass("active");
 		}
 	});
+
+	$(".layoutbutton").click(function () {
+		updateChartsLayout($(this).attr("data-layout"));
+	});
+}
+
+function updateChartsLayout(newLayoutId) {
+	
 }
 
 function renderAllCharts() {
