@@ -167,22 +167,22 @@ function loadChart(svgSelector, _ticker) {
 	};
 
 	HistoricalPrices.getDataForTicker(chartInputs)
-	.then(function (data) {
-	 	console.log("width", $svg.width(), "height", $svg.height());
+		.then(function (data) {
+		 	console.log("width", $svg.width(), "height", $svg.height());
 
-	 	$svg.attr("data-ticker", ticker);
+		 	$svg.attr("data-ticker", ticker);
 
-	 	new CandleStickChart({
-	 		data: data,
-	 		width: $svg.width(),
-	 		height: $svg.height(),
-	 		selector: svgSelector,
-	 		Snap: Snap
-	 	});
-	 })
-	.fail(function (err) {
-		console.log(err);
-	})
+		 	new CandleStickChart({
+		 		data: data,
+		 		width: $svg.width(),
+		 		height: $svg.height(),
+		 		selector: svgSelector,
+		 		Snap: Snap
+		 	});
+		 })
+		.fail(function (err) {
+			console.log(err);
+		});
 }
 
 init();
