@@ -7,7 +7,7 @@ var HistoricalPrices = require('./data/historicalprices'),
 	_ = require("lodash");
 
 
-var totalCharts = 2;
+var totalCharts = 1;
 
 var defaultTicker = "MSFT";
 
@@ -16,7 +16,9 @@ var currentChartsLayout = "chartslayout_1a";
 // move to template
 var chartTemplate = _.template(
 					'<div id="<%= chartId %>" class="chartcontainer" data-layout="<%= layoutId%>">' +
-        					'<svg class="plot"></svg>' +
+        					'<div class="main">' +
+        						'<svg class="plot"></svg>' +
+        					'</div>' +
       				'</div>');
 
 function init() {
@@ -85,32 +87,32 @@ function updateChartsLayout(newLayoutId, newChartCount) {
 		// add new chart containers and adjust layoutids
 		if (newChartCount >= totalCharts) {
 			_.times(newChartCount, function(index) {
-					var chartId = "chart" + (index + 1);
-					var layoutId = newLayoutId + "_" + (index + 1);
+				var chartId = "chart" + (index + 1);
+				var layoutId = newLayoutId + "_" + (index + 1);
 
-					if (!$("#" + chartId)[0]) {
-						var chartContainerHtml = chartTemplate(
-														{
-															 'chartId': chartId,
-														   'layoutId': layoutId
-														});
-						$("#main").append(chartContainerHtml);
-					} else {
-						$("#" + chartId).attr("data-layout", layoutId);
-					}
+				if (!$("#" + chartId)[0]) {
+					var chartContainerHtml = chartTemplate(
+													{
+														 'chartId': chartId,
+													   'layoutId': layoutId
+													});
+					$("#main").append(chartContainerHtml);
+				} else {
+					$("#" + chartId).attr("data-layout", layoutId);
+				}
 			});
 		} else {
-				_.times(totalCharts, function(index) {
+			_.times(totalCharts, function(index) {
 
-					var chartId = "#chart" + (index + 1);
-					var layoutId = newLayoutId + "_" + (index + 1);
+				var chartId = "#chart" + (index + 1);
+				var layoutId = newLayoutId + "_" + (index + 1);
 
-					// remove the extra charts from DOM
-					if (index + 1 > newChartCount) {
-							$(chartId).remove();
-					}
+				// remove the extra charts from DOM
+				if (index + 1 > newChartCount) {
+					$(chartId).remove();
+				}
 
-					$(chartId).attr("data-layout", layoutId);
+				$(chartId).attr("data-layout", layoutId);
 			});
 		}
 

@@ -52,8 +52,12 @@ body {
 
 #topbar {
   overflow: hidden;
+  background-color: #cecece;
+}
+
+#topbar .main {
+  padding: 5px;
   background-color: #fff;
-  padding: 2px 5px;
 }
 
 #topbar .layoutbutton {
@@ -212,10 +216,17 @@ body {
 
 .chartcontainer {
   overflow: hidden;
+  background-color: #cecece;
+}
+
+.chartcontainer .main{
+  width: 100%;
+  height: 100%;
+  padding: 5px;
   background-color: #fff;
 }
 
-.chartcontainer.active {
+.chartcontainer.active .main {
   border: 1px solid blue;
 }
 
