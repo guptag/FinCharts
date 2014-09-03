@@ -16,7 +16,7 @@ var currentChartsLayout = "chartslayout_1a";
 // move to template
 var chartTemplate = _.template(
 					'<div id="<%= chartId %>" class="chartcontainer" data-layout="<%= layoutId%>">' +
-        					'<div class="main">' +
+        					'<div class="maincontainer">' +
         						'<svg class="plot"></svg>' +
         					'</div>' +
       				'</div>');
