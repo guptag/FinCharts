@@ -5,7 +5,7 @@ LayoutDefinitions = {
         LayoutEngine.addLayout("topbarlayout", function(w, h) {
             return {
                 width: w,
-                height: 40,
+                height: 50,
                 top: 0,
                 left: 0
             };
@@ -14,8 +14,8 @@ LayoutDefinitions = {
         LayoutEngine.addLayout("mainlayout", function(w, h) {
             return {
                 width: w,
-                height: h - 40,
-                top: 40,
+                height: h - 50,
+                top: 50,
                 left: 0
             };
         });
