@@ -44,16 +44,16 @@ var CandleStickChart = function (options) {
 	});
 	this.crossHairSeries = crossHairSeries;
 
-	var s = options.Snap(options.selector).attr({
+	var s = options.Snap(options.selector)/*.attr({
 		width: options.width,
 		height: options.height,
-	});
+	})*/;
 
 	s.clear();
 
 
 	var chartTitleGroup = s.group().attr("class", "title");
-	var tickerText = s.text(options.width/2 - 100, options.height/2, options.data.ticker);
+	var tickerText = s.text(options.width/2 - 250, options.height/2, options.data.ticker);
 	chartTitleGroup.add(tickerText);
 
 
@@ -130,6 +130,7 @@ var CandleStickChart = function (options) {
 	this.crossHairRect = s.rect(0,0, options.width, options.height)
 												.attr("class", "crosshair-rect");
 	this.crossHairRect.mousemove(_.bind(this.onMouseMove, this));
+	this.crossHairRect.mouseout(_.bind(this.onMouseOut, this));
 
 	this.crossHairX = s.group().attr("class", "crosshairX");
 	this.crossHairX.add(s.path(crossHairSeries.xAxisGroup.path.pathStr)
@@ -189,5 +190,15 @@ CandleStickChart.prototype.onMouseMove = _.throttle(function (ev) {
 	this.crossHairY.transform(this.crossHairSeries.yAxisGroup.path.transformStr);
 	this.crossHairY[2].attr("text", this.crossHairSeries.yAxisGroup.label.text);
 }, 75);
+
+CandleStickChart.prototype.onMouseOut = function (ev) {
+	this.crossHairSeries.updateTransform(-200, -200);
+
+	this.crossHairX.transform(this.crossHairSeries.xAxisGroup.path.transformStr);
+	this.crossHairX[2].attr("text", this.crossHairSeries.xAxisGroup.label.text);
+
+	this.crossHairY.transform(this.crossHairSeries.yAxisGroup.path.transformStr);
+	this.crossHairY[2].attr("text", this.crossHairSeries.yAxisGroup.label.text);
+};
 
 module.exports = CandleStickChart;
