@@ -109,9 +109,14 @@ CrossHairSeries.prototype.getDateAndAxisPosition = function (mouseX) {
     }
 
     var index = Math.floor( (mouseX - this.margin.left) / this.xUnitScale );
+
+    if (!this.data.series[index]) {
+        console.error("Invalid Index - ", "mouseX:", mouseX, "index:", index);
+        return;
+    }
+
     var date = new Date(this.data.series[index].date);
     var dateStr = date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate();
-
     var position = formatNumber(this.margin.left + (this.xUnitScale * index + this.tickMargin));
 
     return {

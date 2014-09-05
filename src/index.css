@@ -1,3 +1,11 @@
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
 html { font-size: 62.5%; }
 body { font-size: 1em;}
 
@@ -17,16 +25,13 @@ body { font-size: 1em;}
     html { font-size: 120%; }
 }
 
-* {
-  box-sizing: border-box;
-}
-
 body {
     margin: 0;
     padding: 0;
     font-family: 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Verdana;
     overflow:hidden;
     font-size: 1em;
+    background-color: #cecece;
 }
 
 .title {
@@ -48,7 +53,155 @@ body {
 #topbar {
   overflow: hidden;
   background-color: #cecece;
-  padding: 2px 5px;
+  padding: 5px 5px 0 5px;
+}
+
+#topbar .maincontainer {
+  background-color: #fff;
+  border: 1px solid black;
+  padding: 3px 0 0 3px;
+  width: 100%;
+  height: 100%;
+}
+
+#topbar .layoutbutton {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #878690;
+  float: left;
+  margin: 0 3px;
+  position: relative;
+}
+
+#topbar .layoutbutton[data-layout="chartslayout_1a"] .box1 {
+    height: 26px;
+    width: 26px;
+    top: 4px;
+    left: 4px;
+    background-color: #878690;
+    position: absolute;
+}
+
+#topbar .layoutbutton[data-layout="chartslayout_2a"] .box1 {
+    height: 26px;
+    width: 12px;
+    top: 4px;
+    left: 4px;
+    background-color: #878690;
+    position: absolute;
+}
+
+#topbar .layoutbutton[data-layout="chartslayout_2a"] .box2 {
+    height: 26px;
+    width: 12px;
+    top: 4px;
+    left: 18px;
+    background-color: #878690;
+    position: absolute;
+}
+
+#topbar .layoutbutton[data-layout="chartslayout_2b"] .box1 {
+    height: 12px;
+    width: 26px;
+    top: 4px;
+    left: 4px;
+    background-color: #878690;
+    position: absolute;
+}
+
+#topbar .layoutbutton[data-layout="chartslayout_2b"] .box2 {
+    height: 12px;
+    width: 26px;
+    top: 18px;
+    left: 4px;
+    background-color: #878690;
+    position: absolute;
+}
+
+/* 3A */
+
+#topbar .layoutbutton[data-layout="chartslayout_3a"] .box1 {
+    height: 26px;
+    width: 6px;
+    top: 4px;
+    left: 4px;
+    background-color: #878690;
+    position: absolute;
+}
+
+#topbar .layoutbutton[data-layout="chartslayout_3a"] .box2 {
+    height: 26px;
+    width: 6px;
+    top: 4px;
+    left: 14px;
+    background-color: #878690;
+    position: absolute;
+}
+
+#topbar .layoutbutton[data-layout="chartslayout_3a"] .box3 {
+    height: 26px;
+    width: 6px;
+    top: 4px;
+    left: 24px;
+    background-color: #878690;
+    position: absolute;
+}
+
+
+/* 3B */
+#topbar .layoutbutton[data-layout="chartslayout_3b"] .box1 {
+    height: 6px;
+    width: 26px;
+    top: 4px;
+    left: 4px;
+    background-color: #878690;
+    position: absolute;
+}
+
+#topbar .layoutbutton[data-layout="chartslayout_3b"] .box2 {
+    height: 6px;
+    width: 26px;
+    top: 14px;
+    left: 4px;
+    background-color: #878690;
+    position: absolute;
+}
+
+#topbar .layoutbutton[data-layout="chartslayout_3b"] .box3 {
+    height: 6px;
+    width: 26px;
+    top: 24px;
+    left: 4px;
+    background-color: #878690;
+    position: absolute;
+}
+
+/* 3C */
+#topbar .layoutbutton[data-layout="chartslayout_3c"] .box1 {
+    height: 26px;
+    width: 12px;
+    top: 4px;
+    left: 4px;
+    background-color: #878690;
+    position: absolute;
+}
+
+#topbar .layoutbutton[data-layout="chartslayout_3c"] .box2 {
+    height: 12px;
+    width: 12px;
+    top: 4px;
+    left: 18px;
+    background-color: #878690;
+    position: absolute;
+}
+
+#topbar .layoutbutton[data-layout="chartslayout_3c"] .box3 {
+    height: 12px;
+    width: 12px;
+    top: 18px;
+    left: 18px;
+    background-color: #878690;
+    position: absolute;
 }
 
 #ticker {
@@ -57,10 +210,30 @@ body {
   -webkit-appearance: none;
   padding: 0 5px;
   font-size: 0.9em;
+  float: left;
+  margin: 0 3px 0 0;
 }
 
-#plot {
+.chartcontainer {
   overflow: hidden;
+  background-color: #cecece;
+  padding: 5px;
+}
+
+.chartcontainer .maincontainer{
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  border: 1px solid black;
+}
+
+.chartcontainer.active .maincontainer {
+  border: 1px solid blue;
+}
+
+.plot {
+  width: 100%;
+  height: 100%;
 }
 
 .crosshair-rect {

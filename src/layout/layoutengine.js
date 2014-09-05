@@ -21,12 +21,16 @@ LayoutEngine.prototype.addLayout = function (name, measureCb, parentLayout, depe
     });
 }
 
-LayoutEngine.prototype.applyLayouts = function () {
+LayoutEngine.prototype.applyLayouts = function (clearCache) {
     var $window = $(window);
     var windowW = $window.width();
     var windowH = $window.height();
 
     generated = {};
+
+    if (clearCache) {
+        domCache = {};
+    }
 
     // Resolve all the layouts
     _.forEach(defnitions, function (layout) {
