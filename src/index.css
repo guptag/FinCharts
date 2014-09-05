@@ -73,10 +73,6 @@ body {
   position: relative;
 }
 
-#topbar .layoutbutton.active{
-  border: 1px solid blue;
-}
-
 #topbar .layoutbutton[data-layout="chartslayout_1a"] .box1 {
     height: 26px;
     width: 26px;
@@ -231,7 +227,7 @@ body {
   border: 1px solid black;
 }
 
-.chartcontainer.active .main {
+.chartcontainer.active .maincontainer {
   border: 1px solid blue;
 }
 
