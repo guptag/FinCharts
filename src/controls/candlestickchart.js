@@ -2,6 +2,7 @@ var PlotSeries = require('./candlestickseries'),
 	VolumeSeries = require('./volumeseries'),
 	AxisSeries =require('./axisseries'),
 	CrossHairSeries =require('./crosshairseries'),
+	ChartPreview =require('./chartpreview'),
 	Q = require('q'),
 	_ = require('lodash');
 
@@ -44,13 +45,10 @@ var CandleStickChart = function (options) {
 	});
 	this.crossHairSeries = crossHairSeries;
 
-	var s = options.Snap(options.selector)/*.attr({
-		width: options.width,
-		height: options.height,
-	})*/;
+	this.chartPreview = new ChartPreview(options);
 
+	var s = options.Snap(options.selector);
 	s.clear();
-
 
 	var chartTitleGroup = s.group().attr("class", "title");
 	var tickerText = s.text(options.width/2 - 250, options.height/2, options.data.ticker);
@@ -178,6 +176,9 @@ var CandleStickChart = function (options) {
 	crossHairGroup.add(this.crossHairX);
 	crossHairGroup.add(this.crossHairY);
 	crossHairGroup.add(this.crossHairRect);
+
+	// init preview
+	this.chartPreview.init(s);
 }
 
 CandleStickChart.prototype.onMouseMove = _.throttle(function (ev) {
