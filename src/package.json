@@ -5,7 +5,7 @@
   "description" : "Node webkit application for stock charts",
   "main": "index.html",
   "devDependencies": {
-    "nodewebkit": "~0.10.2",
+    "nodewebkit": "~0.10.4",
     "lodash": "~2.4.1",
     "request": "~2.33",
     "gaze": "~0.5.1",

@@ -19,7 +19,7 @@ function fetchData(chartInputs) {
 	fs.exists(util.format(".tmp/%s.csv", ticker), function (exists) {
 		console.log(exists);
 		if (!exists) {
-			request(util.format('http://ichart.finance.yahoo.com/table.csv?s=%s&a=11&b=1&c=2013&d=05&e=30&f=2014&g=d&ignore=.csv', ticker)) //dec 2013 - may 2014
+			request(util.format('http://ichart.finance.yahoo.com/table.csv?s=%s&a=04&b=1&c=2014&d=08&e=06&f=2014&g=d&ignore=.csv', ticker)) //apr 2014 - sep 2014
 				.pipe(fs.createWriteStream(util.format(".tmp/%s.csv", ticker)))
 				.on('finish', function () {
 					console.log("data downloaded");
