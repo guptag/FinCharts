@@ -45,8 +45,6 @@ var CandleStickChart = function (options) {
 	});
 	this.crossHairSeries = crossHairSeries;
 
-	this.chartPreview = new ChartPreview(options);
-
 	var s = options.Snap(options.selector);
 	s.clear();
 
@@ -178,6 +176,12 @@ var CandleStickChart = function (options) {
 	crossHairGroup.add(this.crossHairRect);
 
 	// init preview
+	this.chartPreview = new ChartPreview({
+		width: options.width,
+		height: options.height,
+		data: options.data,
+		margin: {top: 5, bottom: 25, left: 2, right: 40}
+	});
 	this.chartPreview.init(s);
 }
 

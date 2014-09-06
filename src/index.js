@@ -161,21 +161,55 @@ function loadChart(svgSelector, _ticker) {
 
 	HistoricalPrices.getDataForTicker(chartInputs)
 		.then(function (data) {
-		 	console.log("width", $svg.width(), "height", $svg.height());
+			 	console.log("width", $svg.width(), "height", $svg.height());
 
-		 	$svg.attr("data-ticker", ticker);
+			 	$svg.attr("data-ticker", ticker);
 
-		 	new CandleStickChart({
-		 		data: data,
-		 		width: $svg.width(),
-		 		height: $svg.height(),
-		 		selector: svgSelector,
-		 		Snap: Snap
-		 	});
+			 	var chart = new CandleStickChart({
+			 		data: data,
+			 		width: $svg.width(),
+			 		height: $svg.height(),
+			 		selector: svgSelector,
+			 		Snap: Snap
+			 	});
+
+			 	chart.chartPreview.play();
+
+			 /*	Q.delay(5000).then(function () {
+			 		console.log("PAUSE PAUSE PAUSE");
+			 		chart.chartPreview.pause();
+			 	});
+
+			 	Q.delay(10000).then(function () {
+			 		console.log("PLAY PLAY PLAY");
+			 		chart.chartPreview.play();
+			 	});
+
+			 	Q.delay(15000).then(function () {
+			 		console.log("PAUSE PAUSE PAUSE");
+			 		chart.chartPreview.pause();
+			 	});
+
+			 	Q.delay(20000).then(function () {
+			 		console.log("PLAY PLAY PLAY");
+			 		chart.chartPreview.play();
+			 	});
+
+			 	Q.delay(40000).then(function () {
+			 		console.log("STOP STOP STOP");
+			 		chart.chartPreview.stop();
+			 	});
+
+			 	Q.delay(60000).then(function () {
+			 		console.log("PLAY PLAY PLAY");
+			 		chart.chartPreview.play();
+			 	});*/
 		 })
 		.fail(function (err) {
 			console.log(err);
 		});
+
+
 }
 
 init();
