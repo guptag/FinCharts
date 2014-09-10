@@ -1,36 +1,36 @@
 var request = require('request'),
-	fs = require('fs'),
-	csv = require("csv"),
-	Q = require("q"),
-	util = require('util'),
-	PriceSeries = require('../models/priceseries');
+    fs = require('fs'),
+    csv = require("csv"),
+    Q = require("q"),
+    util = require('util'),
+    PriceSeries = require('../models/priceseries');
 
 var  historicalPrices  = new function() {
-	this.getDataForTicker = function (ticker) {
-		return fetchData(ticker)
-				 .then(parseData);
-	}
+    this.getDataForTicker = function (ticker) {
+        return fetchData(ticker)
+                 .then(parseData);
+    }
 };
 
 
 function fetchData(chartInputs) {
-	var fetchDeferred = Q.defer(), ticker = chartInputs.ticker;
+    var fetchDeferred = Q.defer(), ticker = chartInputs.ticker;
 
-	fs.exists(util.format(".tmp/%s.csv", ticker), function (exists) {
-		console.log(exists);
-		if (!exists) {
-			request(util.format('http://ichart.finance.yahoo.com/table.csv?s=%s&a=04&b=1&c=2014&d=08&e=06&f=2014&g=d&ignore=.csv', ticker)) //apr 2014 - sep 2014
-				.pipe(fs.createWriteStream(util.format(".tmp/%s.csv", ticker)))
-				.on('finish', function () {
-					console.log("data downloaded");
-					fetchDeferred.resolve({fileName: util.format(".tmp/%s.csv", ticker), ticker: ticker});
-				});
-		} else {
-			fetchDeferred.resolve({fileName: util.format(".tmp/%s.csv", ticker), ticker: ticker});
-		}
-	});
+    fs.exists(util.format(".tmp/%s.csv", ticker), function (exists) {
+        console.log(exists);
+        if (!exists) {
+            request(util.format('http://ichart.finance.yahoo.com/table.csv?s=%s&a=04&b=1&c=2014&d=08&e=06&f=2014&g=d&ignore=.csv', ticker)) //apr 2014 - sep 2014
+                .pipe(fs.createWriteStream(util.format(".tmp/%s.csv", ticker)))
+                .on('finish', function () {
+                    console.log("data downloaded");
+                    fetchDeferred.resolve({fileName: util.format(".tmp/%s.csv", ticker), ticker: ticker});
+                });
+        } else {
+            fetchDeferred.resolve({fileName: util.format(".tmp/%s.csv", ticker), ticker: ticker});
+        }
+    });
 
-	return fetchDeferred.promise;
+    return fetchDeferred.promise;
 }
 
 // Jan12 - Jan7 - daily - http://finance.yahoo.com/q/hp?s=YHOO&a=00&b=12&c=1996&d=00&e=7&f=2014&g=d
@@ -41,22 +41,22 @@ function fetchData(chartInputs) {
 
 
 function parseData(data) {
-	console.log(data);
-	var series = new PriceSeries(data.ticker);
-	var parseDeferred = Q.defer();
-	console.log("started parsing...");
-	csv()
-		.from
-		.stream(fs.createReadStream(data.fileName))
-		.on('record', function (row, index) {
-			series.add(row);
-		})
-		.on('end', function(count) {
-			//console.log(series);
-			parseDeferred.resolve(series);
-		});
+    console.log(data);
+    var series = new PriceSeries(data.ticker);
+    var parseDeferred = Q.defer();
+    console.log("started parsing...");
+    csv()
+        .from
+        .stream(fs.createReadStream(data.fileName))
+        .on('record', function (row, index) {
+            series.add(row);
+        })
+        .on('end', function(count) {
+            //console.log(series);
+            parseDeferred.resolve(series);
+        });
 
-	return parseDeferred.promise;
+    return parseDeferred.promise;
 }
 
 module.exports = historicalPrices;
