@@ -83,6 +83,26 @@ body {
   margin-left: 20px;
 }
 
+#topbar .timeframeoptions {
+  float: left;
+  margin-left: 20px;
+}
+
+#timeframe{
+    width: 60px;
+    text-align: center;
+}
+
+#topbar .rangeoptions {
+  float: left;
+  margin-left: 20px;
+}
+
+#range{
+    width: 90px;
+    text-align: center;
+}
+
 #topbar .previewoptions {
   float: left;
   margin-left: 20px;
@@ -95,6 +115,13 @@ body {
   float: left;
   margin: 0 3px;
   position: relative;
+}
+
+#topbar select {
+    font-size: 0.9em;
+    padding: 7px 0px 8px 7px;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 #ticker {

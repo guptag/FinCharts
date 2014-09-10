@@ -41,6 +41,26 @@
               <span class="box3"></span>
             </div>
           </div>
+          <div class="timeframeoptions clearfix">
+              <select id="timeframe">
+                <option value="3">3M</option>
+                <option value="6">6M</option>
+                <option value="9" selected="true">9M</option>
+                <option value="12">1Y</option>
+                <option value="36">3Y</option>
+                <option value="60">5Y</option>
+                <option value="120">10Y</option>
+                <option value="180">15Y</option>
+                <option value="240">20Y</option>
+              </select>
+          </div>
+          <div class="rangeoptions clearfix">
+              <select id="range">
+                <option value="d" selected="true">Daily</option>
+                <option value="w">Weekly</option>
+                <option value="m">Monthly</option>
+              </select>
+          </div>
           <div class="previewoptions clearfix play">
               <section class="playview">
                 <button id="play">Animate</button>
@@ -48,7 +68,7 @@
               <section class="stopview">
                 <button id="pause">||</button>
                 <button id="stop">Stop</button>
-                <input id="previewfrequency" type="number" min="0.25" max="3" step="0.5" value="1"></input>
+                <input id="previewfrequency" type="number" min="0.25" max="3" step="0.25" value="1"></input>
               </section>
           </div>
         </div>

@@ -86,6 +86,40 @@ function bindUI() {
         updateChartsLayout($this.attr("data-layout"), $this.attr("data-chartcount"));
     });
 
+    $("#timeframe").change(function () {
+        var numOfMonths = $(this).val();
+        var $range = $("#range");
+        var range = $range.val();
+        if (numOfMonths > 120) {
+            $range.find("option[value='d']").attr("disabled", "disabled");
+            $range.find("option[value='w']").attr("disabled", "disabled");
+            if (range === "w" || range === "d") {
+                $range.val("m");
+            }
+        } else if  (numOfMonths > 12) {
+            $range.find("option[value='d']").attr("disabled", "disabled");;
+            if (range === "d") {
+                $range.val("w");
+            }
+        } else {
+            $range.find("option[value='d']").removeAttr("disabled");
+            $range.find("option[value='w']").removeAttr("disabled");
+        }
+
+
+
+        _.debounce(function () {
+            loadChart($(".chartcontainer.active").attr("id"), this.value);
+        }, 50);
+    });
+
+    $("#range").change(function () {
+        _.debounce(function () {
+            loadChart($(".chartcontainer.active").attr("id"), this.value);
+        }, 50);
+    });
+
+
     $("#play").click(function () {
         stopAllPreviews();
         $("#app .previewoptions").removeClass("playview").addClass("stopview");
@@ -186,10 +220,9 @@ function loadChart(chartId, _ticker) {
     //new Date(year, month (0-11), day (1-31), hours (0-23), minutes(0-59), seconds, milliseconds);
     var chartInputs = {
         ticker: ticker,
-        From: new Date(2013, 9, 1),
-        To: new Date(2014, 5, 31),
-        Range: "daily", //1min, 3min, 5min, 15min, 1hr, 2hr, 4hr, daily, weekly, monthly, yearly,
-        Scale: "normal", //normal, log
+        timeframe: $("#timeframe").val(), /* months */
+        range: $("#range").val(), // daily, weekly, monthly
+        scale: "normal", //normal, log
         chartType: "candlestick" //candlestick, OHLC, HLC, Line, Area
     };
 
