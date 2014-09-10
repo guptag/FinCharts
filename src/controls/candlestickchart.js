@@ -43,6 +43,9 @@ var CandleStickChart = function (options) {
         priceMin: p.extendedMin,
         priceMax: p.extendedMax
     });
+
+    this.options = options;
+
     this.crossHairSeries = crossHairSeries;
 
     var s = options.Snap(options.selector);
