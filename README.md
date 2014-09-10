@@ -3,14 +3,14 @@ Run these commands from 'src':
  * node_modules/.bin/nodewebkit --remote-debugging-port=9222  .
 
 
-Build
------
+Build (todo)
+-----------
 * Gulp
 * Stylus
 
 
-Chart Components:
------------------
+Chart Components (todo)
+-----------------------
 * Axis, Labels
 * Y-axis (Prices, Percentages)
 * Scale (normal, log)
@@ -23,8 +23,8 @@ Chart Components:
 * Animate chart
 * Listing of added modules on the chart (with remove option)
 
-Settings
---------
+Settings (todo)
+---------------
 * Timeframe (3m, 6m, 1y, 3y, 5y, all, custom)
 * Daily, Weekly, Monthly
 * Sync crosshairs
