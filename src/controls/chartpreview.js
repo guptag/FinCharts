@@ -28,7 +28,7 @@ var ChartPreview = function (options) {
     this.yUnitScale = this.canvasHeight / (this.extendedMax - this.extendedMin);
 
     this.timerCb = options.timerCb || function () {
-            return 1000;
+            return 500;
         }
     this.onPreviewComplete = options.onPreviewComplete || _.noop;
 
@@ -58,16 +58,19 @@ var ChartPreview = function (options) {
     this.pause = function () {
         if (!s) { return; }
 
-        previewState = "pause";
+        if (previewState !== "pause") {
+          previewState = "pause";
 
-        previewRect.stop();
-        previewAxis.stop();
-        highMarker.stop();
-        lowMarker.stop();
-        openPoint.stop();
-        closePoint.stop();
-        spreadMarker.stop();
-        closePriceText.stop();
+          previewRect.stop();
+          highMarker.stop();
+          lowMarker.stop();
+          openPoint.stop();
+          closePoint.stop();
+          spreadMarker.stop();
+          closePriceText.stop();
+        } else {
+          this.play();
+        }
     }
 
     this.stop = function () {
