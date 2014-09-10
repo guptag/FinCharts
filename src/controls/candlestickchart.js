@@ -180,6 +180,7 @@ var CandleStickChart = function (options) {
 		width: options.width,
 		height: options.height,
 		data: options.data,
+		timerCb: options.timerCb,
 		margin: {top: 5, bottom: 25, left: 2, right: 40}
 	});
 	this.chartPreview.init(s);

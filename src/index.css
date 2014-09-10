@@ -6,6 +6,16 @@ html {
   box-sizing: inherit;
 }
 
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
 html { font-size: 62.5%; }
 body { font-size: 1em;}
 
@@ -68,6 +78,16 @@ body {
   height: 100%;
 }
 
+#topbar .layoutoptions {
+  float: left;
+  margin-left: 20px;
+}
+
+#topbar .previewoptions {
+  float: left;
+  margin-left: 20px;
+}
+
 #topbar .layoutbutton {
   width: 36px;
   height: 36px;
@@ -75,6 +95,16 @@ body {
   float: left;
   margin: 0 3px;
   position: relative;
+}
+
+#ticker {
+  height:35px;
+  width: 200px;
+  -webkit-appearance: none;
+  padding: 0 5px;
+  font-size: 0.9em;
+  float: left;
+  margin: 0;
 }
 
 #topbar .layoutbutton[data-layout="chartslayout_1a"] .box1 {
@@ -208,14 +238,35 @@ body {
     position: absolute;
 }
 
-#ticker {
-  height:35px;
-  width: 200px;
-  -webkit-appearance: none;
-  padding: 0 5px;
-  font-size: 0.9em;
-  float: left;
-  margin: 0 3px 0 0;
+
+#topbar .previewoptions > section {
+  width: 170px;
+}
+
+#topbar .previewoptions.playview .stopview {
+  display: none;
+}
+
+#topbar .previewoptions.stopview .playview {
+  display: none;
+}
+
+#topbar .previewoptions .playview > button {
+   margin: 2px 0 0 0;
+   width: 80%;
+   height: 34px;
+}
+
+#topbar .previewoptions .stopview > button {
+   margin: 2px 0 0 0;
+   width: 30%;
+   height: 34px;
+}
+
+#topbar .previewoptions .stopview > input {
+   margin: 2px 0 0 0;
+   width: 25%;
+   height: 34px;
 }
 
 .chartcontainer {

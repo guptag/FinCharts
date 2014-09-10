@@ -13,6 +13,8 @@ var defaultTicker = "MSFT";
 
 var currentChartsLayout = "chartslayout_1a";
 
+var chartsCollection = {}; //key -> chartid in dom; value -> chart instance
+
 // move to template
 var chartTemplate = _.template(
 					'<div id="<%= chartId %>" class="chartcontainer" data-layout="<%= layoutId%>">' +
@@ -56,7 +58,7 @@ function bindUI() {
     $("#ticker").keypress(function(event){
 		var keyCode = (event.keyCode ? event.keyCode : event.which);
 		if(keyCode == 13){
-			loadChart(".chartcontainer.active svg", this.value);
+			loadChart($(".chartcontainer.active").attr("id"), this.value);
 		}
 	}).focus();
 
@@ -72,13 +74,41 @@ function bindUI() {
 		if (!$this.hasClass("active")) {
 			$(".chartcontainer.active").removeClass("active");
 			$this.addClass("active");
+
+			// preview to play mode
+			stopAllPreviews();
+			$("#app .previewoptions").removeClass("stopview").addClass("playview");
 		}
 	});
 
 	$(".layoutbutton").on("click.charts", function () {
-		console.log("clciked");
 		var $this = $(this);
 		updateChartsLayout($this.attr("data-layout"), $this.attr("data-chartcount"));
+	});
+
+	$("#play").click(function () {
+		stopAllPreviews();
+		$("#app .previewoptions").removeClass("playview").addClass("stopview");
+
+		var activeChartId = $(".chartcontainer.active")[0].id;
+		chartsCollection[activeChartId].chartPreview.play();
+	});
+
+	$("#stop").click(function () {
+		$("#app .previewoptions").removeClass("stopview").addClass("playview");
+
+		var activeChartId = $(".chartcontainer.active")[0].id;
+		chartsCollection[activeChartId].chartPreview.stop();
+	});
+
+	$("#pause").click(function () {
+		if ($(this).text() === "||") {
+			$(this).text("|>");
+		} else {
+			$(this).text("||");
+		}
+		var activeChartId = $(".chartcontainer.active")[0].id;
+		chartsCollection[activeChartId].chartPreview.pause();
 	});
 }
 
@@ -93,7 +123,7 @@ function updateChartsLayout(newLayoutId, newChartCount) {
 				if (!$("#" + chartId)[0]) {
 					var chartContainerHtml = chartTemplate(
 													{
-														 'chartId': chartId,
+													   'chartId': chartId,
 													   'layoutId': layoutId
 													});
 					$("#main").append(chartContainerHtml);
@@ -126,23 +156,27 @@ function updateChartsLayout(newLayoutId, newChartCount) {
 
 		LayoutEngine.applyLayouts(true);
 		renderAllCharts();
-
-		Q.delay(0).then(function() {
-
-		});
-
 }
 
 function renderAllCharts() {
+	chartsCollection = {}; //reset state
+	var promiseCollection = [];
+	$("#app .previewoptions").addClass("hide"); //hide preview options
+
 	_.times(totalCharts, function(index) {
-		var chartId = "#chart" + (index + 1);
-		var svgSelector = chartId + " svg";
-		loadChart(svgSelector);
+		var chartId = "chart" + (index + 1);
+		promiseCollection.push(loadChart(chartId));
 	});
+
+	Q.allSettled(promiseCollection)
+	 .then(function () {
+	 	$("#app .previewoptions").removeClass("hide stopview").addClass("playview"); //show preview options
+	 })
 }
 
 
-function loadChart(svgSelector, _ticker) {
+function loadChart(chartId, _ticker) {
+	var svgSelector = "#" + chartId + " svg";
 	var $svg = $(svgSelector);
 
 	var ticker = _ticker || $svg.attr("data-ticker") || defaultTicker;
@@ -159,57 +193,38 @@ function loadChart(svgSelector, _ticker) {
 		chartType: "candlestick" //candlestick, OHLC, HLC, Line, Area
 	};
 
-	HistoricalPrices.getDataForTicker(chartInputs)
-		.then(function (data) {
-			 	console.log("width", $svg.width(), "height", $svg.height());
+	return HistoricalPrices.getDataForTicker(chartInputs)
+				.then(function (data) {
+					 	console.log("width", $svg.width(), "height", $svg.height());
 
-			 	$svg.attr("data-ticker", ticker);
+					 	$svg.attr("data-ticker", ticker);
 
-			 	var chart = new CandleStickChart({
-			 		data: data,
-			 		width: $svg.width(),
-			 		height: $svg.height(),
-			 		selector: svgSelector,
-			 		Snap: Snap
-			 	});
+					 	var chart = new CandleStickChart({
+					 		data: data,
+					 		width: $svg.width(),
+					 		height: $svg.height(),
+					 		selector: svgSelector,
+					 		timerCb: function () {
+					 		   var frequency = parseFloat($("#previewfrequency").val());
+					 		   if (frequency && frequency < 3) {
+					 		   	return frequency * 1000;
+					 		   }
+					 		   return 1000;
+					 		},
+					 		Snap: Snap
+					 	});
 
-			 	chart.chartPreview.play();
+					 	chartsCollection[chartId] = chart;
+				 })
+				.fail(function (err) {
+					console.log(err);
+				});
+}
 
-			 /*	Q.delay(5000).then(function () {
-			 		console.log("PAUSE PAUSE PAUSE");
-			 		chart.chartPreview.pause();
-			 	});
-
-			 	Q.delay(10000).then(function () {
-			 		console.log("PLAY PLAY PLAY");
-			 		chart.chartPreview.play();
-			 	});
-
-			 	Q.delay(15000).then(function () {
-			 		console.log("PAUSE PAUSE PAUSE");
-			 		chart.chartPreview.pause();
-			 	});
-
-			 	Q.delay(20000).then(function () {
-			 		console.log("PLAY PLAY PLAY");
-			 		chart.chartPreview.play();
-			 	});
-
-			 	Q.delay(40000).then(function () {
-			 		console.log("STOP STOP STOP");
-			 		chart.chartPreview.stop();
-			 	});
-
-			 	Q.delay(60000).then(function () {
-			 		console.log("PLAY PLAY PLAY");
-			 		chart.chartPreview.play();
-			 	});*/
-		 })
-		.fail(function (err) {
-			console.log(err);
-		});
-
-
+function stopAllPreviews() {
+	_.each(chartsCollection, function(chart, chartId) {
+		chart.chartPreview.stop();
+	})
 }
 
 init();

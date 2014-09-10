@@ -13,31 +13,43 @@
     <div id="topbar" data-layout="topbarlayout">
         <div class="maincontainer">
           <input id="ticker" placeholder="Ticker (e.g. MSFT)"></input>
-          <div class="layoutbutton" data-layout="chartslayout_1a" data-chartcount="1">
-            <span class="box1"></span>
+          <div class="layoutoptions clearfix">
+            <div class="layoutbutton" data-layout="chartslayout_1a" data-chartcount="1">
+              <span class="box1"></span>
+            </div>
+            <div class="layoutbutton" data-layout="chartslayout_2a" data-chartcount="2">
+              <span class="box1"></span>
+              <span class="box2"></span>
+            </div>
+            <div class="layoutbutton" data-layout="chartslayout_2b" data-chartcount="2">
+              <span class="box1"></span>
+              <span class="box2"></span>
+            </div>
+            <div class="layoutbutton" data-layout="chartslayout_3a" data-chartcount="3">
+              <span class="box1"></span>
+              <span class="box2"></span>
+              <span class="box3"></span>
+            </div>
+            <div class="layoutbutton" data-layout="chartslayout_3b" data-chartcount="3">
+              <span class="box1"></span>
+              <span class="box2"></span>
+              <span class="box3"></span>
+            </div>
+            <div class="layoutbutton" data-layout="chartslayout_3c" data-chartcount="3">
+              <span class="box1"></span>
+              <span class="box2"></span>
+              <span class="box3"></span>
+            </div>
           </div>
-          <div class="layoutbutton" data-layout="chartslayout_2a" data-chartcount="2">
-            <span class="box1"></span>
-            <span class="box2"></span>
-          </div>
-          <div class="layoutbutton" data-layout="chartslayout_2b" data-chartcount="2">
-            <span class="box1"></span>
-            <span class="box2"></span>
-          </div>
-          <div class="layoutbutton" data-layout="chartslayout_3a" data-chartcount="3">
-            <span class="box1"></span>
-            <span class="box2"></span>
-             <span class="box3"></span>
-          </div>
-          <div class="layoutbutton" data-layout="chartslayout_3b" data-chartcount="3">
-            <span class="box1"></span>
-            <span class="box2"></span>
-             <span class="box3"></span>
-          </div>
-          <div class="layoutbutton" data-layout="chartslayout_3c" data-chartcount="3">
-            <span class="box1"></span>
-            <span class="box2"></span>
-             <span class="box3"></span>
+          <div class="previewoptions clearfix play">
+              <section class="playview">
+                <button id="play">Animate</button>
+              </section>
+              <section class="stopview">
+                <button id="pause">||</button>
+                <button id="stop">Stop</button>
+                <input id="previewfrequency" type="number" min="0.25" max="3" step="0.5" value="1"></input>
+              </section>
           </div>
         </div>
     </div>
