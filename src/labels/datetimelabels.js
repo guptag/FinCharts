@@ -72,14 +72,14 @@ var _ = require('lodash');
 var shortMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 var DateTimeLabels = {
-    generate : function (data, timeFrame, width) {
+    generate : function (data, range, width) {
         var minColWidth = 75,
             dropColumnDistance = 3,
             totalColumns = Math.floor(width / minColWidth),
             columnPerPoints = Math.floor(data.series.length / totalColumns),
             dateTimeLabels = [];
 
-        switch (timeFrame.toLowerCase()) {
+        switch (range.toLowerCase()) {
             /*
                 YEARLY:
                     total labels = width / 100 (1 label per 100px)
@@ -91,7 +91,7 @@ var DateTimeLabels = {
                                     Show YEAR
 
             */
-            case "yearly":
+            case "y":
                 dateTimeLabels = _.chain(data.series).map(function(data, index) {
                     var dateObj = new Date(data.date);
                     if (columnPerPoints <= 0 || index % columnPerPoints === 0) {
@@ -103,7 +103,7 @@ var DateTimeLabels = {
                 }).compact().value();
                 break;
 
-            case "monthly":
+            case "m":
                 /*
                 MONTHLY:
                     total labels = width / 100 (1 label per 100px)
@@ -152,7 +152,8 @@ var DateTimeLabels = {
                                         if (addYearLabel || addMonthLabel) {
                                             return {
                                                 dataItemIndex: index,
-                                                label: (addYearLabel ? year : shortMonths[month]) + ""
+                                                label: (addYearLabel ? year : shortMonths[month]) + "",
+                                                isBold: addYearLabel
                                             };
                                         }
 
@@ -160,9 +161,11 @@ var DateTimeLabels = {
                                 .compact().value();
                 break;
 
-            case "daily":
+            case "d":
+            case "w":
                 /*
                 DAILY:
+                WEEKLY:
                     total labels = width / 100 (1 label per 100px)
                     labelsPerPoints = total data points / total labels (1 label per N points)
                     labelsPerPoints < 0 - add labels for all points
@@ -210,6 +213,7 @@ var DateTimeLabels = {
                                         (isYearChanged)) {
                                         addYearLabel = true;
                                         currentYear = dateObj.getUTCFullYear();
+                                        currentMonth = dateObj.getUTCMonth();
                                     } else if ((isFirstPoint && probableFirstWeekDayInMonth) ||
                                         (isMonthChanged)) {
                                         addMonthLabel = true;
@@ -221,7 +225,8 @@ var DateTimeLabels = {
                                     if (addYearLabel || addMonthLabel || addDayLabel) {
                                         return {
                                             dataItemIndex: index,
-                                            label: (addYearLabel ? year : (addMonthLabel ? shortMonths[month] : date)) + ""
+                                            label: (addYearLabel ? year : (addMonthLabel ? shortMonths[month] : date)) + "",
+                                            isBold: addYearLabel || addMonthLabel
                                         };
                                     }
 
@@ -231,11 +236,13 @@ var DateTimeLabels = {
                 break;
         }
 
+        //console.log(dateTimeLabels);
+
         //remove some points closer to the special year/month markers
         // 4 digit - year, 3 digit - month, 1 or 2 digits - day
         var filteredDateTimeLabels = [];
         for(var i = 1;i < dateTimeLabels.length - 1; ++i) /* ignore first and last */{
-            var isDayLabel = (dateTimeLabels[i].label.length === 1 || dateTimeLabels[i].label.length === 2 || dateTimeLabels[i].label.length === 3);
+            var isDayLabel = (dateTimeLabels[i].label.length === 1 || dateTimeLabels[i].label.length === 2);
 
             var isPrevLabelWithinReach = !!(Math.abs(dateTimeLabels[i-1].dataItemIndex - dateTimeLabels[i].dataItemIndex) < dropColumnDistance);
             var isPrevLabelSpecialMarker = (dateTimeLabels[i-1].label.length === 3 || dateTimeLabels[i-1].label.length === 4); //month or year
