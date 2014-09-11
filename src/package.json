@@ -12,7 +12,8 @@
     "jquery": "~2.1.0",
     "csv": "~0.3.7",
     "q": "~1.0.0",
-    "moment":"2.8.3"
+    "moment":"2.8.3",
+    "sprintf-js":"0.0.7"
   },
   "window": {
     "frame": true,

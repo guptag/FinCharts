@@ -9,7 +9,7 @@ var ChartPreview = function (options) {
     var self = this;
     this.margin = _.defaults(options.margin, {left: 0, right: 0, top: 0, bottom: 0});
 
-    console.log("chart preview", this.margin, options);
+    //console.log("chart preview", this.margin, options);
 
     this.canvasWidth = options.width - this.margin.left - this.margin.right;
     this.canvasHeight = options.height - this.margin.top - this.margin.bottom;
@@ -18,7 +18,7 @@ var ChartPreview = function (options) {
     this.priceMax = options.priceMax;
 
     var labels = PriceLabels.generate(options.data.series.min, options.data.series.max, this.canvasHeight);
-    console.log(labels, options.data.series.min, options.data.series.max, this.canvasHeight);
+    //console.log(labels, options.data.series.min, options.data.series.max, this.canvasHeight);
     this.extendedMin = labels[0];
     this.extendedMax = labels[labels.length - 1];
 
