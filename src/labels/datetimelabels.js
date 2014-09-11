@@ -74,7 +74,8 @@ var shortMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"
 var DateTimeLabels = {
     generate : function (data, range, width) {
         var minColWidth = 75,
-            dropColumnDistance = 3,
+            dayLabelDropDistance = 3,
+            monthLabelDropDistance = 5,
             totalColumns = Math.floor(width / minColWidth),
             columnPerPoints = Math.floor(data.series.length / totalColumns),
             dateTimeLabels = [];
@@ -104,8 +105,10 @@ var DateTimeLabels = {
                 break;
 
             case "m":
+            case "w":
                 /*
                 MONTHLY:
+                WEEKLY:
                     total labels = width / 100 (1 label per 100px)
                     labelsPerPoints = total data points / total labels (1 label per N points)
                     labelsPerPoints < 0 - add labels for all points
@@ -162,10 +165,8 @@ var DateTimeLabels = {
                 break;
 
             case "d":
-            case "w":
                 /*
                 DAILY:
-                WEEKLY:
                     total labels = width / 100 (1 label per 100px)
                     labelsPerPoints = total data points / total labels (1 label per N points)
                     labelsPerPoints < 0 - add labels for all points
@@ -238,19 +239,35 @@ var DateTimeLabels = {
 
         //console.log(dateTimeLabels);
 
-        //remove some points closer to the special year/month markers
-        // 4 digit - year, 3 digit - month, 1 or 2 digits - day
+        // remove some (day) labels that are closer to year/month markers
+        // remove some (month) labels that are closer to year markers
+        // (4 digit - year, 3 digit - month, 1 or 2 digits - day)
         var filteredDateTimeLabels = [];
         for(var i = 1;i < dateTimeLabels.length - 1; ++i) /* ignore first and last */{
             var isDayLabel = (dateTimeLabels[i].label.length === 1 || dateTimeLabels[i].label.length === 2);
+            var isMonthLabel = (dateTimeLabels[i].label.length === 3);
 
-            var isPrevLabelWithinReach = !!(Math.abs(dateTimeLabels[i-1].dataItemIndex - dateTimeLabels[i].dataItemIndex) < dropColumnDistance);
-            var isPrevLabelSpecialMarker = (dateTimeLabels[i-1].label.length === 3 || dateTimeLabels[i-1].label.length === 4); //month or year
+            var isPrevLabelWithinReach, isPrevLabelSpecialMarker, isNextLabelWithinReach, isNextLabelSpecialMarker;
 
-            var isNextLabelWithinReach = !!(Math.abs(dateTimeLabels[i+1].dataItemIndex - dateTimeLabels[i].dataItemIndex) < dropColumnDistance);
-            var isNextLabelSpecialMarker = (dateTimeLabels[i+1].label.length === 3 || dateTimeLabels[i+1].label.length === 4); //month or year
+            if (isDayLabel) {
 
-            var dropLabel = isDayLabel && ((isPrevLabelSpecialMarker && isPrevLabelWithinReach) || (isNextLabelSpecialMarker && isNextLabelWithinReach));
+                isPrevLabelWithinReach = !!(Math.abs(dateTimeLabels[i-1].dataItemIndex - dateTimeLabels[i].dataItemIndex) < dayLabelDropDistance);
+                isPrevLabelSpecialMarker = (dateTimeLabels[i-1].label.length === 3 || dateTimeLabels[i-1].label.length === 4); //month or year
+
+                isNextLabelWithinReach = !!(Math.abs(dateTimeLabels[i+1].dataItemIndex - dateTimeLabels[i].dataItemIndex) < dayLabelDropDistance);
+                isNextLabelSpecialMarker = (dateTimeLabels[i+1].label.length === 3 || dateTimeLabels[i+1].label.length === 4); //month or year
+
+            } else if (isMonthLabel) {
+
+                isPrevLabelWithinReach = !!(Math.abs(dateTimeLabels[i-1].dataItemIndex - dateTimeLabels[i].dataItemIndex) < monthLabelDropDistance);
+                isPrevLabelSpecialMarker = dateTimeLabels[i-1].label.length === 4; //year
+
+                isNextLabelWithinReach = !!(Math.abs(dateTimeLabels[i+1].dataItemIndex - dateTimeLabels[i].dataItemIndex) < monthLabelDropDistance);
+                isNextLabelSpecialMarker = dateTimeLabels[i+1].label.length === 4; //year
+            }
+
+            // drop if the current label is closer to the special markers
+            var dropLabel = (isDayLabel || isMonthLabel) && ((isPrevLabelSpecialMarker && isPrevLabelWithinReach) || (isNextLabelSpecialMarker && isNextLabelWithinReach));
 
             if (!dropLabel) {
                 filteredDateTimeLabels.push(dateTimeLabels[i]);
