@@ -78,6 +78,25 @@ function bindUI() {
             // preview to play mode
             stopAllPreviews();
             $("#app .previewoptions").removeClass("stopview").addClass("playview");
+
+            var chartId = $this.attr("id");
+            var chartInputs = chartsCollection[chartId].options.chartInputs;
+            var numOfMonths = chartInputs.timeframe;
+            $("#timeframe").val(chartInputs.timeframe);
+            var $range = $("#range");
+            if (numOfMonths > 120) {
+                $range.find("option[value='d']").attr("disabled", "disabled");
+                $range.find("option[value='w']").attr("disabled", "disabled");
+            } else if  (numOfMonths > 24) {
+              $range.find("option[value='w']").removeAttr("disabled");
+              $range.find("option[value='d']").attr("disabled", "disabled");
+            } else {
+                $range.find("option[value='d']").removeAttr("disabled");
+                $range.find("option[value='w']").removeAttr("disabled");
+            }
+            $("#range").val(chartInputs.range);
+            console.log(chartInputs.timeframe, chartInputs.range);
+
         }
     });
 
