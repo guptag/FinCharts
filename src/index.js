@@ -232,6 +232,7 @@ function loadChart(chartId, _ticker) {
                             width: $svg.width(),
                             height: $svg.height(),
                             selector: svgSelector,
+                            chartInputs: chartInputs,
                             timerCb: function () {
                                var frequency = parseFloat($("#previewfrequency").val());
                                if (frequency && frequency < 3) {

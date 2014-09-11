@@ -14,10 +14,12 @@ var CandleStickChart = function (options) {
         height: height of the svg
         Snap: reference to Snap object (todo change to require)
     */
+    console.log(options);
     var p = new PlotSeries({
         width: options.width,
         height: options.height,
         data: options.data,
+        chartInputs: options.chartInputs,
         margin: {top: 5, bottom: 25, left: 2, right: 40}
     });
 
@@ -25,6 +27,7 @@ var CandleStickChart = function (options) {
         width: options.width,
         height: options.height,
         data: options.data,
+        chartInputs: options.chartInputs,
         margin: {top: 5, bottom: 25, left: 2, right: 40}
     });
 
@@ -32,6 +35,7 @@ var CandleStickChart = function (options) {
         width: options.width,
         height: options.height,
         data: options.data,
+        chartInputs: options.chartInputs,
         margin: {top: 5, bottom: 25, left: 2, right: 40}
     });
 
@@ -39,6 +43,7 @@ var CandleStickChart = function (options) {
         width: options.width,
         height: options.height,
         data: options.data,
+        chartInputs: options.chartInputs,
         margin: {top: 5, bottom: 25, left: 2, right: 40},
         priceMin: p.extendedMin,
         priceMax: p.extendedMax
@@ -92,7 +97,7 @@ var CandleStickChart = function (options) {
                         stroke: tick.stroke,
                         "stroke-width": "1" });
       var label = s.text(tick.label.x, tick.label.y, tick.label.text)
-                .attr("class", "datetimelabel");
+                .attr({"class": "datetimelabel", "font-weight" : tick.label["font-weight"]});
         yAxisGroup.add(path);
         yAxisGroup.add(label);
     });

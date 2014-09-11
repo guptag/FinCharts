@@ -21,7 +21,7 @@ function AxisSeriesModel(options) {
     this.extendedMin = priceLabels[0];
     this.extendedMax = priceLabels[priceLabels.length - 1];
 
-    var dateTimeLabels = DateTimeLabels.generate(options.data, "daily", this.canvasWidth);
+    var dateTimeLabels = DateTimeLabels.generate(options.data, options.chartInputs.range, this.canvasWidth);
     console.log(dateTimeLabels);
 
     this.xUnitScale = this.canvasWidth / options.data.series.length;
@@ -92,7 +92,8 @@ function AxisSeriesModel(options) {
                                 label : {
                                     x: self.toPlotX(dataIndex) - labelPullBack /* based of length of chars */,
                                     y: self.margin.top + self.canvasHeight + 17,
-                                    text: labelItem.label
+                                    text: labelItem.label,
+                                     "font-weight": labelItem.isBold ? "bolder" : "normal"
                                 }
                             }
                         })
