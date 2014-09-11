@@ -96,7 +96,8 @@ function bindUI() {
             if (range === "w" || range === "d") {
                 $range.val("m");
             }
-        } else if  (numOfMonths > 12) {
+        } else if  (numOfMonths > 24) {
+        	  $range.find("option[value='w']").removeAttr("disabled");
             $range.find("option[value='d']").attr("disabled", "disabled");;
             if (range === "d") {
                 $range.val("w");
@@ -106,17 +107,11 @@ function bindUI() {
             $range.find("option[value='w']").removeAttr("disabled");
         }
 
-
-
-        _.debounce(function () {
-            loadChart($(".chartcontainer.active").attr("id"), this.value);
-        }, 50);
+        loadChart($(".chartcontainer.active").attr("id"));
     });
 
     $("#range").change(function () {
-        _.debounce(function () {
-            loadChart($(".chartcontainer.active").attr("id"), this.value);
-        }, 50);
+        loadChart($(".chartcontainer.active").attr("id"));
     });
 
 
@@ -220,8 +215,8 @@ function loadChart(chartId, _ticker) {
     //new Date(year, month (0-11), day (1-31), hours (0-23), minutes(0-59), seconds, milliseconds);
     var chartInputs = {
         ticker: ticker,
-        timeframe: $("#timeframe").val(), /* months */
-        range: $("#range").val(), // daily, weekly, monthly
+        timeframe: $("#timeframe").val(), /* # of months */
+        range: $("#range").val(), // d, w, m
         scale: "normal", //normal, log
         chartType: "candlestick" //candlestick, OHLC, HLC, Line, Area
     };

@@ -3,6 +3,8 @@ var request = require('request'),
     csv = require("csv"),
     Q = require("q"),
     util = require('util'),
+    moment = require('moment'),
+    sprintf = require("sprintf-js").sprintf,
     PriceSeries = require('../models/priceseries');
 
 var  historicalPrices  = new function() {
@@ -16,17 +18,35 @@ var  historicalPrices  = new function() {
 function fetchData(chartInputs) {
     var fetchDeferred = Q.defer(), ticker = chartInputs.ticker;
 
-    fs.exists(util.format(".tmp/%s.csv", ticker), function (exists) {
+    var toDate = moment().toDate();
+    var fromDate = moment(toDate).subtract(chartInputs.timeframe, 'months').toDate();
+    var range = chartInputs.range;
+
+    var dataUrl = sprintf("http://ichart.finance.yahoo.com/table.csv?s=%s&a=%d&b=%d&c=%d&d=%d&e=%d&f=%d&g=%s&ignore=.csv",
+                                                                        ticker,
+                                                                        fromDate.getMonth(),
+                                                                        fromDate.getDate(),
+                                                                        fromDate.getFullYear(),
+                                                                        toDate.getMonth(),
+                                                                        toDate.getDate(),
+                                                                        toDate.getFullYear(),
+                                                                        range);
+
+    var fileName = sprintf(".tmp/%s_%s_%s_%s.csv", ticker.toLowerCase(), range, moment(toDate).format('YYYYMMDD'), moment(fromDate).format('YYYYMMDD'));
+
+    console.log(dataUrl, fileName);
+
+    fs.exists(fileName, function (exists) {
         console.log(exists);
         if (!exists) {
-            request(util.format('http://ichart.finance.yahoo.com/table.csv?s=%s&a=04&b=1&c=2014&d=08&e=06&f=2014&g=d&ignore=.csv', ticker)) //apr 2014 - sep 2014
-                .pipe(fs.createWriteStream(util.format(".tmp/%s.csv", ticker)))
+            request(dataUrl) //apr 2014 - sep 2014
+                .pipe(fs.createWriteStream(fileName))
                 .on('finish', function () {
                     console.log("data downloaded");
-                    fetchDeferred.resolve({fileName: util.format(".tmp/%s.csv", ticker), ticker: ticker});
+                    fetchDeferred.resolve({fileName: fileName, ticker: ticker});
                 });
         } else {
-            fetchDeferred.resolve({fileName: util.format(".tmp/%s.csv", ticker), ticker: ticker});
+            fetchDeferred.resolve({fileName: fileName, ticker: ticker});
         }
     });
 
