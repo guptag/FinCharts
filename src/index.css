@@ -267,7 +267,7 @@ body {
 
 
 #topbar .previewoptions > section {
-  width: 170px;
+  width: 220px;
 }
 
 #topbar .previewoptions.playview .stopview {
@@ -286,14 +286,18 @@ body {
 
 #topbar .previewoptions .stopview > button {
    margin: 2px 0 0 0;
-   width: 30%;
+   width: 20%;
    height: 34px;
 }
 
 #topbar .previewoptions .stopview > input {
    margin: 2px 0 0 0;
-   width: 25%;
+   width: 20%;
    height: 34px;
+}
+
+#topbar .previewoptions .stopview > label {
+   font-size: 0.8em;
 }
 
 .chartcontainer {

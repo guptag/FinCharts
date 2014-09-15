@@ -189,6 +189,7 @@ var CandleStickChart = function (options) {
         height: options.height,
         data: options.data,
         timerCb: options.timerCb,
+        hidePriceAnimationCb: options.hidePriceAnimationCb,
         margin: {top: 5, bottom: 25, left: 2, right: 40}
     });
     this.chartPreview.init(s);
