@@ -27,6 +27,10 @@ var ChartPreview = function (options) {
     this.xUnitScale = this.canvasWidth / this.data.series.length;
     this.yUnitScale = this.canvasHeight / (this.extendedMax - this.extendedMin);
 
+
+    this.volBarHeight = formatNumber(this.canvasHeight * 30 / 100);
+    this.volYUnitScale = this.volBarHeight/options.data.series.maxVolume;
+
     this.timerCb = options.timerCb || function () {
             return 500;
         }
@@ -34,7 +38,7 @@ var ChartPreview = function (options) {
 
     var s;
 
-    var previewGroup, previewRect, previewAxis,
+    var previewGroup, previewRect, volumeRect,
         highMarker, lowMarker, openPoint, closePoint,
         spreadMarker, closePriceText;
 
@@ -64,7 +68,8 @@ var ChartPreview = function (options) {
           previewRect.stop();
           highMarker.stop();
           lowMarker.stop();
-          openPoint.stop();
+         // openPoint.stop();
+          volumeRect.stop();
           closePoint.stop();
           spreadMarker.stop();
           closePriceText.stop();
@@ -111,10 +116,15 @@ var ChartPreview = function (options) {
                           .attr( {"class": "preview-axis", "stroke" : "black"});
         previewGroup.add(previewAxis); */
 
-        openPoint = s.circle(0, 0, 4).attr({"fill": "#000"});
-        previewGroup.add(openPoint);
+        //openPoint = s.circle(0, 0, 4).attr({"fill": "#000"});
+        //previewGroup.add(openPoint);
 
-        closePoint = s.circle(0, 0, 4).attr({"fill": "#000"});
+        //closePoint = s.circle(0, 0, 4).attr({"fill": "#000"});
+        closePoint = s.line(0, 0, 0 + 4, 0)
+                      .attr({
+                        "stroke" : "#000",
+                        "stroke-width" : 1
+                      })
         previewGroup.add(closePoint);
 
         highMarker = s.line(0 - 8, 0, 0 + 8, 0)
@@ -138,6 +148,10 @@ var ChartPreview = function (options) {
                       });
         previewGroup.add(spreadMarker);
 
+        volumeRect = s.rect(0,0,0,0)
+                       .attr( {"class": "preview-vol-rect", "fill" : "white"});
+        previewGroup.add(volumeRect);
+
         closePriceText = s.text(0, 0, "").attr("class", "preview-closetext");
         previewGroup.add(closePriceText);
     }
@@ -148,13 +162,15 @@ var ChartPreview = function (options) {
       var priceClose = self.data.series[currentIndex].close;
       var priceHigh = self.data.series[currentIndex].high;
       var priceLow = self.data.series[currentIndex].low;
+      var volume = self.data.series[currentIndex].volume;
 
 
       var priceOpenY = self.toPlotY(priceOpen);
-      priceCloseY = self.toPlotY(priceClose);
-      priceHighY = self.toPlotY(priceHigh);
-      priceLowY = self.toPlotY(priceLow);
-      color = (priceOpen > priceClose) ? "red" : "green";
+      var priceCloseY = self.toPlotY(priceClose);
+      var priceHighY = self.toPlotY(priceHigh);
+      var priceLowY = self.toPlotY(priceLow);
+      var volY = self.volToPlotY(volume);
+      var color = (priceOpen > priceClose) ? "red" : "green";
 
       var posX = self.xUnitScale * (currentIndex + 1) + 2;
       var posXOffset = posX + 15;
@@ -169,19 +185,20 @@ var ChartPreview = function (options) {
         x2: posXOffset,
       });*/
 
-      openPoint.stop().attr({
+      /*openPoint.stop().attr({
         cx: posXOffset
       }).animate({
         cy: priceOpenY,
         "fill": color
-      }, 100, window.mina.easein);
+      }, 100, window.mina.easein); */
 
-      closePoint.stop().attr({
-        cx: posXOffset
-      }).animate({
-        cy: priceCloseY,
-        "fill": color
-      }, 100, window.mina.easein);
+      closePoint.stop().animate({
+        x1: posXOffset,
+        x2: posXOffset + 4,
+        y1: priceCloseY,
+        y2: priceCloseY,
+        "stroke" : color
+      }, 100);
 
       highMarker.stop().animate({
         x1: posXOffset - 8,
@@ -206,11 +223,26 @@ var ChartPreview = function (options) {
         y2: priceLowY,
         "stroke" : color
       }, 100, window.mina.easein);
+
+      volumeRect.stop().animate({
+        x: posXOffset - 10,
+        y: volY,
+        width: 20,
+        height: self.margin.top + self.canvasHeight - volY,
+        "fill": color,
+        "opacity": 0.6
+      }, 100);
+
+      closePriceText.attr({"text" : formatNumber(priceClose), "x" : posXOffset + 10, "y": priceCloseY + 5});
     }
 };
 
 ChartPreview.prototype.toPlotY = function (dataY) {
     return formatNumber(this.margin.top + this.canvasHeight  - ((dataY - this.extendedMin) * this.yUnitScale));
+}
+
+ChartPreview.prototype.volToPlotY = function (dataY) {
+    return formatNumber(this.margin.top + this.canvasHeight - dataY * this.volYUnitScale);
 }
 
 function formatNumber(number) {

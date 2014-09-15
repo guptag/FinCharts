@@ -324,3 +324,7 @@ body {
   fill-opacity:0;
   stroke-opacity:0;
 }
+
+.preview-closetext {
+  font-size: 0.45em;
+}
