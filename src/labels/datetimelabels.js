@@ -74,7 +74,7 @@ var shortMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"
 var DateTimeLabels = {
     generate : function (data, range, width) {
         var minColWidth = 75,
-            dayLabelDropDistance = 3,
+            dayLabelDropDistance = 5,
             monthLabelDropDistance = 5,
             totalColumns = Math.floor(width / minColWidth),
             columnPerPoints = Math.floor(data.series.length / totalColumns),

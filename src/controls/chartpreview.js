@@ -33,13 +33,16 @@ var ChartPreview = function (options) {
 
     this.timerCb = options.timerCb || function () {
             return 500;
-        }
+        };
+    this.hidePriceAnimationCb = options.hidePriceAnimationCb || function () {
+        return false;
+    };
     this.onPreviewComplete = options.onPreviewComplete || _.noop;
 
     var s;
 
-    var previewGroup, previewRect, volumeRect,
-        highMarker, lowMarker, openPoint, closePoint,
+    var previewGroup, previewElementGroup, previewRect, volumeRect,
+        highMarker, lowMarker, closePoint,
         spreadMarker, closePriceText;
 
     var currentIndex = 0;
@@ -68,7 +71,6 @@ var ChartPreview = function (options) {
           previewRect.stop();
           highMarker.stop();
           lowMarker.stop();
-         // openPoint.stop();
           volumeRect.stop();
           closePoint.stop();
           spreadMarker.stop();
@@ -112,48 +114,43 @@ var ChartPreview = function (options) {
                        .attr( {"class": "preview-rect", "fill" : "white"});
         previewGroup.add(previewRect);
 
-       /* previewAxis = s.line(0, 0, 0,  self.canvasHeight)
-                          .attr( {"class": "preview-axis", "stroke" : "black"});
-        previewGroup.add(previewAxis); */
 
-        //openPoint = s.circle(0, 0, 4).attr({"fill": "#000"});
-        //previewGroup.add(openPoint);
+        previewElementGroup = s.group().attr("class", "chart-preview-elements");
 
-        //closePoint = s.circle(0, 0, 4).attr({"fill": "#000"});
         closePoint = s.line(0, 0, 0 + 4, 0)
                       .attr({
                         "stroke" : "#000",
-                        "stroke-width" : 1
+                        "stroke-width" : 3
                       })
-        previewGroup.add(closePoint);
+        previewElementGroup.add(closePoint);
 
         highMarker = s.line(0 - 8, 0, 0 + 8, 0)
                       .attr({
                         "stroke" : "#000",
                         "stroke-width" : 1
                       });
-        previewGroup.add(highMarker);
+        previewElementGroup.add(highMarker);
 
         lowMarker = s.line(0 - 8, 0, 0 + 8, 0)
                       .attr({
                         "stroke" : "#000",
                         "stroke-width" : 1
                       });
-        previewGroup.add(lowMarker);
+        previewElementGroup.add(lowMarker);
 
         spreadMarker = s.line(0, 0, 0, 0)
                       .attr({
                         "stroke" : "#000",
                         "stroke-width" : 2
                       });
-        previewGroup.add(spreadMarker);
+        previewElementGroup.add(spreadMarker);
 
         volumeRect = s.rect(0,0,0,0)
                        .attr( {"class": "preview-vol-rect", "fill" : "white"});
-        previewGroup.add(volumeRect);
+        previewElementGroup.add(volumeRect);
 
         closePriceText = s.text(0, 0, "").attr("class", "preview-closetext");
-        previewGroup.add(closePriceText);
+        previewElementGroup.add(closePriceText);
     }
 
     function slidePreview () {
@@ -180,17 +177,12 @@ var ChartPreview = function (options) {
         width: self.canvasWidth - posX
       });
 
-      /*previewAxis.attr({
-        x1: posXOffset,
-        x2: posXOffset,
-      });*/
-
-      /*openPoint.stop().attr({
-        cx: posXOffset
-      }).animate({
-        cy: priceOpenY,
-        "fill": color
-      }, 100, window.mina.easein); */
+      if(self.hidePriceAnimationCb()) {
+        previewElementGroup.addClass("hide");
+        return;
+      } else {
+        previewElementGroup.removeClass("hide");
+      }
 
       closePoint.stop().animate({
         x1: posXOffset,
@@ -225,9 +217,9 @@ var ChartPreview = function (options) {
       }, 100, window.mina.easein);
 
       volumeRect.stop().animate({
-        x: posXOffset - 10,
+        x: posXOffset - 7,
         y: volY,
-        width: 20,
+        width: 14,
         height: self.margin.top + self.canvasHeight - volY,
         "fill": color,
         "opacity": 0.6

@@ -260,6 +260,10 @@ function loadChart(chartId, _ticker) {
                                }
                                return 1000;
                             },
+                            hidePriceAnimationCb: function () {
+                                console.log(!!($('#hidePriceAnimation').prop('checked')));
+                                return !!($('#hidePriceAnimation').prop('checked'));
+                            },
                             Snap: Snap
                         });
 

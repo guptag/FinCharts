@@ -26,6 +26,14 @@ PriceSeries.prototype.add = function (record) {
         adjClose: +parseFloat(record[6]).toFixed(2),
     };
 
+    // adjust prices for splits (unfortunately yahoo includes dividends in adjClose)
+    // the prices displayed in this tool will be off by a bit
+    /*var adjRatio = data.adjClose / data.close;
+    data.open = formatNumber(data.open * adjRatio);
+    data.high = formatNumber(data.high * adjRatio);
+    data.low = formatNumber(data.low * adjRatio);
+    data.close = formatNumber(data.close * adjRatio);*/
+
     this.series.unshift(data);
 
     if (data.low < this.series.min)
@@ -39,6 +47,10 @@ PriceSeries.prototype.add = function (record) {
 
     if (data.volume > this.series.maxVolume)
         this.series.maxVolume = data.volume;
+}
+
+function formatNumber(number) {
+    return +number.toFixed(2);
 }
 
 module.exports = PriceSeries;
