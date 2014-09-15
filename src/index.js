@@ -59,6 +59,7 @@ function bindUI() {
         var keyCode = (event.keyCode ? event.keyCode : event.which);
         if(keyCode == 13){
             loadChart($(".chartcontainer.active").attr("id"), this.value);
+            $("#app .previewoptions").removeClass("stopview").addClass("playview");
         }
     }).focus();
 
