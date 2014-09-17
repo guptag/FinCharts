@@ -59,6 +59,7 @@ function bindUI() {
         var keyCode = (event.keyCode ? event.keyCode : event.which);
         if(keyCode == 13){
             loadChart($(".chartcontainer.active").attr("id"), this.value);
+            $("#app .previewoptions").removeClass("stopview").addClass("playview");
         }
     }).focus();
 
@@ -78,6 +79,25 @@ function bindUI() {
             // preview to play mode
             stopAllPreviews();
             $("#app .previewoptions").removeClass("stopview").addClass("playview");
+
+            var chartId = $this.attr("id");
+            var chartInputs = chartsCollection[chartId].options.chartInputs;
+            var numOfMonths = chartInputs.timeframe;
+            $("#timeframe").val(chartInputs.timeframe);
+            var $range = $("#range");
+            if (numOfMonths > 120) {
+                $range.find("option[value='d']").attr("disabled", "disabled");
+                $range.find("option[value='w']").attr("disabled", "disabled");
+            } else if  (numOfMonths > 24) {
+              $range.find("option[value='w']").removeAttr("disabled");
+              $range.find("option[value='d']").attr("disabled", "disabled");
+            } else {
+                $range.find("option[value='d']").removeAttr("disabled");
+                $range.find("option[value='w']").removeAttr("disabled");
+            }
+            $("#range").val(chartInputs.range);
+            console.log(chartInputs.timeframe, chartInputs.range);
+
         }
     });
 
@@ -85,6 +105,35 @@ function bindUI() {
         var $this = $(this);
         updateChartsLayout($this.attr("data-layout"), $this.attr("data-chartcount"));
     });
+
+    $("#timeframe").change(function () {
+        var numOfMonths = $(this).val();
+        var $range = $("#range");
+        var range = $range.val();
+        if (numOfMonths > 120) {
+            $range.find("option[value='d']").attr("disabled", "disabled");
+            $range.find("option[value='w']").attr("disabled", "disabled");
+            if (range === "w" || range === "d") {
+                $range.val("m");
+            }
+        } else if  (numOfMonths > 24) {
+        	  $range.find("option[value='w']").removeAttr("disabled");
+            $range.find("option[value='d']").attr("disabled", "disabled");;
+            if (range === "d") {
+                $range.val("w");
+            }
+        } else {
+            $range.find("option[value='d']").removeAttr("disabled");
+            $range.find("option[value='w']").removeAttr("disabled");
+        }
+
+        loadChart($(".chartcontainer.active").attr("id"));
+    });
+
+    $("#range").change(function () {
+        loadChart($(".chartcontainer.active").attr("id"));
+    });
+
 
     $("#play").click(function () {
         stopAllPreviews();
@@ -186,10 +235,9 @@ function loadChart(chartId, _ticker) {
     //new Date(year, month (0-11), day (1-31), hours (0-23), minutes(0-59), seconds, milliseconds);
     var chartInputs = {
         ticker: ticker,
-        From: new Date(2013, 9, 1),
-        To: new Date(2014, 5, 31),
-        Range: "daily", //1min, 3min, 5min, 15min, 1hr, 2hr, 4hr, daily, weekly, monthly, yearly,
-        Scale: "normal", //normal, log
+        timeframe: $("#timeframe").val(), /* # of months */
+        range: $("#range").val(), // d, w, m
+        scale: "normal", //normal, log
         chartType: "candlestick" //candlestick, OHLC, HLC, Line, Area
     };
 
@@ -204,12 +252,17 @@ function loadChart(chartId, _ticker) {
                             width: $svg.width(),
                             height: $svg.height(),
                             selector: svgSelector,
+                            chartInputs: chartInputs,
                             timerCb: function () {
                                var frequency = parseFloat($("#previewfrequency").val());
                                if (frequency && frequency < 3) {
                                 return frequency * 1000;
                                }
                                return 1000;
+                            },
+                            hidePriceAnimationCb: function () {
+                                console.log(!!($('#hidePriceAnimation').prop('checked')));
+                                return !!($('#hidePriceAnimation').prop('checked'));
                             },
                             Snap: Snap
                         });
