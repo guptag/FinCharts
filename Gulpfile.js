@@ -23,14 +23,13 @@ var bases = {
 
 var paths = {
   all: "**",
-  jsx: '**/*.jsx',
-  js: '**/*.js',
+  jsx: 'js/**/*.jsx',
+  js: 'js/**/*.js',
   styl: "**/*.styl",
   rootStyl: 'index.styl',
   destStyl: 'index.css',
   html: '**/*.html',
-  md: '**/*.md',
-  node_modules: 'node_modules/**'
+  md: '**/*.md'
 };
 
 gulp.task('clean-target', function() {
@@ -38,18 +37,13 @@ gulp.task('clean-target', function() {
              .pipe(clean({force: true}));
 });
 
+/*gulp.task('npm-install', ['clean-target'], function() {
+  return shell.task('npm install --parseable true --color false --unicode false', {cwd : bases.src});
+}); */
+
 gulp.task('copy', ['clean-target'], function() {
-  var stream = streamqueue({objectMode: true});
-
-  // move app
-  stream.queue(gulp.src(paths.all, {cwd: bases.src})
-      .pipe(gulp.dest(bases.appTarget)));
-
-  /*stream.queue(gulp.src(paths.node_modules, {cwd: bases.root})
-      .pipe(gulp.dest(bases.appTarget)));*/
-
-  return stream.done()
-               .pipe(gulp.dest(bases.appTarget));
+  return gulp.src(paths.all, {cwd: bases.src})
+             .pipe(gulp.dest(bases.appTarget));
 });
 
 gulp.task('stylus', ['copy'], function () {
