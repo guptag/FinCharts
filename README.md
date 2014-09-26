@@ -1,7 +1,10 @@
-Run these commands from 'app':
+Run from 'app' (once):
  * npm install
- * gulp
- * node_modules/.bin/nodewebkit --remote-debugging-port=9222  target/app
+
+Run from 'root':
+ * npm install (once)
+ * gulp (builds and opens the app)
+ * gulp dev (builds, adds file watchers and opens the app)
 
 
 Build (todo)
