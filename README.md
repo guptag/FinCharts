@@ -1,4 +1,4 @@
-Run these commands from 'src':
+Run these commands from 'legacy':
  * npm install
  * node_modules/.bin/nodewebkit --remote-debugging-port=9222  .
 

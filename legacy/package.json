@@ -15,12 +15,19 @@
     "moment":"2.8.3",
     "sprintf-js":"0.0.7"
   },
+  "webkit": {
+    "plugin": false,
+    "java": false,
+    "page-cache": false
+  },
   "window": {
     "frame": true,
     "width": 1400,
     "height": 700,
-    "toolbar": true,
+    "toolbar": false,
     "position": "center",
-    "resizable": true
+    "resizable": true,
+    "min_width": 1200,
+    "min_height": 600
   }
 }
