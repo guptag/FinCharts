@@ -6,6 +6,8 @@ var gulp        = require('gulp'),
     rename      = require('gulp-rename'),
     concat      = require('gulp-concat'),
     stylish     = require('jshint-stylish'),
+    preprocess  = require('gulp-preprocess'),
+    seq         = require('run-sequence'),
     streamqueue = require('streamqueue'),
     react       = require('gulp-react'),
     exec        = require('child_process').exec,
@@ -18,8 +20,8 @@ var bases = {
  root: '.',
  src: 'app/',
  target: 'target/',
- appTarget: 'target/app',
- packageTarget: 'target/package'
+ appTarget: 'target/app/',
+ packageTarget: 'target/package/'
 };
 
 var paths = {
@@ -29,9 +31,16 @@ var paths = {
   styl: "**/*.styl",
   rootStyl: 'index.styl',
   destStyl: 'index.css',
+  rootHtml: 'index.html',
   html: '**/*.html',
   md: '**/*.md'
 };
+
+var isDevEnvironment = false;
+
+gulp.task('setDevEnv', function() {
+    isDevEnvironment = true;
+});
 
 gulp.task('clean-target', function() {
   return gulp.src(bases.target, {read: false})
@@ -80,6 +89,17 @@ gulp.task('post-build-cleanup', ['stylus', 'scripts'], function() {
              .pipe(clean({force: true}));
 });
 
+gulp.task('post-process-files', ['post-build-cleanup'], function () {
+    return gulp.src(paths.rootHtml, {cwd: bases.appTarget})
+                .pipe(preprocess({
+                    inline: true,
+                    context: {
+                        AutoReload: isDevEnvironment
+                    }
+                }))
+                .pipe(gulp.dest(bases.appTarget));
+});
+
 gulp.task('notify', ['post-build-cleanup'], function() {
   Notifier.notify({
         title: 'Build Completed',
@@ -103,9 +123,11 @@ gulp.task('open', ['build'], function (cb) {
 })
 
 
-gulp.task('build', ['clean-target', 'copy', 'stylus', 'scripts', 'post-build-cleanup', 'notify']);
+gulp.task('build', ['clean-target', 'copy', 'stylus', 'scripts', 'post-build-cleanup', 'post-process-files', 'notify']);
 gulp.task('default', ['build', 'open']);
-gulp.task('dev', ['build', 'watch', 'open']);
+gulp.task('dev', function () {
+  seq('setDevEnv', ['build', 'watch', 'open']);
+});
 
 
 
