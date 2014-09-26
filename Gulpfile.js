@@ -1,28 +1,37 @@
 var gulp        = require('gulp'),
     clean       = require('gulp-clean'),
     stylus      = require('gulp-stylus'),
+    nib         = require('nib'),
     jshint      = require('gulp-jshint'),
+    rename      = require('gulp-rename'),
     concat      = require('gulp-concat'),
     stylish     = require('jshint-stylish'),
     streamqueue = require('streamqueue'),
     react       = require('gulp-react'),
-    NwBuilder   = require('node-webkit-builder'),
+    //NwBuilder   = require('node-webkit-builder'),
     gutil       = require('gulp-util'),
     Notifier    = require('node-notifier')();
 
 
 var bases = {
+ root: '.',
  src: 'app/',
  target: 'target/',
+ appTarget: 'target/src/app',
+ nodeModulesTarget: 'target/src/',
+ packageTarget: 'target/package'
 };
 
 var paths = {
   all: "**",
   jsx: '**/*.jsx',
   js: '**/*.js',
-  stylus: '**/*.styl',
+  styl: "**/*.styl",
+  rootStyl: 'index.styl',
+  destStyl: 'index.css',
   html: '**/*.html',
-  md: '**/*.md'
+  md: '**/*.md',
+  node_modules: 'node_modules/**'
 };
 
 gulp.task('clean-target', function() {
@@ -31,32 +40,49 @@ gulp.task('clean-target', function() {
 });
 
 gulp.task('copy', ['clean-target'], function() {
-  return gulp.src(paths.all, {cwd: bases.src})
-      .pipe(gulp.dest(bases.target));
+  var stream = streamqueue({objectMode: true});
+
+  // move app
+  stream.queue(gulp.src(paths.all, {cwd: bases.src})
+      .pipe(gulp.dest(bases.appTarget)));
+
+  stream.queue(gulp.src(paths.node_modules, {cwd: bases.root})
+      .pipe(gulp.dest(bases.appTarget)));
+
+  return stream.done()
+               .pipe(gulp.dest(bases.appTarget));
 });
 
 gulp.task('stylus', ['copy'], function () {
-  return gulp.src(paths.stylus, {cwd: bases.target})
-    .pipe(stylus({errors: true}))
-    .pipe(gulp.dest(bases.target));
+  return gulp.src(paths.rootStyl, {cwd: bases.appTarget})
+            .pipe(stylus({errors: true, /*linenos: true,*/ use: [nib()]}))
+            /*.pipe(config.production ? minify() : gutil.noop())*/
+            .pipe(rename(paths.destStyl))
+            .pipe(gulp.dest(bases.appTarget));
 });
 
 gulp.task('scripts', ['copy'], function() {
   var stream = streamqueue({objectMode: true});
 
   // jsx scripts
-  stream.queue(gulp.src(paths.jsx, {cwd: bases.target})
+  stream.queue(gulp.src(paths.js, {cwd: bases.appTarget})
+                  .pipe(jshint('./.jshintrc'))
+                  .pipe(jshint.reporter(stylish)));
+
+
+  // jsx scripts
+  stream.queue(gulp.src(paths.jsx, {cwd: bases.appTarget})
                   .pipe(react())
                   .pipe(jshint('./.jshintrc'))
                   .pipe(jshint.reporter(stylish)));
 
   // copy to dest
   return stream.done()
-              .pipe(gulp.dest(bases.target));
+               .pipe(gulp.dest(bases.appTarget));
 });
 
-gulp.task('clean-templates', ['stylus', 'scripts'], function() {
-  return gulp.src([paths.md, paths.stylus, paths.jsx], {read: false, cwd: bases.target})
+gulp.task('post-build-cleanup', ['stylus', 'scripts'], function() {
+  return gulp.src([paths.md, paths.styl, paths.jsx], {read: false, cwd: bases.target})
              .pipe(clean({force: true}));
 });
 
@@ -68,7 +94,7 @@ gulp.task('watch', function() {
 });
 
 
-gulp.task('default', ['clean-target', 'copy', 'stylus', 'scripts', 'clean-templates']);
+gulp.task('default', ['clean-target', 'copy', 'stylus', 'scripts', 'post-build-cleanup']);
 
 
 
