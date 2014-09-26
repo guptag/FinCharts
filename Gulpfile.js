@@ -8,9 +8,10 @@ var gulp        = require('gulp'),
     stylish     = require('jshint-stylish'),
     streamqueue = require('streamqueue'),
     react       = require('gulp-react'),
+    exec        = require('child_process').exec,
     //NwBuilder   = require('node-webkit-builder'),
     gutil       = require('gulp-util'),
-    Notifier    = require('node-notifier')();
+    Notifier    = new require('node-notifier')();
 
 
 var bases = {
@@ -79,16 +80,32 @@ gulp.task('post-build-cleanup', ['stylus', 'scripts'], function() {
              .pipe(clean({force: true}));
 });
 
-gulp.task('watch', function() {
-  gulp.watch([bases.src + paths.jsx,
-              bases.src + paths.js,
-              bases.src + paths.stylus,
-              bases.src + paths.html], ['default']);
+gulp.task('notify', ['post-build-cleanup'], function() {
+  Notifier.notify({
+        title: 'Build Completed',
+        message: 'Refresh the app to see the updates!'
+    });
+})
+
+gulp.task('watch', ['post-build-cleanup'], function() {
+  gutil.log(gutil.colors.cyan('watching for changes...'));
+  return gulp.watch([bases.src + paths.all,
+                     "!" + bases.src + "node_modules/**"],
+                    ['build']);
 });
 
+gulp.task('open', ['build'], function (cb) {
+  exec('node_modules/.bin/nodewebkit target/app --remote-debugging-port=9222', {
+    cwd: paths.root
+  }, function (err, stdout, stderr) {
+      //upon complete
+  });
+})
 
-gulp.task('default', ['clean-target', 'copy', 'stylus', 'scripts', 'post-build-cleanup']);
 
+gulp.task('build', ['clean-target', 'copy', 'stylus', 'scripts', 'post-build-cleanup', 'notify']);
+gulp.task('default', ['build', 'open']);
+gulp.task('dev', ['build', 'watch', 'open']);
 
 
 
