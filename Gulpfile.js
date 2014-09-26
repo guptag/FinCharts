@@ -17,8 +17,7 @@ var bases = {
  root: '.',
  src: 'app/',
  target: 'target/',
- appTarget: 'target/src/app',
- nodeModulesTarget: 'target/src/',
+ appTarget: 'target/app',
  packageTarget: 'target/package'
 };
 
@@ -46,8 +45,8 @@ gulp.task('copy', ['clean-target'], function() {
   stream.queue(gulp.src(paths.all, {cwd: bases.src})
       .pipe(gulp.dest(bases.appTarget)));
 
-  stream.queue(gulp.src(paths.node_modules, {cwd: bases.root})
-      .pipe(gulp.dest(bases.appTarget)));
+  /*stream.queue(gulp.src(paths.node_modules, {cwd: bases.root})
+      .pipe(gulp.dest(bases.appTarget)));*/
 
   return stream.done()
                .pipe(gulp.dest(bases.appTarget));
