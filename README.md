@@ -1,6 +1,7 @@
 Run these commands from 'app':
  * npm install
- * node_modules/.bin/nodewebkit --remote-debugging-port=9222  .
+ * gulp
+ * node_modules/.bin/nodewebkit --remote-debugging-port=9222  target/app
 
 
 Build (todo)

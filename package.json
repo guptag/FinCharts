@@ -1,0 +1,39 @@
+{
+  "name" : "FinCharts",
+  "version" : "0.0.1",
+  "author" : "Gupta Garuda",
+  "description" : "Node webkit application for stock charts",
+  "devDependencies": {
+    "nodewebkit": "^0.10.4",
+    "gulp": "^3.6.2",
+    "gulp-stylus": "^1.0.0",
+    "gulp-jshint": "^1.5.5",
+    "gulp-concat": "^2.2.0",
+    "gulp-uglify": "^0.3.0",
+    "gulp-util": "^3.0.0",
+    "gulp-clean": "^0.3.1",
+    "gulp-react": "^1.0.2",
+    "gulp-symlink": "^1.1.0",
+    "jshint-stylish": "^0.1.5",
+    "gulp-rename": "^1.2.0",
+    "streamqueue": "0.0.7",
+    "nib": "^1.0.3",
+    "node-notifier": "^3.1.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/guptag/FinCharts.git"
+  },
+  "keywords": [
+    "nodewebkit",
+    "charts",
+    "finance",
+    "flux",
+    "d3"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/guptag/FinCharts/issues"
+  },
+  "homepage": "https://github.com/guptag/FinCharts"
+}
