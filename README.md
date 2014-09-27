@@ -1,7 +1,4 @@
-Run from 'app' (once):
- * npm install
-
-Run from 'root':
+Run from root('FinCharts'):
  * npm install (once)
  * gulp (builds and opens the app)
  * gulp dev (builds, adds file watchers and opens the app)
