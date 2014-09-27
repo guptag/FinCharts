@@ -11,7 +11,7 @@ var gulp        = require('gulp'),
     streamqueue = require('streamqueue'),
     react       = require('gulp-react'),
     exec        = require('child_process').exec,
-    //NwBuilder   = require('node-webkit-builder'),
+    NwBuilder   = require('node-webkit-builder'),
     gutil       = require('gulp-util'),
     Notifier    = new require('node-notifier')();
 
@@ -47,7 +47,7 @@ gulp.task('clean-target', function() {
              .pipe(clean({force: true}));
 });
 
-gulp.task('copy', ['clean-target'], function() {
+gulp.task('copy', function() {
   return gulp.src(paths.all, {cwd: bases.src})
              .pipe(gulp.dest(bases.appTarget));
 });
@@ -55,7 +55,6 @@ gulp.task('copy', ['clean-target'], function() {
 gulp.task('stylus', ['copy'], function () {
   return gulp.src(paths.rootStyl, {cwd: bases.appTarget})
             .pipe(stylus({errors: true, /*linenos: true,*/ use: [nib()]}))
-            /*.pipe(config.production ? minify() : gutil.noop())*/
             .pipe(rename(paths.destStyl))
             .pipe(gulp.dest(bases.appTarget));
 });
@@ -63,7 +62,7 @@ gulp.task('stylus', ['copy'], function () {
 gulp.task('scripts', ['copy'], function() {
   var stream = streamqueue({objectMode: true});
 
-  // jsx scripts
+  // js scripts
   stream.queue(gulp.src(paths.js, {cwd: bases.appTarget})
                   .pipe(jshint('./.jshintrc'))
                   .pipe(jshint.reporter(stylish)));
@@ -116,24 +115,18 @@ gulp.task('open', ['build'], function (cb) {
   }, function (err, stdout, stderr) {
       //upon complete
   });
-})
-
-
-gulp.task('build', ['clean-target', 'copy', 'stylus', 'scripts', 'post-build-cleanup', 'post-process-files', 'notify']);
-gulp.task('default', ['build', 'open']);
-gulp.task('dev', function () {
-  seq('setDevEnv', ['build', 'watch', 'open']);
 });
 
-
-
 // https://github.com/mllrsohn/node-webkit-builder
-/*gulp.task('nw', function () {
-
+gulp.task('package-app', ['build'], function () {
     var nw = new NwBuilder({
         version: '0.10.4',
-        files: [ './**'],
-        platforms: ['osx']
+        files: [ bases.appTarget + "**"],
+        platforms: ['osx'],
+        appName: "FinCharts",
+        appVersion: "0.0.1",
+        buildDir: bases.packageTarget,
+        cacheDir: bases.target + "cache"
     });
 
     nw.on('log', function (msg) {
@@ -144,4 +137,24 @@ gulp.task('dev', function () {
     return nw.build().catch(function (err) {
         gutil.log('node-webkit-builder', err);
     });
-});*/
+});
+
+
+gulp.task('build', ['copy', 'stylus', 'scripts', 'post-build-cleanup', 'post-process-files']);
+
+gulp.task('default', function () {
+  seq('clean-target', ['build', 'open']);
+});
+
+// dev task - enables watchers and autoreload
+gulp.task('dev', function () {
+  seq('setDevEnv', 'clean-target', ['build', 'watch', 'open', 'notify']);
+});
+
+gulp.task('package', function () {
+  seq('clean-target', 'package-app');
+});
+
+
+
+
