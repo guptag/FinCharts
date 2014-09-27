@@ -47,10 +47,6 @@ gulp.task('clean-target', function() {
              .pipe(clean({force: true}));
 });
 
-/*gulp.task('npm-install', ['clean-target'], function() {
-  return shell.task('npm install --parseable true --color false --unicode false', {cwd : bases.src});
-}); */
-
 gulp.task('copy', ['clean-target'], function() {
   return gulp.src(paths.all, {cwd: bases.src})
              .pipe(gulp.dest(bases.appTarget));
