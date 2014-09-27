@@ -6,6 +6,6 @@ fs.watch(path, function() {
     window.isLoading = true;
     setTimeout(function(){
       window.location.reload();
-    }, 2000);
+    }, 1500);
   }
 });
