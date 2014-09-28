@@ -7,8 +7,6 @@ var gulp        = require('gulp'),
     concat      = require('gulp-concat'),
     stylish     = require('jshint-stylish'),
     preprocess  = require('gulp-preprocess'),
-    minifyCSS   = require('gulp-minify-css'),
-    uglify      = require('gulp-uglify')
     seq         = require('run-sequence'),
     streamqueue = require('streamqueue'),
     react       = require('gulp-react'),
@@ -30,13 +28,12 @@ var paths = {
   all: "**",
   jsx: 'js/**/*.jsx',
   js: 'js/**/*.js',
-  styl: "css/**/*.styl",
-  rootStyl: 'css/index.styl',
-  destStyl: 'css/index.css',
+  styl: "**/*.styl",
+  rootStyl: 'index.styl',
+  destStyl: 'index.css',
   rootHtml: 'index.html',
   html: '**/*.html',
-  md: '**/*.md',
-  css: 'css/*/**'
+  md: '**/*.md'
 };
 
 var isDevEnvironment = false;
@@ -58,37 +55,32 @@ gulp.task('copy', function() {
 gulp.task('stylus', ['copy'], function () {
   return gulp.src(paths.rootStyl, {cwd: bases.appTarget})
             .pipe(stylus({errors: true, /*linenos: true,*/ use: [nib()]}))
-            .pipe(isDevEnvironment ? gutil.noop() : minifyCSS({keepBreaks:true}))
             .pipe(rename(paths.destStyl))
             .pipe(gulp.dest(bases.appTarget));
 });
 
 gulp.task('scripts', ['copy'], function() {
   var stream = streamqueue({objectMode: true});
-  var stream2 = streamqueue({objectMode: true});
 
   // js scripts
-  stream.queue(gulp.src([paths.js], {cwd: bases.appTarget})
+  stream.queue(gulp.src(paths.js, {cwd: bases.appTarget})
                   .pipe(jshint('./.jshintrc'))
-                  .pipe(jshint.reporter(stylish)))
-                  .pipe(isDevEnvironment ? gutil.noop() : uglify());
+                  .pipe(jshint.reporter(stylish)));
 
 
   // jsx scripts
   stream.queue(gulp.src(paths.jsx, {cwd: bases.appTarget})
                   .pipe(react())
                   .pipe(jshint('./.jshintrc'))
-                  .pipe(jshint.reporter(stylish)))
-                  .pipe(isDevEnvironment ? gutil.noop() : uglify());
+                  .pipe(jshint.reporter(stylish)));
 
   // copy to dest
   return stream.done()
-               .pipe(gulp.dest(bases.appTarget + "/js"));
+               .pipe(gulp.dest(bases.appTarget));
 });
 
 gulp.task('post-build-cleanup', ['stylus', 'scripts'], function() {
-  // delete unnecessary files in target
-  return gulp.src([paths.md, paths.styl, paths.jsx, paths.css], {read: false, cwd: bases.appTarget})
+  return gulp.src([paths.md, paths.styl, paths.jsx], {read: false, cwd: bases.target})
              .pipe(clean({force: true}));
 });
 
