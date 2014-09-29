@@ -1,21 +1,29 @@
-/*var path = './css';
-var fs = require('fs');
-var gui = require('nw.gui');
+//var path = process.cwd() + '/app/client.js';
+//var fs = window.fs;
 
-console.log("auto reload init", process.cwd(), process.autoreload);
+/*var gui = require('nw.gui');
 var win = gui.Window.get();
-win.loading = false;
-if (!process.autoreload) {
-  fs.watch(process.cwd() + "/css", function() {
+win.reload(3); //to force load dev */
 
-    if (!win.loading) {
-      win.loading = true;
-      setTimeout(function() {
-        win.loading = false;
-        console.log("watch triggered", win);
-        gui.Window.get().reload(3);
-      }, 4000);
-    }
-  });
-  process.autoreload = true;
-} */
+//console.log(path, window);
+
+/*if (!process.refreshConfigured) {
+
+    console.log("watching index.css for auto refresh", path);
+    fs.watch(path, function() {
+        console.log("window.refreshing: ", window.refreshing)
+        if (!window.refreshing) {
+          window.refreshing = true;
+          setTimeout(function() {
+            //window.location.reload();
+            gui.Window.get().reload(3);
+          }, 4000);
+        }
+    });
+
+    process.refreshConfigured = true;
+}*/
+
+
+
+

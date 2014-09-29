@@ -84,7 +84,7 @@ gulp.task('browserify', ['jshint-react'], function() {
                 debug: isDevEnvironment,
                 /*extensions: ['.jsx', '.js'],*/
                 paths: ['./target/app/node_modules','./target/app/js/'],
-                noparse: ['q', 'lodash', 'react', 'flux', 'moment'],
+                noparse: ['q', 'lodash', 'react', 'flux', 'moment', 'jquery'],
                 cache: {}, // for watchify
                 packageCache: {}, // for watchify
                 fullPaths: isDevEnvironment // for watchify
