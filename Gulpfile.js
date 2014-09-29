@@ -85,7 +85,7 @@ gulp.task('scripts', ['copy'], function() {
   return browserify({
                       entries: ['./app/index.js'],
                       extensions: ['.jsx', '.js'],
-                      paths: ['./node_modules', './app/node_modules','./app/js/'],
+                      paths: ['./app/node_modules','./app/js/'],
                       noparse: ['q', 'lodash', 'react', 'flux', 'moment']
                   })
                 .transform(reactify)
