@@ -1,4 +1,5 @@
 var gulp        = require('gulp'),
+    source      = require('vinyl-source-stream'),
     clean       = require('gulp-clean'),
     stylus      = require('gulp-stylus'),
     nib         = require('nib'),
@@ -8,10 +9,12 @@ var gulp        = require('gulp'),
     stylish     = require('jshint-stylish'),
     preprocess  = require('gulp-preprocess'),
     minifyCSS   = require('gulp-minify-css'),
+    browserify  = require('browserify');
     uglify      = require('gulp-uglify')
     seq         = require('run-sequence'),
     streamqueue = require('streamqueue'),
     react       = require('gulp-react'),
+    reactify    = require('reactify');
     exec        = require('child_process').exec,
     NwBuilder   = require('node-webkit-builder'),
     gutil       = require('gulp-util'),
@@ -65,11 +68,11 @@ gulp.task('stylus', ['copy'], function () {
 });
 
 gulp.task('scripts', ['copy'], function() {
-  var stream = streamqueue({objectMode: true});
-  var stream2 = streamqueue({objectMode: true});
+  //var stream = streamqueue({objectMode: true});
+  //var stream2 = streamqueue({objectMode: true});
 
   // js, jsx scripts
-  stream.queue(gulp.src([paths.js, paths.jsx, paths.rootJS], {cwd: bases.appTarget})
+  /*stream.queue(gulp.src([paths.js, paths.jsx, paths.rootJS], {cwd: bases.appTarget})
                   .pipe(react())
                   .pipe(jshint('./.jshintrc'))
                   .pipe(jshint.reporter(stylish)))
@@ -77,7 +80,18 @@ gulp.task('scripts', ['copy'], function() {
 
   // copy to dest
   return stream.done()
-               .pipe(gulp.dest(bases.appTarget + "/js"));
+               .pipe(gulp.dest(bases.appTarget + "/js"));*/
+
+  return browserify({
+                      entries: ['./app/index.js'],
+                      extensions: ['.jsx', '.js'],
+                      paths: ['./node_modules', './app/node_modules','./app/js/'],
+                      noparse: ['q', 'lodash', 'react', 'flux', 'moment']
+                  })
+                .transform(reactify)
+                .bundle({ debug: isDevEnvironment })
+                .pipe(source('client.js'))
+                .pipe(gulp.dest(bases.appTarget));
 });
 
 gulp.task('post-build-cleanup', ['stylus', 'scripts'], function() {
