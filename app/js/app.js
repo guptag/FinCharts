@@ -1,24 +1,23 @@
 /** @jsx React.DOM */
 
-//https://github.com/rogerwang/node-webkit/issues/1188#issuecomment-26002789
+// https://github.com/rogerwang/node-webkit/issues/1188#issuecomment-26002789
 // https://github.com/substack/node-browserify/issues/481
-global.document = window.document;
-global.navigator = window.navigator;
+// https://github.com/greypants/gulp-starter/issues/17
+// http://blog.avisi.nl/2014/04/25/how-to-keep-a-fast-build-with-browserify-and-reactjs/
 
-//var HelloMessage = require("./ui/components/temp");
-//var React = require("react");
-var $ = require("jquery");
 
-var App = {
-  init: function () {
-    console.log("init");
-    //React.renderComponent(<HelloMessage name="World 12467" />, $("#container")[0]);
-    $("#container").html("hello world");
+
+var React = require('react');
+
+var TodoApp = require('ui/components/TodoApp.react');
+
+module.exports = {
+  init: function() {
+    React.renderComponent(
+              <TodoApp />,
+              document.getElementById('todoapp'));
   }
 };
-
-module.exports = App;
-
 
 
 

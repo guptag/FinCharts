@@ -7,12 +7,18 @@
   <link type="text/css" media="all" rel="stylesheet"  href="css/index.css"/>
 </head>
 <body>
-   <i class="fa fa-home fa-fw"></i><span id="testspan"></span>
-   <div id="container">msgs:</div>
+  <section id="todoapp"></section>
+  <footer id="info">
+    <p>Double-click to edit a todo</p>
+    <p>Created by <a href="http://facebook.com/bill.fisher.771">Bill Fisher</a></p>
+    <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+  </footer>
+  <script>require("./server/main")</script>
 
-   <script type="text/javascript" src="index.js"></script>
-   <!-- @if AutoReload -->
-   <script type="text/javascript" src="../../autoreload.js"></script>
+
+  <script type="text/javascript" src="client.js"></script>
+  <!-- @if AutoReload -->
+  <script type="text/javascript" src="../../autoreload.js"></script>
   <!-- @endif -->
 </body>
 </html>
