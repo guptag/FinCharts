@@ -10,7 +10,8 @@ var gulp        = require('gulp'),
     stylish     = require('jshint-stylish'),
     preprocess  = require('gulp-preprocess'),
     minifyCSS   = require('gulp-minify-css'),
-    browserify  = require('browserify');
+    browserify  = require('browserify'),
+    watchify    = require('watchify');
     uglify      = require('gulp-uglify')
     seq         = require('run-sequence'),
     react       = require('gulp-react'),
@@ -77,17 +78,32 @@ gulp.task('jshint-react', ['copy'], function () {
 });
 
 gulp.task('browserify', ['jshint-react'], function() {
-  return browserify({
-                      entries: ['./target/app/index.js'],
-                      /*extensions: ['.jsx', '.js'],*/
-                      paths: ['./target/app/node_modules','./target/app/js/'],
-                      noparse: ['q', 'lodash', 'react', 'flux', 'moment']
-                  })
-               /* .transform(reactify)*/
-                .bundle({ debug: isDevEnvironment })
-                .pipe(source('client.js'))
-                .pipe(isDevEnvironment ? gutil.noop() : stream(uglify()))
-                .pipe(gulp.dest(bases.appTarget));
+
+    var bundler = browserify({
+                entries: ['./target/app/index.js'],
+                debug: isDevEnvironment,
+                /*extensions: ['.jsx', '.js'],*/
+                paths: ['./target/app/node_modules','./target/app/js/'],
+                noparse: ['q', 'lodash', 'react', 'flux', 'moment'],
+                cache: {}, // for watchify
+                packageCache: {}, // for watchify
+                fullPaths: isDevEnvironment // for watchify
+            });
+
+    var rebundle = function() {
+        gutil.log('Watchify rebundle');
+        return bundler.bundle()
+                    .pipe(source('client.js'))
+                    .pipe(isDevEnvironment ? gutil.noop() : stream(uglify()))
+                    .pipe(gulp.dest(bases.appTarget));
+    };
+
+    /*if(isDevEnvironment) {
+        bundler = watchify(bundler);
+        bundler.on('update', rebundle);
+    }*/
+
+    return rebundle();
 });
 
 gulp.task('post-build-cleanup', ['stylus', 'browserify'], function() {
@@ -110,7 +126,7 @@ gulp.task('post-process-files', ['post-build-cleanup'], function () {
 gulp.task('notify', ['post-build-cleanup'], function() {
   Notifier.notify({
         title: 'Build Completed',
-        message: 'Refresh the app to see the updates!'
+        message: ''
     });
 })
 
@@ -152,7 +168,7 @@ gulp.task('package-app', ['build'], function () {
 });
 
 
-gulp.task('build', ['copy', 'stylus', 'jshint-react', 'browserify', 'post-build-cleanup', 'post-process-files']);
+gulp.task('build', ['copy', 'stylus', 'jshint-react', 'browserify', 'post-build-cleanup', 'post-process-files', 'notify']);
 
 gulp.task('default', function () {
   seq('clean-target', ['build', 'open']);
@@ -160,7 +176,7 @@ gulp.task('default', function () {
 
 // dev task - enables watchers and autoreload
 gulp.task('dev', function () {
-  seq('setDevEnv', 'clean-target', ['build', 'watch', 'open', 'notify']);
+  seq('setDevEnv', 'clean-target', ['build', 'watch', 'open']);
 });
 
 gulp.task('package', function () {
