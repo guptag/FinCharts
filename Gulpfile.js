@@ -3,6 +3,7 @@ var gulp        = require('gulp'),
     clean       = require('gulp-clean'),
     stylus      = require('gulp-stylus'),
     nib         = require('nib'),
+    stream      = require('gulp-streamify'),
     jshint      = require('gulp-jshint'),
     rename      = require('gulp-rename'),
     concat      = require('gulp-concat'),
@@ -12,7 +13,6 @@ var gulp        = require('gulp'),
     browserify  = require('browserify');
     uglify      = require('gulp-uglify')
     seq         = require('run-sequence'),
-    streamqueue = require('streamqueue'),
     react       = require('gulp-react'),
     reactify    = require('reactify');
     exec        = require('child_process').exec,
@@ -47,6 +47,7 @@ var isDevEnvironment = false;
 
 gulp.task('setDevEnv', function() {
     isDevEnvironment = true;
+    console.log("set to dev environment");
 });
 
 gulp.task('clean-target', function() {
@@ -67,36 +68,31 @@ gulp.task('stylus', ['copy'], function () {
             .pipe(gulp.dest(bases.appTarget));
 });
 
-gulp.task('scripts', ['copy'], function() {
-  //var stream = streamqueue({objectMode: true});
-  //var stream2 = streamqueue({objectMode: true});
+gulp.task('jshint-react', ['copy'], function () {
+  return gulp.src([paths.js, paths.jsx, paths.rootJS], {cwd: bases.appTarget})
+            .pipe(react())
+            .pipe(jshint('./.jshintrc'))
+            .pipe(jshint.reporter(stylish))
+            .pipe(gulp.dest(bases.appTarget + "/js"));
+});
 
-  // js, jsx scripts
-  /*stream.queue(gulp.src([paths.js, paths.jsx, paths.rootJS], {cwd: bases.appTarget})
-                  .pipe(react())
-                  .pipe(jshint('./.jshintrc'))
-                  .pipe(jshint.reporter(stylish)))
-                  .pipe(isDevEnvironment ? gutil.noop() : uglify());
-
-  // copy to dest
-  return stream.done()
-               .pipe(gulp.dest(bases.appTarget + "/js"));*/
-
+gulp.task('browserify', ['jshint-react'], function() {
   return browserify({
-                      entries: ['./app/index.js'],
-                      extensions: ['.jsx', '.js'],
-                      paths: ['./app/node_modules','./app/js/'],
+                      entries: ['./target/app/index.js'],
+                      /*extensions: ['.jsx', '.js'],*/
+                      paths: ['./target/app/node_modules','./target/app/js/'],
                       noparse: ['q', 'lodash', 'react', 'flux', 'moment']
                   })
-                .transform(reactify)
+               /* .transform(reactify)*/
                 .bundle({ debug: isDevEnvironment })
                 .pipe(source('client.js'))
+                .pipe(isDevEnvironment ? gutil.noop() : stream(uglify()))
                 .pipe(gulp.dest(bases.appTarget));
 });
 
-gulp.task('post-build-cleanup', ['stylus', 'scripts'], function() {
+gulp.task('post-build-cleanup', ['stylus', 'browserify'], function() {
   // delete unnecessary files in target
-  return gulp.src([paths.md, paths.styl, paths.jsx, paths.css], {read: false, cwd: bases.appTarget})
+  return gulp.src([paths.md, paths.styl, paths.jsx, paths.css, "js", "index.js"], {read: false, cwd: bases.appTarget})
              .pipe(clean({force: true}));
 });
 
@@ -156,7 +152,7 @@ gulp.task('package-app', ['build'], function () {
 });
 
 
-gulp.task('build', ['copy', 'stylus', 'scripts', 'post-build-cleanup', 'post-process-files']);
+gulp.task('build', ['copy', 'stylus', 'jshint-react', 'browserify', 'post-build-cleanup', 'post-process-files']);
 
 gulp.task('default', function () {
   seq('clean-target', ['build', 'open']);
