@@ -35,7 +35,7 @@
     "frame": true,
     "width": 1400,
     "height": 700,
-    "toolbar": false,
+    "toolbar": true,
     "position": "center",
     "resizable": true,
     "min_width": 1200,

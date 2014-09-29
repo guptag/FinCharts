@@ -33,6 +33,7 @@ var paths = {
   styl: "css/**/*.styl",
   rootStyl: 'css/index.styl',
   destStyl: 'css/index.css',
+  rootJS: 'js/index.js',
   rootHtml: 'index.html',
   html: '**/*.html',
   md: '**/*.md',
@@ -67,15 +68,8 @@ gulp.task('scripts', ['copy'], function() {
   var stream = streamqueue({objectMode: true});
   var stream2 = streamqueue({objectMode: true});
 
-  // js scripts
-  stream.queue(gulp.src([paths.js], {cwd: bases.appTarget})
-                  .pipe(jshint('./.jshintrc'))
-                  .pipe(jshint.reporter(stylish)))
-                  .pipe(isDevEnvironment ? gutil.noop() : uglify());
-
-
-  // jsx scripts
-  stream.queue(gulp.src(paths.jsx, {cwd: bases.appTarget})
+  // js, jsx scripts
+  stream.queue(gulp.src([paths.js, paths.jsx, paths.rootJS], {cwd: bases.appTarget})
                   .pipe(react())
                   .pipe(jshint('./.jshintrc'))
                   .pipe(jshint.reporter(stylish)))
