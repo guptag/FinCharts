@@ -126,7 +126,7 @@ gulp.task('post-process-files', ['post-build-cleanup'], function () {
 gulp.task('notify', ['post-build-cleanup'], function() {
   Notifier.notify({
         title: 'Build Completed',
-        message: ''
+        message: 'App will be auto refreshed in a moment...'
     });
 })
 

@@ -1,28 +1,25 @@
-//var path = process.cwd() + '/app/client.js';
-//var fs = window.fs;
+// target will be recreated for every change
+// just watch for a change in a small dir
+var path = process.cwd() + '/css';
+var fs = window.Server.fs;
 
-/*var gui = require('nw.gui');
-var win = gui.Window.get();
-win.reload(3); //to force load dev */
-
-//console.log(path, window);
-
-/*if (!process.refreshConfigured) {
-
-    console.log("watching index.css for auto refresh", path);
+// Attach the watcher only once per app restart
+if (!process.refreshConfigured) {
     fs.watch(path, function() {
-        console.log("window.refreshing: ", window.refreshing)
         if (!window.refreshing) {
+          // stop watching further updates
           window.refreshing = true;
+
+          // refresh with delay
+          // will take some time for browserify to run
           setTimeout(function() {
-            //window.location.reload();
-            gui.Window.get().reload(3);
-          }, 4000);
+            window.location.reload();
+            //gui.Window.get().reload(3);
+          }, 2500);
         }
     });
-
     process.refreshConfigured = true;
-}*/
+}
 
 
 

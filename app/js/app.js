@@ -4,6 +4,7 @@
 // https://github.com/substack/node-browserify/issues/481
 // https://github.com/greypants/gulp-starter/issues/17
 // http://blog.avisi.nl/2014/04/25/how-to-keep-a-fast-build-with-browserify-and-reactjs/
+// https://github.com/joyent/node/issues/2479
 
 
 
