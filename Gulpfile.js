@@ -32,16 +32,16 @@ var bases = {
 
 var paths = {
   all: "**",
-  jsx: 'js/**/*.jsx',
-  js: 'js/**/*.js',
+  jsx: 'client/**/*.jsx',
+  js: 'client/**/*.js',
   styl: "css/**/*.styl",
   rootStyl: 'css/index.styl',
   destStyl: 'css/index.css',
-  rootJS: 'js/index.js',
+  rootJS: 'index.js',
   rootHtml: 'index.html',
   html: '**/*.html',
   md: '**/*.md',
-  css: 'css/*/**'
+  cssfolders: 'css/*/**'
 };
 
 var isDevEnvironment = false;
@@ -74,7 +74,7 @@ gulp.task('jshint-react', ['copy'], function () {
             .pipe(react())
             .pipe(jshint('./.jshintrc'))
             .pipe(jshint.reporter(stylish))
-            .pipe(gulp.dest(bases.appTarget + "/js"));
+            .pipe(gulp.dest(bases.appTarget + "/client"));
 });
 
 gulp.task('browserify', ['jshint-react'], function() {
@@ -83,7 +83,7 @@ gulp.task('browserify', ['jshint-react'], function() {
                 entries: ['./target/app/index.js'],
                 debug: isDevEnvironment,
                 /*extensions: ['.jsx', '.js'],*/
-                paths: ['./target/app/node_modules','./target/app/js/'],
+                paths: ['./target/app/node_modules','./target/app/client/'],
                 noparse: ['q', 'lodash', 'react', 'flux', 'moment', 'jquery'],
                 cache: {}, // for watchify
                 packageCache: {}, // for watchify
@@ -108,7 +108,7 @@ gulp.task('browserify', ['jshint-react'], function() {
 
 gulp.task('post-build-cleanup', ['stylus', 'browserify'], function() {
   // delete unnecessary files in target
-  return gulp.src([paths.md, paths.styl, paths.jsx, paths.css, "js", "index.js"], {read: false, cwd: bases.appTarget})
+  return gulp.src([paths.md, paths.styl, paths.jsx, paths.cssfolders, "client", "index.js"], {read: false, cwd: bases.appTarget})
              .pipe(clean({force: true}));
 });
 

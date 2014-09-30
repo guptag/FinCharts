@@ -1,4 +1,4 @@
-var app = require("./js/app.js");
+var app = require("./client/app.js");
 var $ = require('jquery');
 var _ = require('lodash');
 
