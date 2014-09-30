@@ -13,7 +13,13 @@
     <p>Created by <a href="http://facebook.com/bill.fisher.771">Bill Fisher</a></p>
     <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
   </footer>
-  <script>require("./server/main")</script>
+
+  <script>
+    if (window.Server) { throw new Error("window.Server exists already;");}
+
+    // transfer server context to the window object
+    window.Server = require("./server/main");
+  </script>
 
 
   <script type="text/javascript" src="client.js"></script>
