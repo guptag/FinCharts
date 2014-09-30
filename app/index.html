@@ -17,8 +17,8 @@
   <script>
     if (window.Server) { throw new Error("window.Server exists already;");}
 
-    // transfer server context to the window object
-    window.Server = require("./server/main");
+    // transfer server context to the window
+    window.Server = require("./server.js");
   </script>
 
 
