@@ -1,12 +1,26 @@
-Run these commands from 'src':
- * npm install
- * node_modules/.bin/nodewebkit --remote-debugging-port=9222  .
+Run from root('FinCharts'):
+ * npm install (once)
+ * gulp (builds and opens the app)
+ * gulp dev (builds, adds file watchers and opens the app)
 
 
 Build (todo)
 -----------
-* Gulp
-* Stylus
+* gulp
+* stylus
+* nib
+* node-webkit-builder
+
+
+Architecture (draft)
+--------------------
+
+* Application will follow [React's Flux](https://github.com/facebook/flux) model.
+* [D3.js](https://github.com/mbostock/d3) for chart components.
+* OM style cursors to propagate specific application state to the views (looks like [React Cursor](https://github.com/dustingetz/react-cursor) is a perfect fit)
+* Q promises for coordinating async tasks.
+* Downloaded ticker data will be stored on disk (for now).
+
 
 
 Chart Components (todo)
