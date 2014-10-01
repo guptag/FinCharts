@@ -4,12 +4,14 @@ Run from root('FinCharts'):
  * gulp dev (builds, adds file watchers and opens the app)
 
 
-Build (todo)
------------
-* gulp
-* stylus
-* nib
-* node-webkit-builder
+Build
+-----
+* [x] gulp
+* [x] stylus
+* [x] nib
+* [x] node-webkit-builder
+* [x] watchers (dev)
+* [x] auto reload (dev)
 
 
 Architecture (draft)
@@ -25,28 +27,28 @@ Architecture (draft)
 
 Chart Components (todo)
 -----------------------
-* Axis, Labels
-* Y-axis (Prices, Percentages)
-* Scale (normal, log)
-* Grid Lines
-* Main chart (line, area, candlestick, OHL, OHLC)
-* Volume bars
-* Crosshairs
-* Split view (compare ticker, RSI, ADX etc)
-* Multi chart layout (3H, 3V)
-* Animate chart
-* Listing of added modules on the chart (with remove option)
+* [ ] Axis, Labels
+* [ ] Y-axis (Prices, Percentages)
+* [ ] Scale (normal, log)
+* [ ] Grid Lines
+* [ ] Main chart (line, area, candlestick, OHL, OHLC)
+* [ ] Volume bars
+* [ ] Crosshairs
+* [ ] Split view (compare ticker, RSI, ADX etc)
+* [ ] Multi chart layout (3H, 3V, 2H, 2V)
+* [ ] Animate chart
+* [ ] Listing of added modules on the chart (with remove option)
 
 Settings (todo)
 ---------------
-* Timeframe (3m, 6m, 1y, 3y, 5y, all, custom)
-* Daily, Weekly, Monthly
-* Sync crosshairs
-* Compare tickers
-* Technical indicators
-    * Moving Averages
-    * RSI
-    * Bollingar Bands
-    * ADX
-    * Avg Volume
-* Themes (light/dark)
+* [ ] Timeframe (3m, 6m, 1y, 3y, 5y, all, custom)
+* [ ] Daily, Weekly, Monthly
+* [ ] Sync crosshairs
+* [ ] Compare tickers
+* [ ] Technical indicators
+    * [ ] Moving Averages
+    * [ ] RSI
+    * [ ] Bollingar Bands
+    * [ ] ADX
+    * [ ] Avg Volume
+* [ ] Themes (light/dark)
