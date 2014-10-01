@@ -4,12 +4,14 @@ Run from root('FinCharts'):
  * gulp dev (builds, adds file watchers and opens the app)
 
 
-Build (todo)
------------
-* gulp
-* stylus
-* nib
-* node-webkit-builder
+Build
+-----
+* [x] gulp
+* [x] stylus
+* [x] nib
+* [x] node-webkit-builder
+* [x] watchers (dev)
+* [x] auto reload (dev)
 
 
 Architecture (draft)
