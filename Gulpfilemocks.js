@@ -33,7 +33,8 @@ var loadTasks = function (gulp) {
     all: "**",
     jsx: '**/*.jsx',
     js: '**/*.js',
-    styl: "**/*.styl"
+    styl: "**/*.styl",
+    md: '**/*.md'
   };
 
 
@@ -49,16 +50,36 @@ var loadTasks = function (gulp) {
   });
 
   gulp.task('mocks-jshint-react', ['mocks-copy'], function () {
-  return gulp.src([paths.js, paths.jsx], {cwd: bases.target})
-            .pipe(react())
-            .pipe(jshint('./.jshintrc'))
-            .pipe(jshint.reporter(stylish))
-            .pipe(gulp.dest(bases.target));
-});
+    return gulp.src([paths.js, paths.jsx], {cwd: bases.target})
+              .pipe(react())
+              .pipe(jshint('./.jshintrc'))
+              .pipe(jshint.reporter(stylish))
+              .pipe(gulp.dest(bases.target));
+  });
+
+  gulp.task('mocks-build-cleanup', ['mocks-stylus', 'mocks-jshint-react'], function() {
+    // delete unnecessary files in target
+    return gulp.src([paths.md, paths.styl, paths.jsx], {read: false, cwd: bases.target})
+                 .pipe(clean({force: true}));
+  });
+
+  /*gulp.task('mocks-notify', ['mocks-build-cleanup'], function() {
+      Notifier.notify({
+            title: 'FinCharts (Mocks): Build Completed',
+            message: 'App will be auto refreshed in a moment...'
+        });
+})
+
+  gulp.task('mocks-watch', ['mocks-build-cleanup'], function() {
+      gutil.log(gutil.colors.cyan('watching for changes...'));
+      return gulp.watch([bases.src + paths.all,
+                         "!" + bases.src + "node_modules/**"],
+                        ['mocks-gen'*]);
+  }); */
 
   //gulp.task('mocks-gen', ['mocks-copy', 'mocks-stylus', 'mocks-jshint-react', 'mocks-build-cleanup', 'mocks-notify']);
 
-  gulp.task('mocks-gen', ['mocks-copy', 'mocks-stylus', 'mocks-jshint-react']);
+  gulp.task('mocks-gen', ['mocks-copy', 'mocks-stylus', 'mocks-jshint-react', 'mocks-build-cleanup']);
 }
 
 console.log(loadTasks);
