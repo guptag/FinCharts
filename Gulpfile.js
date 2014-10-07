@@ -21,6 +21,8 @@ var gulp        = require('gulp'),
     gutil       = require('gulp-util'),
     Notifier    = new require('node-notifier')();
 
+// load other gulp tasks
+require('./Gulpfilemocks')(gulp);
 
 var bases = {
  root: '.',
@@ -178,6 +180,10 @@ gulp.task('default', function () {
 gulp.task('dev', function () {
   seq('setDevEnv', 'clean-target', ['build', 'watch', 'open']);
 });
+
+gulp.task('mocks', ['build'], function () {
+  seq('mocks-gen'/*, 'mocks-watch'*/);
+})
 
 gulp.task('package', function () {
   seq('clean-target', 'package-app');
