@@ -63,25 +63,28 @@ var loadTasks = function (gulp) {
                  .pipe(clean({force: true}));
   });
 
-  /*gulp.task('mocks-notify', ['mocks-build-cleanup'], function() {
+  gulp.task('mocks-notify', ['mocks-build-cleanup'], function() {
       Notifier.notify({
             title: 'FinCharts (Mocks): Build Completed',
             message: 'App will be auto refreshed in a moment...'
         });
-})
+  });
 
   gulp.task('mocks-watch', ['mocks-build-cleanup'], function() {
       gutil.log(gutil.colors.cyan('watching for changes...'));
-      return gulp.watch([bases.src + paths.all,
-                         "!" + bases.src + "node_modules/**"],
-                        ['mocks-gen'*]);
-  }); */
+      return gulp.watch([bases.src + paths.all],
+                        ['mocks-build']);
+  });
 
-  //gulp.task('mocks-gen', ['mocks-copy', 'mocks-stylus', 'mocks-jshint-react', 'mocks-build-cleanup', 'mocks-notify']);
+  gulp.task('mocks-open', ['mocks-build'], function (cb) {
+      exec('node_modules/.bin/nodewebkit target/app --remote-debugging-port=9222', {
+        cwd: paths.root
+      }, function (err, stdout, stderr) {
+          //upon complete
+      });
+  });
 
-  gulp.task('mocks-gen', ['mocks-copy', 'mocks-stylus', 'mocks-jshint-react', 'mocks-build-cleanup']);
+  gulp.task('mocks-build', ['mocks-copy', 'mocks-stylus', 'mocks-jshint-react', 'mocks-build-cleanup', 'mocks-notify']);
 }
-
-console.log(loadTasks);
 
 module.exports = loadTasks;

@@ -181,10 +181,12 @@ gulp.task('dev', function () {
   seq('setDevEnv', 'clean-target', ['build', 'watch', 'open']);
 });
 
+// builds mocks project
 gulp.task('mocks', ['build'], function () {
-  seq('mocks-gen'/*, 'mocks-watch'*/);
+  seq('mocks-build', 'mocks-watch', 'mocks-open');
 })
 
+// packages the app
 gulp.task('package', function () {
   seq('clean-target', 'package-app');
 });
