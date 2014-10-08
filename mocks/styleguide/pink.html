@@ -9,7 +9,7 @@
 <body>
     <div id="app">
         <div class="clearfix">
-            <div class="label1">FINCHARTS</div>
+            <div class="label1">FINCHARTS1234</div>
             <div class="label11">Microsoft Corporation</div>
             <div class="label2">Candle Stick Charts</div>
             <div class="label22">Moving Average</div>
@@ -572,10 +572,8 @@
   </div>
 
   <script>
-    if (window.Server) { throw new Error("window.Server exists already;");}
-
     // transfer server context to the window
-    window.Server = require("../../server.js");
+    window.Server = require(process.cwd() + "/server.js");
   </script>
 
 
