@@ -1,10 +1,10 @@
-// target will be recreated for every change
+// mocks will be recreated for every change
 // just watch for a change in a small dir
-var path = process.cwd() + '/css';
+var path = process.cwd() + '/mocks/styleguide';
 var fs = window.Server.fs;
 
 // Attach the watcher only once per app restart
-if (!process.appRefreshConfigured) {
+if (!process.mocksRefreshConfigured) {
     fs.watch(path, function() {
         if (!window.refreshing) {
           // stop watching further updates
@@ -18,9 +18,5 @@ if (!process.appRefreshConfigured) {
           }, 2500);
         }
     });
-    process.appRefreshConfigured = true;
+    process.mocksRefreshConfigured = true;
 }
-
-
-
-
