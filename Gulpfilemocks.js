@@ -1,26 +1,14 @@
 var loadTasks = function (gulp) {
 
-  var source      = require('vinyl-source-stream'),
-      clean       = require('gulp-clean'),
+  var clean       = require('gulp-clean'),
       stylus      = require('gulp-stylus'),
       nib         = require('nib'),
-      stream      = require('gulp-streamify'),
       jshint      = require('gulp-jshint'),
-      rename      = require('gulp-rename'),
-      concat      = require('gulp-concat'),
       stylish     = require('jshint-stylish'),
-      preprocess  = require('gulp-preprocess'),
-      minifyCSS   = require('gulp-minify-css'),
-      browserify  = require('browserify'),
-      watchify    = require('watchify');
-      uglify      = require('gulp-uglify')
       seq         = require('run-sequence'),
       react       = require('gulp-react'),
-      reactify    = require('reactify');
       exec        = require('child_process').exec,
-      NwBuilder   = require('node-webkit-builder'),
       gutil       = require('gulp-util'),
-      streamqueue = require('streamqueue'),
       Notifier    = new require('node-notifier')();
 
 
@@ -76,7 +64,7 @@ var loadTasks = function (gulp) {
                         ['mocks-build']);
   });
 
-  gulp.task('mocks-open', ['mocks-build'], function (cb) {
+  gulp.task('mocks-open', function (cb) {
       exec('node_modules/.bin/nodewebkit target/app --remote-debugging-port=9222', {
         cwd: paths.root
       }, function (err, stdout, stderr) {
