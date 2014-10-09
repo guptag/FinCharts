@@ -3,12 +3,12 @@
 <head>
   <title>FinCharts</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link type="text/css" media="all" rel="stylesheet"  href="assets/font-awesome.css"/>
+  <link type="text/css" media="all" rel="stylesheet"  href="../assets/font-awesome.css"/>
   <link type="text/css" media="all" rel="stylesheet"  href="pink.css"/>
 </head>
 <body>
     <div id="app">
-        <div id="topbar" data-layout="topbarlayout" style="position: absolute; width: 1400px; height: 50px; top: 0px; left: 0px;" class="hide">
+        <div id="topbar" data-layout="topbarlayout" style="position: absolute; width: 1400px; height: 40px; top: 0px; left: 0px;">
             <div class="maincontainer">
                 <input id="ticker" placeholder="Ticker (e.g. MSFT)">
                 <div class="layoutoptions clearfix">
@@ -75,8 +75,8 @@
                 </div>
             </div>
         </div>
-        <div id="main" data-layout="mainlayout" style="position: absolute; width: 1400px; height: 650px; top: 50px; left: 0px;">
-            <div id="chart1" class="chartcontainer active" data-layout="chartslayout_1a_1" style="position: absolute; width: 1400px; height: 650px; top: 0px; left: 0px;">
+        <div id="main" data-layout="mainlayout" style="position: absolute; width: 1400px; height: 660px; top: 40px; left: 0px;">
+            <div id="chart1" class="chartcontainer active" data-layout="chartslayout_1a_1" style="position: absolute; width: 1400px; height: 660px; top: 0px; left: 0px;">
                 <div class="maincontainer">
                     <svg class="plot" data-ticker="MSFT">
                         <defs></defs>
@@ -560,8 +560,6 @@
     window.Server = require(process.cwd() + "/server.js");
   </script>
 
-
-  <script type="text/javascript" src="client.js"></script>
 
   <script type="text/javascript" src="../../../../autoreloadmocks.js"></script>
 

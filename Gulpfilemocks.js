@@ -13,6 +13,7 @@ var loadTasks = function (gulp) {
 
 
   var bases = {
+   app: 'app/',
    src: 'mocks/',
    target: 'target/app/mocks/'
   };
@@ -59,9 +60,16 @@ var loadTasks = function (gulp) {
   });
 
   gulp.task('mocks-watch', ['mocks-build-cleanup'], function() {
-      gutil.log(gutil.colors.cyan('watching for changes...'));
+      gutil.log(gutil.colors.cyan('watching for mocks changes...'));
       return gulp.watch([bases.src + paths.all],
                         ['mocks-build']);
+  });
+
+  gulp.task('mocks-app-watch', ['mocks-build-cleanup'], function() {
+      gutil.log(gutil.colors.cyan('watching for app changes...'));
+      return gulp.watch([bases.app + paths.all], function () {
+                          seq('build', 'mocks-build');
+                        });
   });
 
   gulp.task('mocks-open', function (cb) {
