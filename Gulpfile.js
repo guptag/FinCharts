@@ -127,7 +127,7 @@ gulp.task('post-process-files', ['post-build-cleanup'], function () {
 
 gulp.task('notify', ['post-build-cleanup'], function() {
   Notifier.notify({
-        title: 'Build Completed',
+        title: 'FinCharts (App): Build Completed',
         message: 'App will be auto refreshed in a moment...'
     });
 })
@@ -183,7 +183,7 @@ gulp.task('dev', function () {
 
 // builds mocks project
 gulp.task('mocks', ['build'], function () {
-  seq('mocks-build', 'mocks-watch', 'mocks-open');
+  seq('mocks-build', 'mocks-app-watch', 'mocks-watch', 'mocks-open');
 })
 
 // packages the app
