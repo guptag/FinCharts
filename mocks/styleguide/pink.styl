@@ -13,3 +13,68 @@ body
     font1()
     color screen-font-color
     background-color screen-background
+
+.grid-x
+    .axis
+        stroke grid-lines-color
+        stroke-width 2px
+        opacity 1
+
+    .pricelabel
+        font8()
+
+.grid-y
+    .axis
+        stroke grid-lines-color
+        stroke-width 2px
+        opacity 1
+
+    .datetimelabel
+        font8()
+
+        &.year,
+        &.month
+            font-weight bold
+
+.volume
+    stroke-width 1px
+    opacity 0.5
+
+    .up
+        stroke volume-stroke-color
+        fill volume-up-color
+
+    .down
+        stroke volume-stroke-color
+        fill volume-down-color
+
+.chart-info
+    fill screen-font-color
+
+    &.active
+        fill screen-font-color-light
+
+    .ticker
+        font1()
+        font-weight bold
+
+    .range
+        font6()
+
+    .period
+        font8()
+
+.candles
+    stroke-width 1px
+    stroke candle-stroke-color
+
+    .up
+        fill candle-up-color
+
+    .down
+        fill candle-down-color
+
+
+
+
+
