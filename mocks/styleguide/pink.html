@@ -527,18 +527,18 @@
                             <text x="0" y="20" class="range">1 Jan 2014 - 10 Oct 2014</text>
                             <text x="160" y="20" class="period">(weekly)</text>
                         </g>
-                        <g class="crosshair hide">
-                            <g transform="matrix(1,0,0,1,-50,-50)" class="crosshairX">
-                                <path d="M0,0L1346,0" stroke="#000000" style="stroke-dasharray: 2px, 2px;"></path>
-                                <rect x="1348" y="-10" width="42" height="20" fill="#000000"></rect>
-                                <text x="1350" y="3" fill="#ffffff" class="pricelabel">38.05</text>
+                        <g class="crosshairs">
+                            <g transform="matrix(1,0,0,1,0,150)" class="value-axis">
+                                <path d="M0,0L1346,0" class="axis"></path>
+                                <rect x="1348" y="-10" class="label-box" width="42" height="20"></rect>
+                                <text x="1350" y="3" class="label">44.05</text>
                             </g>
-                            <g transform="matrix(1,0,0,1,-50,-50)" class="crosshairX">
-                                <path d="M0,608L0,0" stroke="#000000" style="stroke-dasharray: 2px, 2px;"></path>
-                                <rect x="-35" y="612" width="70" height="20" fill="#000000"></rect>
-                                <text x="-28" y="626" fill="#ffffff" class="datetimelabel">2014-01-25</text>
+                            <g transform="matrix(1,0,0,1,-50,-50)" class="time-axis">
+                                <path d="M0,608L0,0" class="axis"></path>
+                                <rect x="-35" y="612" width="70" height="20" class="label-box" ></rect>
+                                <text x="-28" y="626" class="label">2014-01-25</text>
                             </g>
-                            <rect x="0" y="0" width="1388" height="638" class="crosshair-rect"></rect>
+                            <rect x="0" y="0" width="1388" height="638" class="overlay"></rect>
                         </g>
                         <g class="chart-preview hide">
                             <rect x="2" y="5" width="1346" height="608" fill="#ffffff" class="preview-rect"></rect>
