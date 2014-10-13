@@ -10,7 +10,7 @@ vendor-prefixes = webkit
 @import "./../../../../app/css/common/root"
 
 body
-    font3()
+    font1()
     color screen-font-color
     background-color screen-background
 
@@ -19,21 +19,19 @@ body
     position absolute
 
     .text
-        font2()
-        letter-spacing 7px
+        font4()
+        letter-spacing 5.5px
         position absolute
         top 5px
         left 7px
         color screen-font-color
-
-
 
     .icon
         .axis
             position absolute
             top 20px
             left 5px
-            width 132px
+            width 125px
             height 1px
             border-radius 2px
             opacity 0.7
@@ -56,12 +54,12 @@ body
             border-radius: 50%;
             width: 5px;
             height: 5px;
-            background-color red
+            background-color icon-down-color
 
         .tri2
             position absolute
             top 11px
-            left 126px
+            left 120px
             width: 0;
             height: 0;
             border-style: solid;
@@ -71,12 +69,224 @@ body
         .dot2
             position absolute
             top 6px
-            left 129px
+            left 123px
             border-radius: 50%;
             width: 5px;
             height: 5px;
-            background-color green
+            background-color icon-up-color
 
+
+#topnav-settings
+    .ticker
+        font4()
+        height 30px
+        width 170px
+        background-color #D87B6D
+        color #FEFEFE
+        text-transform uppercase
+        position absolute
+        right 40px
+        top 2px
+        padding 2px 7px
+        border-width 0
+        border 1px solid #994235
+
+        &::-webkit-input-placeholder
+            color #FFF
+            font-size 0.8em
+            text-transform none
+
+        &:focus
+            background-color #D87B6D
+            color #FFF
+
+    .range
+       position absolute
+       font4()
+       font-weight bold
+       right 220px
+       top 2px
+       width 40px
+       height 30px
+       border 1px solid #994235
+       background-color #D87B6D
+       padding 7px 7px
+       color #FFF
+
+       i.fa
+            font-size 0.5em
+            right 3px
+            top 10px
+            position absolute
+            color black
+
+    .timeframe
+       position absolute
+       font4()
+       font-weight bold
+       right 270px
+       top 2px
+       width 65px
+       height 30px
+       border 1px solid #994235
+       background-color #D87B6D
+       padding 7px 7px
+       color #FFF
+
+       i.fa
+            font-size 0.5em
+            right 3px
+            top 10px
+            position absolute
+            color black
+
+    .layouts
+        position absolute
+        font4()
+        font-weight bold
+        right 345px
+        top 2px
+        width 50px
+        height 30px
+        border 1px solid #994235
+        background-color #D87B6D
+        padding 7px 7px
+        color #FFF
+
+        .layoutbutton
+            &[data-layout='1a'],
+            &[data-layout='2a'],
+            &[data-layout='2b'],
+            &[data-layout='3a'],
+            &[data-layout='3b'],
+            &[data-layout='3c']
+                display none
+
+            .box
+                border: 1px solid screen-font-color;
+                position: absolute;
+
+        &.layout-1a .layoutbutton[data-layout='1a'],
+        &.layout-2a .layoutbutton[data-layout='2a'],
+        &.layout-2b .layoutbutton[data-layout='2b'],
+        &.layout-3a .layoutbutton[data-layout='3a'],
+        &.layout-3b .layoutbutton[data-layout='3b'],
+        &.layout-3c .layoutbutton[data-layout='3c']
+            display block
+            .box
+                border-color white
+
+
+        .layoutbutton[data-layout='1a']
+            .box1
+                height: 18px;
+                width: 25px;
+                top: 5px;
+                left: 4px;
+
+
+        .layoutbutton[data-layout='2a']
+            .box1
+                height: 18px;
+                width: 13px;
+                top: 5px;
+                left: 4px;
+
+            .box2
+                height: 18px;
+                width: 13px;
+                top: 5px;
+                left: 20px;
+
+        .layoutbutton[data-layout='2b']
+            .box1
+                height: 9px;
+                width: 25px;
+                top: 4px;
+                left: 4px;
+
+            .box2
+                height: 9px;
+                width: 25px;
+                top: 15px;
+                left: 4px;
+
+        .layoutbutton[data-layout='3a']
+            .box1
+                height: 18px;
+                width: 7px;
+                top: 5px;
+                left: 4px;
+
+            .box2
+                height: 18px;
+                width: 7px;
+                top: 5px;
+                left: 15px;
+
+            .box3
+                height: 18px;
+                width: 7px;
+                top: 5px;
+                left: 25px;
+
+        .layoutbutton[data-layout='3b']
+            .box1
+                height: 5px;
+                width: 26px;
+                top: 5px;
+                left: 4px;
+
+            .box2
+                height: 5px;
+                width: 26px;
+                top: 12px;
+                left: 4px;
+
+            .box3
+                height: 5px;
+                width: 26px;
+                top: 19px;
+                left: 4px;
+
+        .layoutbutton[data-layout='3c']
+            .box1
+                height: 20px;
+                width: 12px;
+                top: 4px;
+                left: 4px;
+
+            .box2
+                height: 9px;
+                width: 12px;
+                top: 4px;
+                left: 18px;
+
+            .box3
+                height: 9px;
+                width: 12px;
+                top: 15px;
+                left: 18px;
+
+        i.fa
+            font-size 0.5em
+            right 3px
+            top 10px
+            position absolute
+            color black
+
+    .preview
+        position absolute
+        font4()
+        font-weight bold
+        right 400px
+        top 2px
+        width 150px
+        height 30px
+        border 1px solid #994235
+        background-color #D87B6D
+        padding 7px 7px
+        color #FFF
 
 
 
@@ -154,7 +364,7 @@ body
                 fill crosshairs-label-background
 
             .label
-                font7()
+                font8()
                 stroke crosshairs-label-color
 
         .overlay

@@ -18,39 +18,22 @@
                 <div class="tri2"></div>
             </div>
         </div>
-        <div id="topnav" style="position: absolute; width: 1400px; height: 40px; top: 0px; left: 0px;">
-            <div class="options hide">
-                <input id="ticker" placeholder="Ticker (e.g. MSFT)">
-                <div class="layoutoptions clearfix">
-                    <div class="layoutbutton" data-layout="chartslayout_1a" data-chartcount="1">
-                        <span class="box1"></span>
-                    </div>
-                    <div class="layoutbutton" data-layout="chartslayout_2a" data-chartcount="2">
-                        <span class="box1"></span>
-                        <span class="box2"></span>
-                    </div>
-                    <div class="layoutbutton" data-layout="chartslayout_2b" data-chartcount="2">
-                        <span class="box1"></span>
-                        <span class="box2"></span>
-                    </div>
-                    <div class="layoutbutton" data-layout="chartslayout_3a" data-chartcount="3">
-                        <span class="box1"></span>
-                        <span class="box2"></span>
-                        <span class="box3"></span>
-                    </div>
-                    <div class="layoutbutton" data-layout="chartslayout_3b" data-chartcount="3">
-                        <span class="box1"></span>
-                        <span class="box2"></span>
-                        <span class="box3"></span>
-                    </div>
-                    <div class="layoutbutton" data-layout="chartslayout_3c" data-chartcount="3">
-                        <span class="box1"></span>
-                        <span class="box2"></span>
-                        <span class="box3"></span>
-                    </div>
+        <div id="topnav" style="position: absolute; width: 1000px; height: 40px; top: 0px; right: 60px;">
+            <div id="topnav-settings">
+                <input id="ticker" class="ticker" placeholder="Ticker (e.g. msft)">
+                <div class="range">
+                    <i class="fa fa-chevron-down"></i>
+                    <span>W</span>
+                    <select id="range" class="hide">
+                        <option value="d" selected="true">Daily</option>
+                        <option value="w">Weekly</option>
+                        <option value="m">Monthly</option>
+                    </select>
                 </div>
-                <div class="timeframeoptions clearfix">
-                    <select id="timeframe">
+                <div class="timeframe">
+                    <i class="fa fa-chevron-down"></i>
+                    <span>3.5M</span>
+                    <select id="timeframe" class="hide">
                         <option value="3">3M</option>
                         <option value="6">6M</option>
                         <option value="9" selected="true">9M</option>
@@ -65,14 +48,36 @@
                         <option value="240">20Y</option>
                     </select>
                 </div>
-                <div class="rangeoptions clearfix">
-                    <select id="range">
-                        <option value="d" selected="true">Daily</option>
-                        <option value="w">Weekly</option>
-                        <option value="m">Monthly</option>
-                    </select>
+                <div class="layouts layout-1a">
+                    <i class="fa fa-chevron-down"></i>
+                    <div class="layoutbutton" data-layout="1a">
+                        <span class="box box1"></span>
+                    </div>
+                    <div class="layoutbutton" data-layout="2a">
+                        <span class="box box1"></span>
+                        <span class="box box2"></span>
+                    </div>
+                    <div class="layoutbutton" data-layout="2b">
+                        <span class="box box1"></span>
+                        <span class="box box2"></span>
+                    </div>
+                    <div class="layoutbutton" data-layout="3a">
+                        <span class="box box1"></span>
+                        <span class="box box2"></span>
+                        <span class="box box3"></span>
+                    </div>
+                    <div class="layoutbutton" data-layout="3b">
+                        <span class="box box1"></span>
+                        <span class="box box2"></span>
+                        <span class="box box3"></span>
+                    </div>
+                    <div class="layoutbutton" data-layout="3c">
+                        <span class="box box1"></span>
+                        <span class="box box2"></span>
+                        <span class="box box3"></span>
+                    </div>
                 </div>
-                <div class="previewoptions clearfix play playview">
+                <div class="preview play playview hide">
                     <section class="playview">
                         <button id="play">Animate</button>
                     </section>
@@ -553,7 +558,7 @@
                         <g class="chart-preview hide">
                             <rect x="2" y="5" width="1346" height="608" fill="#ffffff" class="preview-rect"></rect>
                         </g>
-                        <g class="chart-preview-elements">
+                        <g class="chart-preview-elements hide">
                             <line x1="0" x2="4" y1="0" y2="0" stroke="#000000" style="stroke-width: 3px;"></line>
                             <line x1="-8" x2="8" y1="0" y2="0" stroke="#000000" style="stroke-width: 1px;"></line>
                             <line x1="-8" x2="8" y1="0" y2="0" stroke="#000000" style="stroke-width: 1px;"></line>
