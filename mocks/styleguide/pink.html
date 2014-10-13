@@ -8,8 +8,18 @@
 </head>
 <body>
     <div id="app">
-        <div id="topbar" data-layout="topbarlayout" style="position: absolute; width: 1400px; height: 40px; top: 0px; left: 0px;" class="hide">
-            <div class="maincontainer">
+        <div class="logo">
+            <div class="text">FinCharts</div>
+            <div class="icon">
+                <span class="axis"></span>
+                <span class="dot1"></span>
+                <span class="dot2"></span>
+                <div class="tri1"></div>
+                <div class="tri2"></div>
+            </div>
+        </div>
+        <div id="topnav" style="position: absolute; width: 1400px; height: 40px; top: 0px; left: 0px;">
+            <div class="options hide">
                 <input id="ticker" placeholder="Ticker (e.g. MSFT)">
                 <div class="layoutoptions clearfix">
                     <div class="layoutbutton" data-layout="chartslayout_1a" data-chartcount="1">
@@ -78,7 +88,7 @@
         <div id="main" data-layout="mainlayout" style="position: absolute; width: 1400px; height: 660px; top: 40px; left: 0px;">
             <div id="chart1" class="chartcontainer active" data-layout="chartslayout_1a_1" style="position: absolute; width: 1400px; height: 660px; top: 0px; left: 0px;">
                 <div class="maincontainer">
-                    <svg class="plot" data-ticker="MSFT">
+                    <svg class="finchart" data-ticker="MSFT">
                         <defs></defs>
                         <g class="grid-x">
                             <path d="M0,613L1388,613" class="axis"></path>
