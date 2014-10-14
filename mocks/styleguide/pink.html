@@ -32,7 +32,7 @@
                 </div>
                 <div class="timeframe">
                     <i class="fa fa-chevron-down"></i>
-                    <span>3.5M</span>
+                    <span>3.5m</span>
                     <select id="timeframe" class="hide">
                         <option value="3">3M</option>
                         <option value="6">6M</option>
@@ -77,15 +77,20 @@
                         <span class="box box3"></span>
                     </div>
                 </div>
-                <div class="preview play playview hide">
-                    <section class="playview">
-                        <button id="play">Animate</button>
-                    </section>
-                    <section class="stopview">
-                        <button id="pause">||</button>
-                        <button id="stop">Stop</button>
-                        <input id="previewfrequency" type="number" min="0.25" max="3" step="0.25" value="1">
-                        <label><input id="hidePriceAnimation" type="checkbox">Hide</label>
+                <div class="preview playview">
+                    <i class="fa fa-chevron-down"></i>
+                    <button class="play">
+                        <i class="fa fa-play"></i>
+                    </button>
+                    <button class="pause disabled">
+                        <i class="fa fa-pause"></i>
+                    </button>
+                    <button class="stop disabled">
+                        <i class="fa fa-stop"></i>
+                    </button>
+                    <section class="addl hide">
+                        <input class="frequency" type="number" min="0.25" max="3" step="0.25" value="1">
+                        <label><input class="hide-price-movement" type="checkbox">Hide</label>
                     </section>
                 </div>
             </div>
