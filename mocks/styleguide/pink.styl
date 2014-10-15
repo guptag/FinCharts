@@ -76,20 +76,31 @@ body
             background-color icon-up-color
 
 
-#topnav-settings
-    .ticker
-        font4()
-        height 30px
-        width 170px
+#topnav
+    .topnav-item
         background-color #D87B6D
         color #FEFEFE
-        text-transform uppercase
-        position absolute
-        right 40px
-        top 2px
-        padding 2px 7px
-        border-width 0
         border 1px solid #994235
+        float right
+        position relative
+        height 30px
+        font4()
+        font-weight bold
+        margin 2px 4px 0 4px
+        padding 7px 7px
+
+        i.fa-chevron-down
+            font-size 0.5em
+            right 3px
+            top 10px
+            position absolute
+            color black
+
+    .ticker
+        width 170px
+        text-transform uppercase
+        padding 2px 7px
+        font-weight normal
 
         &::-webkit-input-placeholder
             color #FFF
@@ -101,57 +112,14 @@ body
             color #FFF
 
     .range
-       position absolute
-       font4()
-       font-weight bold
-       right 220px
-       top 2px
        width 40px
-       height 30px
-       border 1px solid #994235
-       background-color #D87B6D
-       padding 7px 7px
-       color #FFF
-
-       i.fa-chevron-down
-            font-size 0.5em
-            right 3px
-            top 10px
-            position absolute
-            color black
 
     .timeframe
-       position absolute
-       font4()
-       font-weight bold
-       right 270px
-       top 2px
-       width 65px
-       height 30px
-       border 1px solid #994235
-       background-color #D87B6D
-       padding 7px 7px
-       color #FFF
-
-       i.fa-chevron-down
-            font-size 0.5em
-            right 3px
-            top 10px
-            position absolute
-            color black
+        width 65px
 
     .layouts
-        position absolute
-        font4()
-        font-weight bold
-        right 345px
-        top 2px
         width 50px
-        height 30px
-        border 1px solid #994235
-        background-color #D87B6D
-        padding 7px 7px
-        color #FFF
+        position relative
 
         .layoutbutton
             &[data-layout='1a'],
@@ -268,25 +236,9 @@ body
                 top: 15px;
                 left: 18px;
 
-        i.fa-chevron-down
-            font-size 0.5em
-            right 3px
-            top 10px
-            position absolute
-            color black
-
     .preview
-        position absolute
-        font4()
-        font-weight bold
-        right 400px
-        top 2px
         width 160px
-        height 30px
-        border 1px solid #994235
-        background-color #D87B6D
         padding 2px 7px
-        color #FFF
 
         button.play
             margin 0
@@ -310,72 +262,20 @@ body
         button.disabled
             opacity 0.4
 
-        i.fa-chevron-down
-            font-size 0.5em
-            right 3px
-            top 10px
-            position absolute
-            color black
-
     .compare
-        position absolute
         font5()
-        font-weight bold
-        right 570px
-        top 2px
         width 110px
-        height 30px
-        border 1px solid #994235
-        background-color #D87B6D
         padding 6px 7px
-        color #FFF
-
-        i.fa-chevron-down
-            font-size 0.5em
-            right 3px
-            top 10px
-            position absolute
-            color black
 
     .signals
-        position absolute
         font5()
-        font-weight bold
-        right 690px
-        top 2px
         width 95px
-        height 30px
-        border 1px solid #994235
-        background-color #D87B6D
         padding 6px 7px
-        color #FFF
-
-        i.fa-chevron-down
-            font-size 0.5em
-            right 3px
-            top 10px
-            position absolute
-            color black
 
     .indicators
-        position absolute
         font5()
-        font-weight bold
-        right 800px
-        top 2px
         width 115px
-        height 30px
-        border 1px solid #994235
-        background-color #D87B6D
         padding 6px 7px
-        color #FFF
-
-        i.fa-chevron-down
-            font-size 0.5em
-            right 3px
-            top 10px
-            position absolute
-            color black
 
 
 
