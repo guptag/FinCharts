@@ -96,6 +96,10 @@ body
             position absolute
             color black
 
+        &:hover
+            background-color #B14A3A
+            box-shadow: 3px 1px 15px 0px rgba(50, 50, 50, 0.61);
+
     .ticker
         width 170px
         text-transform uppercase
@@ -108,7 +112,7 @@ body
             text-transform none
 
         &:focus
-            background-color #D87B6D
+            background-color #B14A3A
             color #FFF
 
     .range
@@ -261,6 +265,16 @@ body
 
         button.disabled
             opacity 0.4
+
+            &:hover
+                background-color #D87B6D
+
+        button:hover
+            background-color #B14A3A
+
+        &:hover
+            background-color #D87B6D
+            box-shadow none
 
     .compare
         font5()
