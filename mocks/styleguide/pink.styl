@@ -77,28 +77,29 @@ body
 
 
 #topnav
+    z-index 1
     .topnav-item
-        background-color #D87B6D
-        color #FEFEFE
-        border 1px solid #994235
-        float right
-        position relative
-        height 30px
         font4()
         font-weight bold
+        position relative
+        float right
         margin 2px 4px 0 4px
         padding 7px 7px
+        height 30px
+        background-color menu-background-color
+        color screen-font-color-light
+        border 1px solid menu-border-color
 
         i.fa-chevron-down
             font-size 0.5em
             right 3px
             top 10px
             position absolute
-            color black
+            color screen-background-dark
 
         &:hover
-            background-color #B14A3A
-            box-shadow: 3px 1px 15px 0px rgba(50, 50, 50, 0.61);
+            background-color menu-background-hover-color
+            box-shadow: 3px 1px 15px 0px menu-boxshadow-color;
 
     .ticker
         width 170px
@@ -112,8 +113,8 @@ body
             text-transform none
 
         &:focus
-            background-color #B14A3A
-            color #FFF
+            background-color menu-background-hover-color
+            color screen-font-color-light
 
     .range
        width 40px
@@ -146,7 +147,7 @@ body
         &.layout-3c .layoutbutton[data-layout='3c']
             display block
             .box
-                border-color white
+                border-color screen-font-color-light
 
 
         .layoutbutton[data-layout='1a']
@@ -248,32 +249,32 @@ body
             margin 0
             width 60px
             background-color transparent
-            border 1px solid white
+            border 1px solid screen-font-color-light
             border-radius 3px
 
         button.stop
             width 30px
             background-color transparent
-            border 1px solid white
+            border 1px solid screen-font-color-light
             border-radius 3px
 
         button.pause
             width 30px
             background-color transparent
-            border 1px solid white
+            border 1px solid screen-font-color-light
             border-radius 3px
 
         button.disabled
             opacity 0.4
 
             &:hover
-                background-color #D87B6D
+                background-color menu-background-color
 
         button:hover
-            background-color #B14A3A
+            background-color menu-background-hover-color
 
         &:hover
-            background-color #D87B6D
+            background-color menu-background-color
             box-shadow none
 
     .compare
@@ -290,6 +291,40 @@ body
         font5()
         width 115px
         padding 6px 7px
+
+
+#topnav
+    .range .navitem-options
+        font5()
+        position absolute
+        top 40px
+        left 0
+        width 150px
+        height 70px
+        padding 10px 10px 10px 30px
+        background-color menu-background-color
+        color screen-font-color
+        border 1px solid menu-border-color
+
+        &:before
+            position absolute
+            top -10px
+            left 15px
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 5.5px 9.5px 5.5px
+            border-color: transparent transparent menu-border-color transparent;
+            content: ''
+
+        .sidetitle
+            position absolute
+            top 0
+            left 10px
+            transform rotate(-270deg)
+            transform-origin: top left
+
+
 
 
 
