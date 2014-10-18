@@ -18,37 +18,36 @@
                 <div class="tri2"></div>
             </div>
         </div>
-        <div id="topnav" style="position: absolute; width: 1000px; height: 40px; top: 0px; right: 60px;">
+        <div id="topnav" style="position: absolute; width: 1000px; height: 40px; top: 0px; right: 60px;" class="clearfix">
             <input id="ticker" class="topnav-item ticker" placeholder="(e.g. msft)">
-            <div class="topnav-item clear-fix range">
+            <div class="topnav-item range">
                 <i class="fa fa-chevron-down"></i>
                 <span class="value">W</span>
-                <div class="navitem-options popover hide">
-                    <div class="sidetitle">Range</div>
+                <div class="navitem-options popover clearfix hide">
                     <div class="option" value="d" selected="true">Daily</div>
-                    <div class="option" value="w">Weekly</div>
+                    <div class="option selected" value="w">Weekly</div>
                     <div class="option" value="m">Monthly</div>
                 </div>
             </div>
-            <div class="topnav-item clear-fix timeframe">
+            <div class="topnav-item timeframe">
                 <i class="fa fa-chevron-down"></i>
-                <span class="value">3.5m</span>
-                <select id="timeframe" class="hide">
-                    <option value="3">3M</option>
-                    <option value="6">6M</option>
-                    <option value="9" selected="true">9M</option>
-                    <option value="12">1Y</option>
-                    <option value="18">1.5Y</option>
-                    <option value="24">2Y</option>
-                    <option value="30">2.5Y</option>
-                    <option value="36">3Y</option>
-                    <option value="60">5Y</option>
-                    <option value="120">10Y</option>
-                    <option value="180">15Y</option>
-                    <option value="240">20Y</option>
-                </select>
+                <span class="value">3M</span>
+                <div class="navitem-options popover clearfix hide">
+                    <div class="option selected" value="3">3M</div>
+                    <div class="option" value="6">6M</div>
+                    <div class="option" value="9">9M</div>
+                    <div class="option" value="12">1Y</div>
+                    <div class="option" value="18">1.5Y</div>
+                    <div class="option" value="24">2Y</div>
+                    <div class="option" value="30">2.5Y</div>
+                    <div class="option" value="36">3Y</div>
+                    <div class="option" value="60">5Y</div>
+                    <div class="option" value="120">10Y</div>
+                    <div class="option" value="180">15Y</div>
+                    <div class="option" value="240">20Y</div>
+                </div>
             </div>
-            <div class="layouts topnav-item clear-fix layout-1a">
+            <div class="layouts topnav-item layout-1a">
                 <i class="fa fa-chevron-down"></i>
                 <div class="layoutbutton" data-layout="1a">
                     <span class="box box1"></span>
@@ -76,8 +75,48 @@
                     <span class="box box2"></span>
                     <span class="box box3"></span>
                 </div>
+                <div class="navitem-options popover clearfix hide">
+                        <div class="option" value="1a">
+                            <div class="layoutbutton" data-layout="1a">
+                                <span class="box box1"></span>
+                            </div>
+                        </div>
+                        <div class="option" value="2a">
+                            <div class="layoutbutton" data-layout="2a">
+                                <span class="box box1"></span>
+                                <span class="box box2"></span>
+                            </div>
+                        </div>
+                        <div class="option" value="2b">
+                            <div class="layoutbutton" data-layout="2b">
+                                <span class="box box1"></span>
+                                <span class="box box2"></span>
+                            </div>
+                        </div>
+                        <div class="option" value="3a">
+                            <div class="layoutbutton" data-layout="3a">
+                                <span class="box box1"></span>
+                                <span class="box box2"></span>
+                                <span class="box box3"></span>
+                            </div>
+                        </div>
+                        <div class="option" value="3b">
+                            <div class="layoutbutton" data-layout="3b">
+                                <span class="box box1"></span>
+                                <span class="box box2"></span>
+                                <span class="box box3"></span>
+                            </div>
+                        </div>
+                        <div class="option" value="3c">
+                            <div class="layoutbutton" data-layout="3c">
+                                <span class="box box1"></span>
+                                <span class="box box2"></span>
+                                <span class="box box3"></span>
+                            </div>
+                        </div>
+                </div>
             </div>
-            <div class="preview topnav-item clear-fix">
+            <div class="preview topnav-item">
                 <i class="fa fa-chevron-down"></i>
                 <button class="play">
                     <i class="fa fa-play"></i>
@@ -93,17 +132,17 @@
                     <label><input class="hide-price-movement" type="checkbox">Hide</label>
                 </section>
             </div>
-            <div class="compare topnav-item clear-fix">
+            <div class="compare topnav-item">
                 <i class="fa fa-chevron-down"></i>
                 <i class="fa fa-files-o"></i>
                 <span>Compare</span>
             </div>
-            <div class="signals topnav-item clear-fix">
+            <div class="signals topnav-item">
                 <i class="fa fa-chevron-down"></i>
                 <i class="fa fa-puzzle-piece"></i>
                 <span>Signals</span>
             </div>
-            <div class="indicators topnav-item clear-fix">
+            <div class="indicators topnav-item">
                 <i class="fa fa-chevron-down"></i>
                 <i class="fa fa-cogs"></i>
                 <span>Indicators</span>

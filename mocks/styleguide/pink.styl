@@ -120,7 +120,8 @@ body
        width 40px
 
     .timeframe
-        width 65px
+        width 60px
+        text-align center
 
     .layouts
         width 50px
@@ -294,21 +295,20 @@ body
 
 
 #topnav
-    .range .navitem-options
+
+    .navitem-options
         font5()
         position absolute
         top 40px
         left 0
-        width 250px
-        height 30px
-        padding 6px 2px
+        width 100px
         background-color menu-background-color
         color screen-font-color
-        border 1px solid menu-border-color
+
 
         &:before
             position absolute
-            top -10px
+            top -8px
             left 15px
             width: 0;
             height: 0;
@@ -317,15 +317,78 @@ body
             border-color: transparent transparent menu-border-color transparent;
             content: ''
 
-        .sidetitle
-            float left
-            padding 0 5px
-            border-right 1px solid white
 
         .option
             float left
+            height 28px
+            width 33.3%
+            padding 8px 0px
+            text-align center
+            border 1px solid menu-border-color
+            border-right none
+            border-bottom none
+
+            &:hover
+                background-color menu-background-hover-color
+                color screen-font-color-light
+
+            &.selected
+                color screen-font-color-light
 
 
+    .range .navitem-options
+        width 230px
+
+        .option
+            height 28px
+            width 33.3%
+            border-bottom 1px solid menu-border-color
+
+            &:nth-child(3)
+                border-right 1px solid menu-border-color
+
+
+    .timeframe .navitem-options
+        width 300px
+
+        &:before
+            left 25px
+
+        .option
+            padding 14px 0 0 0
+            height 40px
+            width 25%
+
+            &:nth-child(4),
+            &:nth-child(8),
+            &:nth-child(12)
+                border-right 1px solid menu-border-color
+
+            &:nth-child(9),
+            &:nth-child(10),
+            &:nth-child(11),
+            &:nth-child(12)
+                border-bottom 1px solid menu-border-color
+
+    .layouts .navitem-options
+        width 120px
+
+        .option
+            height 28px
+            width 33.3%
+            position relative
+
+            &:nth-child(3),
+            &:nth-child(6)
+                border-right 1px solid menu-border-color
+
+            &:nth-child(4),
+            &:nth-child(5),
+            &:nth-child(6)
+                border-bottom 1px solid menu-border-color
+
+            .layoutbutton
+                display block
 
 
 
