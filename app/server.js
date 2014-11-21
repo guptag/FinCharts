@@ -13,9 +13,10 @@ serverContext.argv = window.require('nw.gui').App.argv;
 serverContext.node_proc = process;
 
 // Import the node-space modules that need to be available in all windows
-serverContext.fs     = require('fs');
-serverContext.path   = require('path');
-serverContext._      = require('lodash');
-serverContext.Q      = require('q');
+serverContext.fs        = require('fs');
+serverContext.path      = require('path');
+serverContext._         = require('lodash');
+serverContext.Q         = require('q');
+serverContext.immutable = require('immutable');
 
 module.exports = serverContext;
