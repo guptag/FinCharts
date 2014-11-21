@@ -8,7 +8,7 @@
 
 
 
-var React = require('react');
+/*var React = require('react');
 
 var TodoApp = require('ui/components/TodoApp.react');
 
@@ -18,7 +18,7 @@ module.exports = {
               <TodoApp />,
               document.getElementById('todoapp'));
   }
-};
+};*/
 
 
 
