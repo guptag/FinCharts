@@ -108,6 +108,16 @@ function resolveEnd(end, size) {
 function resolveIndex(index, size, defaultIndex) {
   return index === undefined ? defaultIndex : index < 0 ? Math.max(0, size + index) : size === undefined ? index : Math.min(size, index);
 }
+var imul = typeof Math.imul === 'function' && Math.imul(0xffffffff, 2) === -2 ? Math.imul : function imul(a, b) {
+  a = a | 0;
+  b = b | 0;
+  var c = a & 0xffff;
+  var d = b & 0xffff;
+  return (c * d) + ((((a >>> 16) * d + c * (b >>> 16)) << 16) >>> 0) | 0;
+};
+function smi(i32) {
+  return ((i32 >>> 1) & 0x40000000) | (i32 & 0xBFFFFFFF);
+}
 function hash(o) {
   if (!o) {
     return 0;
@@ -117,11 +127,12 @@ function hash(o) {
   }
   var type = typeof o;
   if (type === 'number') {
-    if ((o | 0) === o) {
-      return o & HASH_MAX_VAL;
+    var h = o | 0;
+    while (o > 0xFFFFFFFF) {
+      o /= 0xFFFFFFFF;
+      h ^= o;
     }
-    o = '' + o;
-    type = 'string';
+    return smi(h);
   }
   if (type === 'string') {
     return o.length > STRING_HASH_CACHE_MIN_STRLEN ? cachedHashString(o) : hashString(o);
@@ -147,9 +158,9 @@ function cachedHashString(string) {
 function hashString(string) {
   var hash = 0;
   for (var ii = 0; ii < string.length; ii++) {
-    hash = (31 * hash + string.charCodeAt(ii)) & HASH_MAX_VAL;
+    hash = 31 * hash + string.charCodeAt(ii) | 0;
   }
-  return hash;
+  return smi(hash);
 }
 function hashJSObj(obj) {
   var hash = weakMap && weakMap.get(obj);
@@ -169,7 +180,10 @@ function hashJSObj(obj) {
   if (Object.isExtensible && !Object.isExtensible(obj)) {
     throw new Error('Non-extensible objects are not allowed as keys.');
   }
-  hash = ++objHashUID & HASH_MAX_VAL;
+  hash = ++objHashUID;
+  if (objHashUID & 0x40000000) {
+    objHashUID = 0;
+  }
   if (weakMap) {
     weakMap.set(obj, hash);
   } else if (canDefineProperty) {
@@ -210,7 +224,6 @@ function getIENodeHash(node) {
   }
 }
 var weakMap = typeof WeakMap === 'function' && new WeakMap();
-var HASH_MAX_VAL = 0x7FFFFFFF;
 var objHashUID = 0;
 var UID_HASH_KEY = '__immutablehash__';
 if (typeof Symbol === 'function') {
@@ -455,26 +468,6 @@ var $Iterable = Iterable;
     return countByFactory(this, grouper, context);
   },
   equals: function(other) {
-    if (this === other) {
-      return true;
-    }
-    if (!other || typeof other.equals !== 'function') {
-      return false;
-    }
-    if (this.size !== undefined && other.size !== undefined) {
-      if (this.size !== other.size) {
-        return false;
-      }
-      if (this.size === 0 && other.size === 0) {
-        return true;
-      }
-    }
-    if (this.__hash !== undefined && other.__hash !== undefined && this.__hash !== other.__hash) {
-      return false;
-    }
-    return this.__deepEquals(other);
-  },
-  __deepEquals: function(other) {
     return deepEqual(this, other);
   },
   entrySeq: function() {
@@ -514,8 +507,11 @@ var $Iterable = Iterable;
   getIn: function(searchKeyPath, notSetValue) {
     var nested = this;
     if (searchKeyPath) {
-      for (var ii = 0; ii < searchKeyPath.length; ii++) {
-        nested = nested && nested.get ? nested.get(searchKeyPath[ii], NOT_SET) : NOT_SET;
+      var iter = getIterator(searchKeyPath) || getIterator($Iterable(searchKeyPath));
+      var step;
+      while (!(step = iter.next()).done) {
+        var key = step.value;
+        nested = nested && nested.get ? nested.get(key, NOT_SET) : NOT_SET;
         if (nested === NOT_SET) {
           return notSetValue;
         }
@@ -590,9 +586,7 @@ var $Iterable = Iterable;
     return this.toIndexedSeq();
   },
   hashCode: function() {
-    return this.__hash || (this.__hash = this.size === Infinity ? 0 : this.reduce((function(h, v, k) {
-      return (h + (hash(v) ^ (v === k ? 0 : hash(k)))) & HASH_MAX_VAL;
-    }), 0));
+    return this.__hash || (this.__hash = hashIterable(this));
   }
 }, {});
 var IS_ITERABLE_SENTINEL = '@@__IMMUTABLE_ITERABLE__@@';
@@ -827,15 +821,21 @@ function defaultNegComparator(a, b) {
   return a > b ? -1 : a < b ? 1 : 0;
 }
 function deepEqual(a, b) {
-  var bothNotAssociative = !isAssociative(a) && !isAssociative(b);
+  if (a === b) {
+    return true;
+  }
+  if (!isIterable(b) || a.size !== undefined && b.size !== undefined && a.size !== b.size || a.__hash !== undefined && b.__hash !== undefined && a.__hash !== b.__hash || isKeyed(a) !== isKeyed(b) || isIndexed(a) !== isIndexed(b) || isOrdered(a) !== isOrdered(b)) {
+    return false;
+  }
+  if (a.size === 0 && b.size === 0) {
+    return true;
+  }
+  var notAssociative = !isAssociative(a);
   if (isOrdered(a)) {
-    if (!isOrdered(b)) {
-      return false;
-    }
     var entries = a.entries();
     return b.every((function(v, k) {
       var entry = entries.next().value;
-      return entry && is(entry[1], v) && (bothNotAssociative || is(entry[0], k));
+      return entry && is(entry[1], v) && (notAssociative || is(entry[0], k));
     })) && entries.next().done;
   }
   var flipped = false;
@@ -851,12 +851,43 @@ function deepEqual(a, b) {
   }
   var allEqual = true;
   var bSize = b.__iterate((function(v, k) {
-    if (bothNotAssociative ? !a.has(v) : flipped ? !is(v, a.get(k, NOT_SET)) : !is(a.get(k, NOT_SET), v)) {
+    if (notAssociative ? !a.has(v) : flipped ? !is(v, a.get(k, NOT_SET)) : !is(a.get(k, NOT_SET), v)) {
       allEqual = false;
       return false;
     }
   }));
   return allEqual && a.size === bSize;
+}
+function hashIterable(iterable) {
+  if (iterable.size === Infinity) {
+    return 0;
+  }
+  var ordered = isOrdered(iterable);
+  var keyed = isKeyed(iterable);
+  var h = ordered ? 1 : 0;
+  var size = iterable.__iterate(keyed ? ordered ? (function(v, k) {
+    h = 31 * h + hashMerge(hash(v), hash(k)) | 0;
+  }) : (function(v, k) {
+    h = h + hashMerge(hash(v), hash(k)) | 0;
+  }) : ordered ? (function(v) {
+    h = 31 * h + hash(v) | 0;
+  }) : (function(v) {
+    h = h + hash(v) | 0;
+  }));
+  return murmurHashOfSize(size, h);
+}
+function murmurHashOfSize(size, h) {
+  h = imul(h, 0xCC9E2D51);
+  h = imul(h << 15 | h >>> -15, 0x1B873593);
+  h = imul(h << 13 | h >>> -13, 5);
+  h = (h + 0xE6546B64 | 0) ^ size;
+  h = imul(h ^ h >>> 16, 0x85EBCA6B);
+  h = imul(h ^ h >>> 13, 0xC2B2AE35);
+  h = smi(h ^ h >>> 16);
+  return h;
+}
+function hashMerge(a, b) {
+  return a ^ b + 0x9E3779B9 + (a << 6) + (a >> 2) | 0;
 }
 function mixin(ctor, methods) {
   var proto = ctor.prototype;
@@ -1212,7 +1243,11 @@ Collection.Keyed = KeyedCollection;
 Collection.Indexed = IndexedCollection;
 Collection.Set = SetCollection;
 var Map = function Map(value) {
-  return value === null || value === undefined ? emptyMap() : isMap(value) ? value : emptyMap().merge(KeyedIterable(value));
+  return value === null || value === undefined ? emptyMap() : isMap(value) ? value : emptyMap().withMutations((function(map) {
+    KeyedIterable(value).forEach((function(v, k) {
+      return map.set(k, v);
+    }));
+  }));
 };
 ($traceurRuntime.createClass)(Map, {
   toString: function() {
@@ -1225,7 +1260,6 @@ var Map = function Map(value) {
     return updateMap(this, k, v);
   },
   setIn: function(keyPath, v) {
-    invariant(keyPath.length > 0, 'Requires non-empty key path.');
     return this.updateIn(keyPath, (function() {
       return v;
     }));
@@ -1234,7 +1268,6 @@ var Map = function Map(value) {
     return updateMap(this, k, NOT_SET);
   },
   removeIn: function(keyPath) {
-    invariant(keyPath.length > 0, 'Requires non-empty key path.');
     return this.updateIn(keyPath, (function() {
       return NOT_SET;
     }));
@@ -1247,7 +1280,8 @@ var Map = function Map(value) {
       updater = notSetValue;
       notSetValue = undefined;
     }
-    return keyPath.length === 0 ? updater(this) : updateInDeepMap(this, keyPath, notSetValue, updater, 0);
+    var updatedValue = updateInDeepMap(this, getIterator(keyPath) || getIterator(Iterable(keyPath)), notSetValue, updater);
+    return updatedValue === NOT_SET ? undefined : updatedValue;
   },
   clear: function() {
     if (this.size === 0) {
@@ -1271,14 +1305,30 @@ var Map = function Map(value) {
       iters[$__3 - 1] = arguments[$__3];
     return mergeIntoMapWith(this, merger, iters);
   },
+  mergeIn: function(keyPath) {
+    for (var iters = [],
+        $__4 = 1; $__4 < arguments.length; $__4++)
+      iters[$__4 - 1] = arguments[$__4];
+    return this.updateIn(keyPath, emptyMap(), (function(m) {
+      return m.merge.apply(m, iters);
+    }));
+  },
   mergeDeep: function() {
     return mergeIntoMapWith(this, deepMerger(undefined), arguments);
   },
   mergeDeepWith: function(merger) {
     for (var iters = [],
-        $__4 = 1; $__4 < arguments.length; $__4++)
-      iters[$__4 - 1] = arguments[$__4];
+        $__5 = 1; $__5 < arguments.length; $__5++)
+      iters[$__5 - 1] = arguments[$__5];
     return mergeIntoMapWith(this, deepMerger(merger), iters);
+  },
+  mergeDeepIn: function(keyPath) {
+    for (var iters = [],
+        $__6 = 1; $__6 < arguments.length; $__6++)
+      iters[$__6 - 1] = arguments[$__6];
+    return this.updateIn(keyPath, emptyMap(), (function(m) {
+      return m.mergeDeep.apply(m, iters);
+    }));
   },
   sort: function(comparator) {
     return OrderedMap(sortFactory(this, comparator));
@@ -1774,8 +1824,14 @@ function deepMerger(merger) {
   });
 }
 function mergeIntoCollectionWith(collection, merger, iters) {
+  iters = iters.filter((function(x) {
+    return x.size !== 0;
+  }));
   if (iters.length === 0) {
     return collection;
+  }
+  if (collection.size === 0 && iters.length === 1) {
+    return collection.constructor(iters[0]);
   }
   return collection.withMutations((function(collection) {
     var mergeIntoMap = merger ? (function(value, key) {
@@ -1790,13 +1846,19 @@ function mergeIntoCollectionWith(collection, merger, iters) {
     }
   }));
 }
-function updateInDeepMap(collection, keyPath, notSetValue, updater, offset) {
-  invariant(!collection || collection.set, 'updateIn with invalid keyPath');
-  var key = keyPath[offset];
-  var existing = collection ? collection.get(key, NOT_SET) : NOT_SET;
-  var existingValue = existing === NOT_SET ? undefined : existing;
-  var value = offset === keyPath.length - 1 ? updater(existing === NOT_SET ? notSetValue : existing) : updateInDeepMap(existingValue, keyPath, notSetValue, updater, offset + 1);
-  return value === existingValue ? collection : value === NOT_SET ? collection && collection.remove(key) : (collection || emptyMap()).set(key, value);
+function updateInDeepMap(existing, keyPathIter, notSetValue, updater) {
+  var isNotSet = existing === NOT_SET;
+  var step = keyPathIter.next();
+  if (step.done) {
+    var existingValue = isNotSet ? notSetValue : existing;
+    var newValue = updater(existingValue);
+    return newValue === existingValue ? existing : newValue;
+  }
+  invariant(isNotSet || (existing && existing.set), 'invalid keyPath');
+  var key = step.value;
+  var nextExisting = isNotSet ? NOT_SET : existing.get(key, NOT_SET);
+  var nextUpdated = updateInDeepMap(nextExisting, keyPathIter, notSetValue, updater);
+  return nextUpdated === nextExisting ? existing : nextUpdated === NOT_SET ? existing.remove(key) : (isNotSet ? emptyMap() : existing).set(key, nextUpdated);
 }
 function popCount(x) {
   x = x - ((x >> 1) & 0x55555555);
@@ -2153,8 +2215,8 @@ function groupByFactory(iterable, grouper, context) {
   var isKeyedIter = isKeyed(iterable);
   var groups = Map().asMutable();
   iterable.__iterate((function(v, k) {
-    groups.update(grouper.call(context, v, k, iterable), [], (function(a) {
-      return (a.push(isKeyedIter ? [k, v] : v), a);
+    groups.update(grouper.call(context, v, k, iterable), (function(a) {
+      return (a = a || [], a.push(isKeyedIter ? [k, v] : v), a);
     }));
   }));
   var coerce = iterableClass(iterable);
@@ -2338,21 +2400,33 @@ function skipWhileFactory(iterable, predicate, context, useKeys) {
 }
 function concatFactory(iterable, values) {
   var isKeyedIterable = isKeyed(iterable);
-  var iters = new ArraySeq([iterable].concat(values)).map((function(v) {
+  var iters = [iterable].concat(values).map((function(v) {
     if (!isIterable(v)) {
       v = isKeyedIterable ? keyedSeqFromValue(v) : indexedSeqFromValue(Array.isArray(v) ? v : [v]);
     } else if (isKeyedIterable) {
       v = KeyedIterable(v);
     }
     return v;
+  })).filter((function(v) {
+    return v.size !== 0;
   }));
-  if (isKeyedIterable) {
-    iters = iters.toKeyedSeq();
-  } else if (!isIndexed(iterable)) {
-    iters = iters.toSetSeq();
+  if (iters.length === 0) {
+    return iterable;
   }
-  var flat = iters.flatten(true);
-  flat.size = iters.reduce((function(sum, seq) {
+  if (iters.length === 1) {
+    var singleton = iters[0];
+    if (singleton === iterable || isKeyedIterable && isKeyed(singleton) || isIndexed(iterable) && isIndexed(singleton)) {
+      return singleton;
+    }
+  }
+  var concatSeq = new ArraySeq(iters);
+  if (isKeyedIterable) {
+    concatSeq = concatSeq.toKeyedSeq();
+  } else if (!isIndexed(iterable)) {
+    concatSeq = concatSeq.toSetSeq();
+  }
+  concatSeq = concatSeq.flatten(true);
+  concatSeq.size = iters.reduce((function(sum, seq) {
     if (sum !== undefined) {
       var size = seq.size;
       if (size !== undefined) {
@@ -2360,7 +2434,7 @@ function concatFactory(iterable, values) {
       }
     }
   }), 0);
-  return flat;
+  return concatSeq;
 }
 function flattenFactory(iterable, depth, useKeys) {
   var flatSequence = makeSequence(iterable);
@@ -2522,7 +2596,12 @@ var List = function List(value) {
   if (size > 0 && size < SIZE) {
     return makeList(0, size, SHIFT, null, new VNode(value.toArray()));
   }
-  return empty.merge(value);
+  return empty.withMutations((function(list) {
+    list.setSize(size);
+    value.forEach((function(v, i) {
+      return list.set(i, v);
+    }));
+  }));
 };
 ($traceurRuntime.createClass)(List, {
   toString: function() {
@@ -2587,8 +2666,8 @@ var List = function List(value) {
   },
   mergeWith: function(merger) {
     for (var iters = [],
-        $__5 = 1; $__5 < arguments.length; $__5++)
-      iters[$__5 - 1] = arguments[$__5];
+        $__7 = 1; $__7 < arguments.length; $__7++)
+      iters[$__7 - 1] = arguments[$__7];
     return mergeIntoListWith(this, merger, iters);
   },
   mergeDeep: function() {
@@ -2596,8 +2675,8 @@ var List = function List(value) {
   },
   mergeDeepWith: function(merger) {
     for (var iters = [],
-        $__6 = 1; $__6 < arguments.length; $__6++)
-      iters[$__6 - 1] = arguments[$__6];
+        $__8 = 1; $__8 < arguments.length; $__8++)
+      iters[$__8 - 1] = arguments[$__8];
     return mergeIntoListWith(this, deepMerger(merger), iters);
   },
   setSize: function(size) {
@@ -2652,6 +2731,8 @@ ListPrototype.setIn = MapPrototype.setIn;
 ListPrototype.removeIn = MapPrototype.removeIn;
 ListPrototype.update = MapPrototype.update;
 ListPrototype.updateIn = MapPrototype.updateIn;
+ListPrototype.mergeIn = MapPrototype.mergeIn;
+ListPrototype.mergeDeepIn = MapPrototype.mergeDeepIn;
 ListPrototype.withMutations = MapPrototype.withMutations;
 ListPrototype.asMutable = MapPrototype.asMutable;
 ListPrototype.asImmutable = MapPrototype.asImmutable;
@@ -3015,7 +3096,11 @@ function getTailOffset(size) {
   return size < SIZE ? 0 : (((size - 1) >>> SHIFT) << SHIFT);
 }
 var OrderedMap = function OrderedMap(value) {
-  return value === null || value === undefined ? emptyOrderedMap() : isOrderedMap(value) ? value : emptyOrderedMap().merge(KeyedIterable(value));
+  return value === null || value === undefined ? emptyOrderedMap() : isOrderedMap(value) ? value : emptyOrderedMap().withMutations((function(map) {
+    KeyedIterable(value).forEach((function(v, k) {
+      return map.set(k, v);
+    }));
+  }));
 };
 ($traceurRuntime.createClass)(OrderedMap, {
   toString: function() {
@@ -3315,7 +3400,11 @@ function emptyStack() {
   return EMPTY_STACK || (EMPTY_STACK = makeStack(0));
 }
 var Set = function Set(value) {
-  return value === null || value === undefined ? emptySet() : isSet(value) ? value : emptySet().union(SetIterable(value));
+  return value === null || value === undefined ? emptySet() : isSet(value) ? value : emptySet().withMutations((function(set) {
+    SetIterable(value).forEach((function(v) {
+      return set.add(v);
+    }));
+  }));
 };
 ($traceurRuntime.createClass)(Set, {
   toString: function() {
@@ -3334,9 +3423,17 @@ var Set = function Set(value) {
     return updateSet(this, this._map.clear());
   },
   union: function() {
-    var iters = arguments;
+    for (var iters = [],
+        $__9 = 0; $__9 < arguments.length; $__9++)
+      iters[$__9] = arguments[$__9];
+    iters = iters.filter((function(x) {
+      return x.size !== 0;
+    }));
     if (iters.length === 0) {
       return this;
+    }
+    if (this.size === 0 && iters.length === 1) {
+      return this.constructor(iters[0]);
     }
     return this.withMutations((function(set) {
       for (var ii = 0; ii < iters.length; ii++) {
@@ -3348,8 +3445,8 @@ var Set = function Set(value) {
   },
   intersect: function() {
     for (var iters = [],
-        $__7 = 0; $__7 < arguments.length; $__7++)
-      iters[$__7] = arguments[$__7];
+        $__10 = 0; $__10 < arguments.length; $__10++)
+      iters[$__10] = arguments[$__10];
     if (iters.length === 0) {
       return this;
     }
@@ -3369,8 +3466,8 @@ var Set = function Set(value) {
   },
   subtract: function() {
     for (var iters = [],
-        $__8 = 0; $__8 < arguments.length; $__8++)
-      iters[$__8] = arguments[$__8];
+        $__11 = 0; $__11 < arguments.length; $__11++)
+      iters[$__11] = arguments[$__11];
     if (iters.length === 0) {
       return this;
     }
@@ -3393,8 +3490,8 @@ var Set = function Set(value) {
   },
   mergeWith: function(merger) {
     for (var iters = [],
-        $__9 = 1; $__9 < arguments.length; $__9++)
-      iters[$__9 - 1] = arguments[$__9];
+        $__12 = 1; $__12 < arguments.length; $__12++)
+      iters[$__12 - 1] = arguments[$__12];
     return this.union.apply(this, iters);
   },
   sort: function(comparator) {
@@ -3472,7 +3569,11 @@ function emptySet() {
   return EMPTY_SET || (EMPTY_SET = makeSet(emptyMap()));
 }
 var OrderedSet = function OrderedSet(value) {
-  return value === null || value === undefined ? emptyOrderedSet() : isOrderedSet(value) ? value : emptyOrderedSet().union(SetIterable(value));
+  return value === null || value === undefined ? emptyOrderedSet() : isOrderedSet(value) ? value : emptyOrderedSet().withMutations((function(set) {
+    SetIterable(value).forEach((function(v) {
+      return set.add(v);
+    }));
+  }));
 };
 ($traceurRuntime.createClass)(OrderedSet, {toString: function() {
     return this.__toString('OrderedSet {', '}');
@@ -3606,8 +3707,11 @@ var RecordPrototype = Record.prototype;
 RecordPrototype[DELETE] = RecordPrototype.remove;
 RecordPrototype.merge = MapPrototype.merge;
 RecordPrototype.mergeWith = MapPrototype.mergeWith;
+RecordPrototype.mergeIn = MapPrototype.mergeIn;
 RecordPrototype.mergeDeep = MapPrototype.mergeDeep;
 RecordPrototype.mergeDeepWith = MapPrototype.mergeDeepWith;
+RecordPrototype.mergeDeepIn = MapPrototype.mergeDeepIn;
+RecordPrototype.setIn = MapPrototype.setIn;
 RecordPrototype.update = MapPrototype.update;
 RecordPrototype.updateIn = MapPrototype.updateIn;
 RecordPrototype.withMutations = MapPrototype.withMutations;
@@ -3711,7 +3815,7 @@ var $Range = Range;
       return ii > maxIndex ? iteratorDone() : iteratorValue(type, ii++, v);
     }));
   },
-  __deepEquals: function(other) {
+  equals: function(other) {
     return other instanceof $Range ? this._start === other._start && this._end === other._end && this._step === other._step : deepEqual(this, other);
   }
 }, {}, IndexedSeq);
@@ -3781,7 +3885,7 @@ var $Repeat = Repeat;
       return ii < $__0.size ? iteratorValue(type, ii++, $__0._value) : iteratorDone();
     }));
   },
-  __deepEquals: function(other) {
+  equals: function(other) {
     return other instanceof $Repeat ? is(this._value, other._value) : deepEqual(other);
   }
 }, {}, IndexedSeq);
