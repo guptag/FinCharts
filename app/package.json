@@ -5,7 +5,7 @@
   "description" : "Node webkit application for stock charts",
   "main": "index.html",
   "dependencies": {
-    "react": "^0.11.2",
+    "react": "^0.12.1",
     "lodash": "^2.4.1",
     "request": "^2.33",
     "jquery": "^2.1.0",
