@@ -52,7 +52,7 @@ declare module 'immutable' {
    *
    * This example converts JSON to List and OrderedMap:
    *
-   *     Immutable.fromJS({a: {b: [10, 20, 30]}, c: 40}, function (value, key) {
+   *     Immutable.fromJS({a: {b: [10, 20, 30]}, c: 40}, function (key, value) {
    *       var isIndexed = Immutable.Iterable.isIndexed(value);
    *       return isIndexed ? value.toList() : value.toOrderedMap();
    *     });
@@ -543,6 +543,7 @@ declare module 'immutable' {
      * Returns the value found by following a key path through nested Iterables.
      */
     getIn(searchKeyPath: Array<any>, notSetValue?: any): any;
+    getIn(searchKeyPath: Iterable<any, any>, notSetValue?: any): any;
 
     /**
      * Returns a `KeyedIterable` of `KeyedIterables`, grouped by the return
@@ -1253,13 +1254,26 @@ declare module 'immutable' {
    * Map
    * ---
    *
-   * A Map is a Iterable of (key, value) pairs with `O(log32 N)` gets and sets.
-   *
-   * Map is a hash map and requires keys that are hashable, either a primitive
-   * (string or number) or an object with a `hashCode(): number` method.
+   * A Map is a Iterable of (key, value) pairs with `O(log32 N)` gets and sets
+   * implemented by an unordered hash map using a hash-array mapped trie.
    *
    * Iteration order of a Map is undefined, however is stable. Multiple iterations
    * of the same Map will iterate in the same order.
+   *
+   * Map's keys can be of any type, and use `Immutable.is` to determine key
+   * equality. This allows the use of NaN as a key.
+   *
+   * Because `Immutable.is` returns equality based on value semantics, and
+   * Immutable collections are treated as values, any Immutable collection may
+   * be used as a key.
+   *
+   *     Map().set(List.of(1), 'listofone').get(List.of(1));
+   *     // 'listofone'
+   *
+   * Any JavaScript object may be used as a key, however strict identity is used
+   * to evaluate key equality. Two similar looking objects will represent two
+   * different keys.
+   *
    */
 
   export module Map {
@@ -1301,6 +1315,7 @@ declare module 'immutable' {
      * `keyPath` do not exist, a new immutable Map will be created at that key.
      */
     setIn(keyPath: Array<any>, value: V): Map<K, V>;
+    setIn(KeyPath: Iterable<any, any>, value: V): Map<K, V>;
 
     /**
      * Returns a new Map which excludes this `key`.
@@ -1317,6 +1332,7 @@ declare module 'immutable' {
      * that key.
      */
     removeIn(keyPath: Array<any>): Map<K, V>;
+    removeIn(keyPath: Iterable<any, any>): Map<K, V>;
 
     /**
      * Returns a new Map containing no keys or values.
@@ -1352,6 +1368,15 @@ declare module 'immutable' {
     ): Map<K, V>;
     updateIn(
       keyPath: Array<any>,
+      notSetValue: any,
+      updater: (value: any) => any
+    ): Map<K, V>;
+    updateIn(
+      keyPath: Iterable<any, any>,
+      updater: (value: any) => any
+    ): Map<K, V>;
+    updateIn(
+      keyPath: Iterable<any, any>,
       notSetValue: any,
       updater: (value: any) => any
     ): Map<K, V>;
@@ -1397,6 +1422,28 @@ declare module 'immutable' {
     ): Map<string, V>;
 
     /**
+     * A combination of `updateIn` and `merge`, returning a new Map, but
+     * performing the merge at a point arrived at by following the keyPath.
+     * In other words, these two lines are equivalent:
+     *
+     *     x.updateIn(['a', 'b', 'c'], abc => abc.merge(y));
+     *     x.mergeIn(['a', 'b', 'c'], y);
+     *
+     */
+    mergeIn(
+      keyPath: Iterable<any, any>,
+      ...iterables: Iterable<K, V>[]
+    ): Map<K, V>;
+    mergeIn(
+      keyPath: Array<any>,
+      ...iterables: Iterable<K, V>[]
+    ): Map<K, V>;
+    mergeIn(
+      keyPath: Array<any>,
+      ...iterables: {[key: string]: V}[]
+    ): Map<string, V>;
+
+    /**
      * Like `merge()`, but when two Iterables conflict, it merges them as well,
      * recursing deeply through the nested data.
      *
@@ -1424,6 +1471,28 @@ declare module 'immutable' {
     ): Map<K, V>;
     mergeDeepWith(
       merger: (previous?: V, next?: V) => V,
+      ...iterables: {[key: string]: V}[]
+    ): Map<string, V>;
+
+    /**
+     * A combination of `updateIn` and `mergeDeep`, returning a new Map, but
+     * performing the deep merge at a point arrived at by following the keyPath.
+     * In other words, these two lines are equivalent:
+     *
+     *     x.updateIn(['a', 'b', 'c'], abc => abc.mergeDeep(y));
+     *     x.mergeDeepIn(['a', 'b', 'c'], y);
+     *
+     */
+    mergeDeepIn(
+      keyPath: Iterable<any, any>,
+      ...iterables: Iterable<K, V>[]
+    ): Map<K, V>;
+    mergeDeepIn(
+      keyPath: Array<any>,
+      ...iterables: Iterable<K, V>[]
+    ): Map<K, V>;
+    mergeDeepIn(
+      keyPath: Array<any>,
       ...iterables: {[key: string]: V}[]
     ): Map<string, V>;
 
@@ -1774,6 +1843,7 @@ declare module 'immutable' {
      * `keyPath` do not exist, a new immutable Map will be created at that key.
      */
     setIn(keyPath: Array<any>, value: T): List<T>;
+    setIn(keyPath: Iterable<any, any>, value: T): List<T>;
 
     /**
      * Returns a new List which excludes this `index` and with a size 1 less
@@ -1797,6 +1867,7 @@ declare module 'immutable' {
      * that key.
      */
     removeIn(keyPath: Array<any>): List<T>;
+    removeIn(keyPath: Iterable<any, any>): List<T>;
 
     /**
      * Returns a new List with 0 size and no values.
@@ -1862,6 +1933,15 @@ declare module 'immutable' {
       notSetValue: any,
       updater: (value: any) => any
     ): List<T>;
+    updateIn(
+      keyPath: Iterable<any, any>,
+      updater: (value: any) => any
+    ): List<T>;
+    updateIn(
+      keyPath: Iterable<any, any>,
+      notSetValue: any,
+      updater: (value: any) => any
+    ): List<T>;
 
     /**
      * @see `Map.prototype.merge`
@@ -1882,6 +1962,22 @@ declare module 'immutable' {
     ): List<T>;
 
     /**
+     * @see `Map.prototype.mergeIn`
+     */
+    mergeIn(
+      keyPath: Iterable<any, any>,
+      ...iterables: IndexedIterable<T>[]
+    ): List<T>;
+    mergeIn(
+      keyPath: Array<any>,
+      ...iterables: IndexedIterable<T>[]
+    ): List<T>;
+    mergeIn(
+      keyPath: Array<any>,
+      ...iterables: Array<T>[]
+    ): List<T>;
+
+    /**
      * @see `Map.prototype.mergeDeep`
      */
     mergeDeep(...iterables: IndexedIterable<T>[]): List<T>;
@@ -1896,6 +1992,22 @@ declare module 'immutable' {
     ): List<T>;
     mergeDeepWith(
       merger: (previous?: T, next?: T) => T,
+      ...iterables: Array<T>[]
+    ): List<T>;
+
+    /**
+     * @see `Map.prototype.mergeDeepIn`
+     */
+    mergeDeepIn(
+      keyPath: Iterable<any, any>,
+      ...iterables: IndexedIterable<T>[]
+    ): List<T>;
+    mergeDeepIn(
+      keyPath: Array<any>,
+      ...iterables: IndexedIterable<T>[]
+    ): List<T>;
+    mergeDeepIn(
+      keyPath: Array<any>,
       ...iterables: Array<T>[]
     ): List<T>;
 
