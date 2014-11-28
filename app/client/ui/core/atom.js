@@ -50,6 +50,10 @@ function Atom (options) {
 
         },
 
+        transactWithLock: function (tasks, lockReason) {
+
+        },
+
         transact: function (tasks) {
 
         },

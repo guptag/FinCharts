@@ -2,17 +2,16 @@
 
 var _ = window.server.lodash;
 
-
 module.exports =  {
    getDefaultAtomState: function (options) {
         return {
-          appStore: this.getDefaultAppStoreState(options),
+          appUIStore: this.getDefaultAppUIStoreState(options),
           chartStore: this.getDefaultChartStoreState(options),
           watchListStore: this.getDefaultWatchlistStoreState(options)
         }
    },
 
-   getDefaultAppStoreState: function (options) {
+   getDefaultAppUIStoreState: function (options) {
       return {
           window: {
             width: 600,

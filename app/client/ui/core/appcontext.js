@@ -8,8 +8,7 @@ var _ = window.server.lodash;
 
 
 function AppContext () {
-    var stores = [],
-        enableLogging = "false",
+    var enableLogging = "false",
         beforeRenderCallback = _.noop,
         afterRenderCallback = _.noop,
         lastRenderedState,
