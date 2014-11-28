@@ -2,213 +2,123 @@
 
 var React = require("react/addons");
 var Logger = require("./utils/logger");
+var AtomState = require("./atomstate");
 
 var Immutable = window.server.immutable;
 var _ = window.server.lodash;
+var Q = window.server.Q;
 
 
 
 function Atom (options) {
 
     var state,
+        currentTransactionState,
+
         lockReason,
+        locked,
+
+        pendingTasks,
+
         beforeTransactionCommit,
-        afterTransactionCommit,
-        currentTransactionState;
+        afterTransactionCommit;
 
     // constructor
     (function init () {
-        state = options.initialState || {};
+        state = Immutable.fromJS(AtomState.getDefaultAtomState());
+        currentTransactionState = undefined;
         lockReason = "";
+        locked = false;
+        pendingTasks = [];
         beforeTransactionCommit = options.beforeCommit || _.noop;
         afterTransactionCommit = options.afterCommit || _.noop;
-        currentTransactionState = undefined;
     })();
 
     return {
         isInTransaction: function () {
-
+            return !!currentTransactionState;
         },
 
         openTransaction: function () {
-
+            currentTransactionState = state;
         },
 
         commitTransaction: function () {
-
+            var transactionState = currentTransactionState;
+            currentTransactionState = undefined;
+            state = transactionState;
         },
 
         rollbackTransaction: function () {
-
+            currentTransactionState = undefined
         },
 
         lock: function (lockReason) {
-
+            locked = true;
+            lockReason = lockReason;
         },
 
         unlock: function () {
-
+            locked = false;
+            lockReason = undefined
         },
 
-        transactWithLock: function (tasks, lockReason) {
-
+        transactWithLock: function (task, lockReason) {
+            try {
+                this.lock(lockReason);
+                this.transact(task);
+            }
+            catch (e) {
+                Logger.error(e);
+                return e;
+            }
+            finally {
+                this.unlock();
+            }
         },
 
-        transact: function (tasks) {
+        transact: function (task) {
+            if (this.isInTransaction() || pendingTasks.length > 0) {
+                Logger.log("added to transaction queue");
+                pendingTasks.push(task);
+            }
 
+            this.openTransaction();
+
+            try {
+
+                var previousState = state;
+
+                currentTransactionState = task(previousState);
+
+                beforeTransactionCommit(currentTransactionState, previousState);
+
+                commitTransaction();
+
+                try {
+                    afterTransactionCommit(state, previousState);
+                } catch(e) {
+                    Logger.error("Error from afterTransactionCommit callback.", e);
+                }
+            } catch (error) {
+                Logger.error("Error during atom transaction! Atom state will be rollbacked",error.message);
+                this.rollbackTransaction();
+                return error;
+            }
+
+            var self = this;
+            if (pendingTasks.length > 0) {
+                Q.delay(50).then(function () {
+                    self.transact(pendingTasks.shift());
+                });
+            }
         },
 
         get: function () {
-
-        },
-
-        setPathValue: function (path, value) {
-
-        },
-
-        getPathValue: function (path) {
-
-        },
-
-        compareAndSwapPathValue: function (path, expectedValue, newValue) {
-
+            var clone = state;
+            return clone;
         }
     }
 }
 
 module.exports = Atom;
-
-
-
-/* var Atom = function Atom(options) {
-    this.state = options.initialState || {};
-    this.lockReason = "";
-    this.beforeTransactionCommit = options.beforeCommit || _.noop;
-    this.afterTransactionCommit = options.afterCommit || _.noop;
-    this.currentTransactionState = undefined;
-};
-
-
-Atom.prototype.swap = function (newState) {
-    if (!this.isInTransaction()) {
-        throw new Error("Cannot swap state outside the transaction");
-    }
-
-    if (this.locked) {
-        throw new Error("Atom is locked because: " + this.lockReason);
-    }
-
-    this.currentTransactionState = newState;
-};
-
-
-Atom.prototype.isInTransaction = function () {
-    return !!this.currentTransactionState;
-};
-
-Atom.prototype.openTransaction = function () {
-    this.currentTransactionState = this.state;
-};
-
-Atom.prototype.commitTransaction = function () {
-    var transactionState = this.currentTransactionState;
-    this.currentTransactionState = undefined
-    this.state = transactionState;
-};
-
-Atom.prototype.rollbackTransaction = function () {
-    this.currentTransactionState = undefined
-};
-
-Atom.prototype.lock = function (lockReason) {
-    this.locked = true;
-    this.lockReason = lockReason
-};
-
-
-Atom.prototype.unlock = function() {
-    this.locked = false;
-    this.lockReason = undefined
-};
-
-Atom.prototype.doWithLock = function(lockReason, task) {
-    try {
-        this.lock(lockReason);
-        task();
-    } finally {
-        this.unlock();
-    }
-};
-
-
-
-Atom.prototype.transact = function(tasks) {
-    // TODO do we need to implement more complex transaction propagation rules than joining the existing transaction?
-    if ( this.isInTransaction() ) {
-        tasks();
-    }
-    else {
-        this.openTransaction();
-        try {
-            tasks();
-            // "lock" these values before calling the callbacks
-            var previousState = this.state;
-            this.beforeTransactionCommit(this.currentTransactionState,previousState);
-            this.commitTransaction();
-            try {
-                this.afterTransactionCommit(this.state,previousState);
-            } catch(error) {
-                console.error("Error in 'afterTransactionCommit' callback. The transaction will still be commited",error.message);
-                console.error(error.stack);
-            }
-        } catch (error) {
-            console.error("Error during atom transaction! Atom state will be rollbacked",error.message);
-            console.error(error.stack);
-            this.rollbackTransaction();
-        }
-    }
-};
-
-
-
-Atom.prototype.get = function() {
-    return this.currentTransactionState || this.state;
-};
-
-
-
-Atom.prototype.setPathValue = function(path,value) {
-    var self = this;
-    this.transact(function() {
-        var newState = AtomUtils.setPathValue(self.get(),path,value);
-        self.swap(newState);
-    });
-};
-
-Atom.prototype.unsetPathValue = function(path) {
-    var self = this;
-    this.transact(function() {
-        var newState = AtomUtils.setPathValue(self.get(),path,undefined);
-        self.swap(newState);
-    })
-
-};
-
-
-Atom.prototype.getPathValue = function(path) {
-    return AtomUtils.getPathValue(this.get(),path);
-};
-
-
-Atom.prototype.compareAndSwapPathValue = function(path,expectedValue,newValue) {
-    var actualValue = this.getPathValue(path);
-    if ( actualValue === expectedValue ) {
-        this.setPathValue(path,newValue);
-        return true;
-    }
-    return false;
-};
-
-
-
-module.exports = Atom; */
