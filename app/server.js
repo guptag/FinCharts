@@ -15,7 +15,7 @@ serverContext.node_proc = process;
 // Import the node-space modules that need to be available in all windows
 serverContext.fs        = require('fs');
 serverContext.path      = require('path');
-serverContext._         = require('lodash');
+serverContext.lodash    = require('lodash');
 serverContext.Q         = require('q');
 serverContext.immutable = require('immutable');
 

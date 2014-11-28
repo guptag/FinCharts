@@ -1,3 +1,145 @@
+
+
+var _ = window.server.lodash;
+
+
+module.exports =  {
+   getDefaultAtomState: function (options) {
+        return {
+          appStore: this.getDefaultAppStoreState(options),
+          chartStore: this.getDefaultChartStoreState(options),
+          watchListStore: this.getDefaultWatchlistStoreState(options)
+        }
+   },
+
+   getDefaultAppStoreState: function (options) {
+      return {
+          window: {
+            width: 600,
+            height: 400
+          },
+          theme: "blue"
+        };
+   },
+
+   getDefaultChartStoreState: function (options) {
+      return {
+          syncCrosshair: true,
+          layout: "chartonly",
+          activeChartIndex: 0,
+          charts: [ this.getDefaultChartState(options) ]
+        }; //chartStore
+   },
+
+   getDefaultChartState: function (options) {
+        return {
+            type: "pricechart",
+            id: 1,
+            layout: "chart_1a_1",
+            keys: {
+              ticker: options.ticker || "MSFT",
+              timeframe:  {
+                from: new Date(),
+                to: new Date()
+              },
+              range: "daily"
+            },
+            ui: {
+              rect: {
+                width: 600,
+                height: 400,
+                top: 50,
+                left: 0
+              },
+              renderer: "candlestick",
+              axis: {
+                value: {
+                  scale: 'linear'
+                }
+              },
+              showGrid: true,
+              showCrosshair: true
+            },
+            overlays: {
+              compareTickers: ['googl', 'ibm'],
+              indicators : [
+                {
+                  id: Date.now(),
+                  type: "SMA",
+                  settings: {
+                    range: 14
+                  }
+                },
+                {
+                  id: Date.now(),
+                  type: "BollingerBand",
+                  settings: {
+                    a: 14,
+                    b: 10,
+                    c: 20
+                  }
+                }
+              ]
+            },
+            splits: {
+              compareTickers: ['spy'],
+              indicators: [
+                {
+                  id: Date.now(),
+                  type: "ADX",
+                  settings: {
+                    range: 14
+                  }
+                }
+              ]
+            }
+        } //chart
+   },
+
+   getDefaultWatchlistStoreState: function () {
+        return {
+          layout: "",
+          groups: [
+            {
+              name: "Default",
+              tickers: [
+                {
+                  name: "MSFT",
+                  current: 47.79
+                },
+                {
+                  name: "IBM",
+                  current: 99.10
+                }
+              ]
+            },
+            {
+              name: "Bull List",
+              tickers: [
+                {
+                  name: "TQQQ",
+                  current: 80.00
+                },
+                {
+                  name: "SOXL",
+                  current: 120.00
+                }
+              ]
+            }
+          ]
+        }
+   },
+
+   getDefaultIndicatorState: function (name) {
+        //TechnicalIndicators[name].getDefaultState();
+   }
+};
+
+
+
+/*
+
+
 console.time("immutable-load");
 var defaultState = {
     appStore: {
@@ -9,13 +151,13 @@ var defaultState = {
     },
     chartStore: {
       syncCrosshair: true,
-      layout: "chartonly", /* chart-with-sidebar */
+      layout: "chartonly",
       activeChartIndex: 0,
       charts: [
         {
           type: "pricechart",
           id: 1,
-          layout: "chart_1a_1", /* chart_2a_1, chart_2a_2 */
+          layout: "chart_1a_1",
           keys: {
             ticker: "MSFT",
             timeframe:  {
@@ -134,26 +276,19 @@ var appState3 = appState2.updateIn(['chartStore', 'activeChartIndex'], function 
 console.timeEnd("deletechart");
 console.log(appState3.toJS());
 
+var tickerList = [];
+_.times(100, function (index) {
+  tickerList.push({
+    ticker: Date.now(),
+    current: Date.now()
+  });
+});
 
-// use cases
+console.time("tickerList");
+var tickerState = Immutable.fromJS(tickerList);
+console.timeEnd("tickerList");
+console.log(tickerState);
 
-// appState.getIn(['chartStore', charts', 0, 'ui', 'rect']) === appState.getIn(['chartStore', 'charts', 0, 'ui', 'rect'])
-// appState.getIn(['chartStore', 'charts', 0, 'ui', 'rect', 'width'])
-//
-// appState1 = appState.updateIn(['chartStore', 'charts', 0, 'ui', 'rect'], function (obj) { return Immutable.fromJS({width:0,height:0, top:0, left:0}); })
-// appState1.getIn(['chartStore', 'charts', 0, 'ui', 'rect']).toJS()
-// appState1.getIn(['chartStore', 'charts', 0, 'overlays']) === appState.getIn(['charts', 0, 'overlays']) -- true
-// appState1.getIn(['chartStore', 'charts', 0]) === appState.getIn(['charts', 0]) -- false
+//debugger;
 
-
-// var appState1 = appState.updateIn(['chartStore', 'charts'], function(list) { return list.push(chart) }) //add new chart
-
-// Indicators Mapping
-//  App.Indicators['SMA'] = require(./indicators/sma);
-//  App.Indicators['BollingerBand'] = require(./indicators/bollingerband);
-//  App.Indicators.add('xyz', instance);
-
-
-// Renderers
-// var LineChart = require(./ui/renderers/linechart);
-// var CandleStickChart = require(./ui/renderers/candlestick);
+*/
