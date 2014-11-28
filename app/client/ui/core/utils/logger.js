@@ -2,19 +2,19 @@
 
 function Logger () {
     this.log = function () {
-        console.log.apply(arguments);
+        console.log.apply(console, arguments);
     };
 
     this.error = function () {
-        console.error.apply(arguments);
+        console.error.apply(console, arguments);
     };
 
     this.warn = function () {
-        console.warn.apply(arguments);
+        console.warn.apply(console, arguments);
     };
 
     this.info = function () {
-        console.info.apply(arguments);
+        console.info.apply(console, arguments);
     }
 }
 
