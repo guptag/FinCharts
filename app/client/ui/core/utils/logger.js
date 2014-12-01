@@ -15,7 +15,7 @@ function Logger () {
 
     this.info = function () {
         console.info.apply(console, arguments);
-    }
+    };
 }
 
 module.exports = new Logger();

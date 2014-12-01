@@ -1,6 +1,3 @@
-'use strict';
-
-var React = require("react/addons");
 var Logger = require("./utils/logger");
 var AtomState = require("./atomstate");
 
@@ -34,23 +31,23 @@ function Atom (options) {
         afterTransactionCommit = options.afterCommit || _.noop;
     })();
 
+    function openTransaction() {
+        currentTransactionState = state;
+    }
+
+    function commitTransaction () {
+        var transactionState = currentTransactionState;
+        currentTransactionState = undefined;
+        state = transactionState;
+    }
+
+    function rollbackTransaction () {
+        currentTransactionState = undefined;
+    }
+
     return {
         isInTransaction: function () {
             return !!currentTransactionState;
-        },
-
-        openTransaction: function () {
-            currentTransactionState = state;
-        },
-
-        commitTransaction: function () {
-            var transactionState = currentTransactionState;
-            currentTransactionState = undefined;
-            state = transactionState;
-        },
-
-        rollbackTransaction: function () {
-            currentTransactionState = undefined
         },
 
         lock: function (lockReason) {
@@ -60,7 +57,7 @@ function Atom (options) {
 
         unlock: function () {
             locked = false;
-            lockReason = undefined
+            lockReason = undefined;
         },
 
         transactWithLock: function (task, lockReason) {
@@ -83,10 +80,9 @@ function Atom (options) {
                 pendingTasks.push(task);
             }
 
-            this.openTransaction();
+            openTransaction();
 
             try {
-
                 var previousState = state;
 
                 currentTransactionState = task(previousState);
@@ -95,14 +91,10 @@ function Atom (options) {
 
                 commitTransaction();
 
-                try {
-                    afterTransactionCommit(state, previousState);
-                } catch(e) {
-                    Logger.error("Error from afterTransactionCommit callback.", e);
-                }
+                afterTransactionCommit(state, previousState);
             } catch (error) {
                 Logger.error("Error during atom transaction! Atom state will be rollbacked",error.message);
-                this.rollbackTransaction();
+                rollbackTransaction();
                 return error;
             }
 
@@ -118,7 +110,7 @@ function Atom (options) {
             var clone = state;
             return clone;
         }
-    }
+    };
 }
 
 module.exports = Atom;

@@ -1,6 +1,6 @@
 
 
-var _ = window.server.lodash;
+// var _ = window.server.lodash;
 
 module.exports =  {
    getDefaultAtomState: function (options) {
@@ -8,14 +8,14 @@ module.exports =  {
           appUIStore: this.getDefaultAppUIStoreState(options),
           chartStore: this.getDefaultChartStoreState(options),
           watchListStore: this.getDefaultWatchlistStoreState(options)
-        }
+        };
    },
 
    getDefaultAppUIStoreState: function (options) {
       return {
           window: {
-            width: 600,
-            height: 400
+            width: options.windowW || 600,
+            height: options.windowH || 400
           },
           theme: "blue"
         };
@@ -92,7 +92,7 @@ module.exports =  {
                 }
               ]
             }
-        } //chart
+        }; //chart
    },
 
    getDefaultWatchlistStoreState: function () {
@@ -126,10 +126,10 @@ module.exports =  {
               ]
             }
           ]
-        }
+        };
    },
 
-   getDefaultIndicatorState: function (name) {
+   getDefaultIndicatorState: function (/* name */) {
         //TechnicalIndicators[name].getDefaultState();
    }
 };

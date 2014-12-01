@@ -1,4 +1,7 @@
 /** @jsx React.DOM */
+
+/*
+
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
 
@@ -20,10 +23,8 @@ var TodoTextInput = React.createClass({
     };
   },
 
-  /**
-   * @return {object}
-   */
-  render: function() /*object*/ {
+
+  render: function()  {
     return (
       <input
         className={this.props.className}
@@ -38,10 +39,7 @@ var TodoTextInput = React.createClass({
     );
   },
 
-  /**
-   * Invokes the callback passed in as onSave, allowing this component to be
-   * used in different ways.
-   */
+
   _save: function() {
     this.props.onSave(this.state.value);
     this.setState({
@@ -49,18 +47,13 @@ var TodoTextInput = React.createClass({
     });
   },
 
-  /**
-   * @param {object} event
-   */
-  _onChange: function(/*object*/ event) {
+  _onChange: function(event) {
     this.setState({
       value: event.target.value
     });
   },
 
-  /**
-   * @param  {object} event
-   */
+
   _onKeyDown: function(event) {
     if (event.keyCode === ENTER_KEY_CODE) {
       this._save();
@@ -70,3 +63,5 @@ var TodoTextInput = React.createClass({
 });
 
 module.exports = TodoTextInput;
+
+*/
