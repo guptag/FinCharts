@@ -1,6 +1,5 @@
 
 var _ = window.server.lodash;
-var Logger = require("./utils/logger");
 
 var AtomCommand = require(".atomcommand");
 var AppStore = require("./stores/appstore");
@@ -16,14 +15,14 @@ function AtomStoreManager(atom) {
             chartStore: new ChartStore(atom),
             layoutStore: new LayoutStore(atom),
             watchlistStore: new WatchlistStore(atom)
-        }
+        };
     })();
 
     this.prototype = {
         handleCommands: function (commands) {
             _.each(commands, function (command) {
                 this.handleCommand(command);
-            }, this)
+            }, this);
         },
 
         handleCommand: function (command) {
@@ -33,18 +32,20 @@ function AtomStoreManager(atom) {
 
             var storeName = command.store,
                 action = command.action,
-                params = command.commandData;
+                commandData = command.commandData;
 
             if (!this.stores[storeName]) {
-                throw new Error("AtomStoreManager: cannot handle command. invalid store name", arguments);
+                throw new Error("AtomStoreManager: Cannot handle command, Invalid store name", arguments);
             }
 
-            if (!this.stores[storeName][method]) {
-                throw new Error("AtomStoreManager: invalid action", arguments);
+            if (!this.stores[storeName][action]) {
+                throw new Error("AtomStoreManager: Cannot handle command, Invalid action", arguments);
             }
 
             // call the action method
-            this.stores[storeName][method].call(this.stores[storeName], params)
+            this.stores[storeName][action].call(this.stores[storeName], commandData);
         }
-    }
+    };
 }
+
+module.exports = AtomStoreManager;

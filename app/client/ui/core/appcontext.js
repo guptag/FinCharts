@@ -1,21 +1,16 @@
-// https://github.com/stample/atom-react/blob/master/src/atomReactContext.js
+// Credit - https://github.com/stample/atom-react/blob/master/src/atomReactContext.js
 
 var React = require("react/addons");
 var Atom  = require("./atom");
-var AtomStoreManager = require("./atomstoremanager"),
+var AtomStoreManager = require("./atomstoremanager");
 var Logger = require("./utils/logger");
 
-var _ = window.server.lodash;
+// var _ = window.server.lodash;
 
 
 function AppContext () {
-    var enableLogging = "false",
-        beforeRenderCallback = _.noop,
-        afterRenderCallback = _.noop,
-        lastRenderedState,
+    var lastRenderedState,
         mountConfig;
-
-    this.atom = null;
 
     this.init = function () {
         this.atom = new Atom({
@@ -27,18 +22,14 @@ function AppContext () {
     };
 
     this.setMountConfig = function (reactClass, domNode) {
-        this.mountConfig = {
+        mountConfig = {
             reactElementClass: reactClass,
             reactElementFactory: React.createFactory(reactClass),
             domNode: domNode
         };
     };
 
-    this.beforeAtomCommit = function () {
-
-    };
-
-    this.afterAtomCommit = function (newState, previousState) {
+    this.beforeAtomCommit = function (newState, previousState) {
         var shouldRender = (newState !== previousState);
         var self;
         if ( shouldRender ) {
@@ -48,6 +39,10 @@ function AppContext () {
                }
             );
         }
+    };
+
+    this.afterAtomCommit = function (/* newState, previousState */) {
+
     };
 
     this.publishCommand = function (atomCommand) {
@@ -70,6 +65,7 @@ function AppContext () {
             addEventListener: this.addEventListener.bind(this),
             removeEventListener: this.addEventListener.bind(this) */
         };
+
         try {
             this.logStateBeforeRender();
 
@@ -77,7 +73,7 @@ function AppContext () {
 
             this.atom.lock("Render");
 
-            React.withContext(context,function() {
+            React.withContext(reactContext, function() {
                 React.render(
                     self.mountConfig.reactElementFactory(props),
                     self.mountConfig.domNode,
@@ -106,7 +102,7 @@ function AppContext () {
         catch (e) {
             Logger.error("Can't print React perf mesures: " + e.message);
         }
-    }
+    };
 
     this.logStateBeforeRender = function() {
         var previousState = lastRenderedState;
@@ -118,8 +114,8 @@ function AppContext () {
              "####\n# Current state\n#",
             currentState.toJS()
         );
-    }
-};
+    };
+}
 
-
-module.exports = AppContext;
+// singleton
+module.exports = new AppContext();

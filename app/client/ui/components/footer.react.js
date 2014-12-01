@@ -1,6 +1,6 @@
 /** @jsx React.DOM */
 
-var React = require('react');
+/*var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var TodoActions = require('../actions/TodoActions');
 
@@ -10,9 +10,7 @@ var Footer = React.createClass({
     allTodos: ReactPropTypes.object.isRequired
   },
 
-  /**
-   * @return {object}
-   */
+
   render: function() {
     var allTodos = this.props.allTodos;
     var total = Object.keys(allTodos).length;
@@ -56,9 +54,7 @@ var Footer = React.createClass({
     );
   },
 
-  /**
-   * Event handler to delete all completed TODOs
-   */
+
   _onClearCompletedClick: function() {
     TodoActions.destroyCompleted();
   }
@@ -66,3 +62,5 @@ var Footer = React.createClass({
 });
 
 module.exports = Footer;
+
+*/

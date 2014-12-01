@@ -1,5 +1,8 @@
 /** @jsx React.DOM */
 
+/*
+
+
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var TodoActions = require('../actions/TodoActions');
@@ -19,9 +22,8 @@ var TodoItem = React.createClass({
     };
   },
 
-  /**
-   * @return {object}
-   */
+return {object}
+
   render: function() {
     var todo = this.props.todo;
 
@@ -35,11 +37,7 @@ var TodoItem = React.createClass({
         />;
     }
 
-    // List items should get the class 'editing' when editing
-    // and 'completed' when marked as completed.
-    // Note that 'completed' is a classification while 'complete' is a state.
-    // This differentiation between classification and state becomes important
-    // in the naming of view actions toggleComplete() vs. destroyCompleted().
+
     return (
       <li
         className={cx({
@@ -72,12 +70,7 @@ var TodoItem = React.createClass({
     this.setState({isEditing: true});
   },
 
-  /**
-   * Event handler called within TodoTextInput.
-   * Defining this here allows TodoTextInput to be used in multiple places
-   * in different ways.
-   * @param  {string} text
-   */
+
   _onSave: function(text) {
     TodoActions.updateText(this.props.todo.id, text);
     this.setState({isEditing: false});
@@ -90,3 +83,5 @@ var TodoItem = React.createClass({
 });
 
 module.exports = TodoItem;
+
+*/

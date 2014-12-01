@@ -74,6 +74,9 @@ gulp.task('stylus', ['copy'], function () {
 gulp.task('jshint-react', ['copy'], function () {
   return gulp.src([paths.js, paths.jsx, paths.rootJS], {cwd: bases.appTarget})
             .pipe(react())
+            .on('error', function(e) {
+                console.error(e.message + '\n  in ' + e.fileName);
+            })
             .pipe(jshint('./.jshintrc'))
             .pipe(jshint.reporter(stylish))
             .pipe(gulp.dest(bases.appTarget + "/client"));

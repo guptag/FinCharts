@@ -1,5 +1,8 @@
 /** @jsx React.DOM */
 
+/*
+
+
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var TodoActions = require('../actions/TodoActions');
@@ -12,9 +15,7 @@ var MainSection = React.createClass({
     areAllComplete: ReactPropTypes.bool.isRequired
   },
 
-  /**
-   * @return {object}
-   */
+
   render: function() {
     // This section should be hidden by default
     // and shown when there are todos.
@@ -43,9 +44,7 @@ var MainSection = React.createClass({
     );
   },
 
-  /**
-   * Event handler to mark all TODOs as complete
-   */
+
   _onToggleCompleteAll: function() {
     TodoActions.toggleCompleteAll();
   }
@@ -53,3 +52,5 @@ var MainSection = React.createClass({
 });
 
 module.exports = MainSection;
+
+*/

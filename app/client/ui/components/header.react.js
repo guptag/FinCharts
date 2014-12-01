@@ -1,14 +1,15 @@
 /** @jsx React.DOM */
 
+/*
+
+
 var React = require('react');
 var TodoActions = require('../actions/TodoActions');
 var TodoTextInput = require('./TodoTextInput.react');
 
 var Header = React.createClass({
 
-  /**
-   * @return {object}
-   */
+
   render: function() {
     return (
       <header id="header">
@@ -22,12 +23,7 @@ var Header = React.createClass({
     );
   },
 
-  /**
-   * Event handler called within TodoTextInput.
-   * Defining this here allows TodoTextInput to be used in multiple places
-   * in different ways.
-   * @param {string} text
-   */
+
   _onSave: function(text) {
     if (text.trim()){
       TodoActions.create(text);
@@ -38,3 +34,5 @@ var Header = React.createClass({
 });
 
 module.exports = Header;
+
+*/
