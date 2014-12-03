@@ -28,6 +28,10 @@ function AppContext () {
         };
     };
 
+    this.stores = function () {
+        return this.storeManager.stores;
+    };
+
     this.afterAtomCommit = function (newState, previousState) {
         var shouldRender = (newState !== previousState);
         var self;

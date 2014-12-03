@@ -5,19 +5,21 @@ function ChartsStore(atom) {
     BaseStore.call(this, atom);
 }
 
-ChartsStore.prototype = _.create(BaseStore.prototype, {'constructor': ChartsStore}, {
+ChartsStore.prototype = _.create(BaseStore.prototype, {
+
+    'constructor': ChartsStore,
 
     getActiveChartIndex: function () {
-
-    },
-
-    updateActiveChartIndex: function () {
 
     },
 
     getChartKey: function () {
 
     },
+
+    getTicker: function () {
+
+    }
 
 });
 
