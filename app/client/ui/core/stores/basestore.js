@@ -2,6 +2,20 @@ function BaseStore(atom) {
 
 }
 
+BaseStore.prototype = {
+      registerActions: function () {
+
+      },
+
+      handleCommand: function (command) {
+
+      },
+
+      canHandleCommand: function (commandName) {
+
+      }
+};
+
 module.exports = BaseStore;
 
 /* atom.transact(function (state) {
