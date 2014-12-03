@@ -14,7 +14,6 @@ function AppContext () {
 
     this.init = function () {
         this.atom = new Atom({
-            beforeCommit: this.beforeAtomCommit.bind(this),
             afterCommit: this.afterAtomCommit.bind(this)
         });
 
@@ -29,7 +28,7 @@ function AppContext () {
         };
     };
 
-    this.beforeAtomCommit = function (newState, previousState) {
+    this.afterAtomCommit = function (newState, previousState) {
         var shouldRender = (newState !== previousState);
         var self;
         if ( shouldRender ) {
@@ -41,12 +40,14 @@ function AppContext () {
         }
     };
 
-    this.afterAtomCommit = function (/* newState, previousState */) {
-
-    };
-
     this.publishCommand = function (atomCommand) {
         this.storeManager.handleCommand(atomCommand);
+    };
+
+    this.publishBatchCommands = function (atomCommands) {
+        this.atom.openBatchTransaction();
+        this.storeManager.handleCommands(atomCommands);
+        this.atom.commitBatchTransactMode();
     };
 
     this.renderAtomState = function (state) {
@@ -69,23 +70,18 @@ function AppContext () {
         try {
             this.logStateBeforeRender();
 
-            console.time("Rendered");
-
-            this.atom.lock("Render");
-
             React.withContext(reactContext, function() {
+                console.time("Rendered");
                 React.render(
                     self.mountConfig.reactElementFactory(props),
                     self.mountConfig.domNode,
                     function () {
                         console.timeEnd("Rendered");
-                        self.atom.unlock();
                     }
                 );
             });
         } catch (e) {
             Logger.error("Could not render application with state ", state.toJS(), e);
-            this.atom.unlock();
             throw e;
         }
     };

@@ -7,6 +7,9 @@ var ChartStore = require("./stores/chartstore");
 var LayoutStore = require("./stores/layoutstore");
 var WatchlistStore = require("./stores/watchliststore");
 
+var Logger = require("./utils/logger");
+
+
 function AtomStoreManager(atom) {
 
     (function init() {
@@ -30,20 +33,16 @@ function AtomStoreManager(atom) {
                 throw new Error("AtomStoreManager: command isn't AtomCommand", command);
             }
 
-            var storeName = command.store,
-                action = command.action,
-                commandData = command.commandData;
-
-            if (!this.stores[storeName]) {
-                throw new Error("AtomStoreManager: Cannot handle command, Invalid store name", arguments);
+            if (!command.name) {
+                throw new Error("AtomStoreManager: Cannot handle command, command.name is null", arguments);
             }
 
-            if (!this.stores[storeName][action]) {
-                throw new Error("AtomStoreManager: Cannot handle command, Invalid action", arguments);
-            }
-
-            // call the action method
-            this.stores[storeName][action].call(this.stores[storeName], commandData);
+            _.each(this.stores, function (store) {
+                if (store.canHandleCommand(name) {
+                    Logger.info("Action:", command.name, "is handled by ", store.name);
+                    store.handleCommand(command);
+                })
+            });
         }
     };
 }

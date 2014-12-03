@@ -1,9 +1,7 @@
 
-var AtomCommand = function (storeName, actionName, commandData) {
-    this.store = storeName;
-    this.action = actionName;
-    this.commandData = commandData;
-    this.timestamp = new Date().getTime();
+var AtomCommand = function (name, payload) {
+    this.name = name;
+    this.payload = payload;
 };
 
 module.exports = AtomCommand;
