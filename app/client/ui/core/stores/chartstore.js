@@ -1,4 +1,6 @@
 
+var _ = window.server.lodash;
+
 var BaseStore = require("./basestore");
 
 function ChartsStore(atom) {

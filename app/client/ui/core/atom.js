@@ -1,6 +1,6 @@
 var Immutable = window.server.immutable;
 var _ = window.server.lodash;
-var Q = window.server.Q;
+// var Q = window.server.Q;
 
 var Logger = require("./utils/logger");
 var AtomState = require("./atomstate");
@@ -11,7 +11,7 @@ function Atom (options) {
 
     var state,
         currentTransactionState,
-        batchedTransactionState,
+        preTransactionState,
 
         lockReason,
         locked,
@@ -78,13 +78,13 @@ function Atom (options) {
                 commitTransaction();
                 afterTransactionCommit(state, preTransactionState);
             } catch (e) {
-                Logger.error("Error during atom commit transaction! Atom state will be rollbacked",error.message);
+                Logger.error("Error during atom commit transaction! Atom state will be rollbacked",e.message);
                 rollbackTransaction();
-                throw e
+                throw e;
             } finally {
                 batchTransactMode = false;
             }
-        }
+        },
 
         transact: function (task) {
             /*if (this.isInTransaction() || pendingTasks.length > 0) {
@@ -107,9 +107,9 @@ function Atom (options) {
 
                     afterTransactionCommit(state, previousState);
                 } catch (e) {
-                    Logger.error("Error during atom commit transaction! Atom state will be rollbacked",error.message);
+                    Logger.error("Error during atom commit transaction! Atom state will be rollbacked",e.message);
                     rollbackTransaction();
-                    throw e
+                    throw e;
                 }
             }
 
