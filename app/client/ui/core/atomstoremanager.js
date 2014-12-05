@@ -38,7 +38,7 @@ function AtomStoreManager(atom) {
             }
 
             _.each(this.stores, function (store) {
-                if (store.canHandleCommand(command.name)) {
+              if (store.canHandleCommand(command) {
                     Logger.info("Action:", command.name, "is handled by ", store.name);
                     store.handleCommand(command);
                 }
