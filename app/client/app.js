@@ -21,5 +21,12 @@ module.exports = {
 };*/
 
 
+//var React = require("react/addons");
+
+var AppContext = require("./core/appcontext");
+
+AppContext.init();
+
+
 
 

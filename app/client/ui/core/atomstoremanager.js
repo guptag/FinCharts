@@ -38,10 +38,10 @@ function AtomStoreManager(atom) {
             }
 
             _.each(this.stores, function (store) {
-                if (store.canHandleCommand(name) {
+                if (store.canHandleCommand(command.name)) {
                     Logger.info("Action:", command.name, "is handled by ", store.name);
                     store.handleCommand(command);
-                })
+                }
             });
         }
     };
