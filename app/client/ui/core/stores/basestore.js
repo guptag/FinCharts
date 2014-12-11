@@ -1,13 +1,17 @@
 var _ = require("lodash");
-var Logger = require("./utils/logger");
+var Logger = require("../utils/logger");
 
 function BaseStore(atom) {
     this.commandHandlers = {};
+    this.atom = atom;
 }
 
 BaseStore.prototype = {
-    registerCommandHandlers: function (actionsHash) {
-        this.commandHandlers = actionsHash;
+    registerCommandHandlers: function (handlers) {
+        var self = this;
+        _.each(handlers, function (handlerHash) {
+            self.commandHandlers[handlerHash.key] = handlerHash.value;
+        });
     },
 
     handleCommand: function (command) {
@@ -17,7 +21,7 @@ BaseStore.prototype = {
         }
     },
 
-    canHandleCommand: function (commandName) {
+    canHandleCommand: function (command) {
         return !!(this.commandHandlers[command.name]);
     }
 };

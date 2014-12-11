@@ -23,9 +23,50 @@ module.exports = {
 
 //var React = require("react/addons");
 
-var AppContext = require("./core/appcontext");
+var AppContext = require("./ui/core/appcontext");
+var AtomCommand = require("./ui/core/atomcommand");
+var AtomConstants = require("./ui/core/atomconstants");
 
-AppContext.init();
+module.exports = {
+  init: function() {
+    /*React.renderComponent(
+              <TodoApp />,
+              document.getElementById('todoapp'));*/
+    AppContext.init();
+
+    console.log(AppContext.stores.chartStore.getTicker());
+    console.log(AppContext.stores.chartStore.getTimeframe());
+    console.log(AppContext.stores.chartStore.getRange());
+
+    AppContext.publishCommand(new AtomCommand(
+        AtomConstants.commands.CHART_UPDATE_TICKER,
+        {ticker: "GOOGL"}
+      ));
+
+    console.log(AppContext.stores.chartStore.getTicker());
+
+    AppContext.publishBatchCommands([
+      new AtomCommand(
+        AtomConstants.commands.CHART_UPDATE_TICKER,
+        {ticker: "IBM"}
+      ),
+      new AtomCommand(
+        AtomConstants.commands.CHART_UPDATE_TIMEFRAME,
+        {timeframe: {from: new Date(), to: new Date()}}
+      ),
+      new AtomCommand(
+        AtomConstants.commands.CHART_UPDATE_RANGE,
+        {range: "weekly"}
+      )
+    ]);
+
+    console.log(AppContext.stores.chartStore.getTicker());
+    console.log(AppContext.stores.chartStore.getTimeframe());
+    console.log(AppContext.stores.chartStore.getRange());
+  }
+};
+
+
 
 
 

@@ -17,6 +17,5 @@ serverContext.fs        = require('fs');
 serverContext.path      = require('path');
 serverContext.lodash    = require('lodash');
 serverContext.Q         = require('q');
-serverContext.immutable = require('immutable');
 
 module.exports = serverContext;

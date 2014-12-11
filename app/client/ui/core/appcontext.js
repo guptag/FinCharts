@@ -5,6 +5,11 @@ var Atom  = require("./atom");
 var AtomStoreManager = require("./atomstoremanager");
 var Logger = require("./utils/logger");
 
+var AppUIStore = require("./stores/appuistore");
+var ChartStore = require("./stores/chartstore");
+var LayoutStore = require("./stores/layoutstore");
+var WatchlistStore = require("./stores/watchliststore");
+
 // var _ = window.server.lodash;
 
 
@@ -17,7 +22,14 @@ function AppContext () {
             afterCommit: this.afterAtomCommit.bind(this)
         });
 
-        this.storeManager = new AtomStoreManager(this.atom);
+        this.stores = {
+            appUIStore: new AppUIStore(this.atom),
+            chartStore: new ChartStore(this.atom),
+            layoutStore: new LayoutStore(this.atom),
+            watchlistStore: new WatchlistStore(this.atom)
+        };
+
+        this.storeManager = new AtomStoreManager(this.atom, this.stores);
     };
 
     this.setMountConfig = function (reactClass, domNode) {
@@ -28,13 +40,9 @@ function AppContext () {
         };
     };
 
-    this.stores = function () {
-        return this.storeManager.stores;
-    };
-
     this.afterAtomCommit = function (newState, previousState) {
         var shouldRender = (newState !== previousState);
-        var self;
+        var self = this;
         if ( shouldRender ) {
             this.printReactPerfMesuresAround(
                function () {
@@ -74,7 +82,7 @@ function AppContext () {
         try {
             this.logStateBeforeRender();
 
-            React.withContext(reactContext, function() {
+            /*React.withContext(reactContext, function() {
                 console.time("Rendered");
                 React.render(
                     self.mountConfig.reactElementFactory(props),
@@ -83,7 +91,7 @@ function AppContext () {
                         console.timeEnd("Rendered");
                     }
                 );
-            });
+            });*/
         } catch (e) {
             Logger.error("Could not render application with state ", state.toJS(), e);
             throw e;
@@ -106,13 +114,13 @@ function AppContext () {
 
     this.logStateBeforeRender = function() {
         var previousState = lastRenderedState;
-        var currentState = this.atom.get();
+        var currentState = this.atom.getState();
         lastRenderedState = currentState;
         console.debug(
             "####\n# Previous state\n#",
-            previousState.toJS(),
+            previousState ? previousState.toJS(): "<nothing>",
              "####\n# Current state\n#",
-            currentState.toJS()
+            currentState ? currentState.toJS() : "<nothing>"
         );
     };
 }
