@@ -1,4 +1,4 @@
-var Immutable = window.server.immutable;
+var Immutable = require('immutable');
 var _ = window.server.lodash;
 // var Q = window.server.Q;
 
@@ -76,6 +76,7 @@ function Atom (options) {
             try {
                 beforeTransactionCommit(currentTransactionState, preTransactionState);
                 commitTransaction();
+                batchTransactMode = false;
                 afterTransactionCommit(state, preTransactionState);
             } catch (e) {
                 Logger.error("Error during atom commit transaction! Atom state will be rollbacked",e.message);
@@ -92,7 +93,7 @@ function Atom (options) {
                 pendingTasks.push(task);
             }*/
             if (batchTransactMode) {
-                currentTransactionState = task(currentTransactionState);
+                currentTransactionState = task(currentTransactionState || state);
             } else {
                 try {
                     openTransaction();
@@ -100,6 +101,10 @@ function Atom (options) {
                     var previousState = state;
 
                     currentTransactionState = task(previousState);
+
+                    if (!currentTransactionState) {
+                        throw new Error("Transact task handler haven't returned the updated state", task);
+                    }
 
                     beforeTransactionCommit(currentTransactionState, previousState);
 

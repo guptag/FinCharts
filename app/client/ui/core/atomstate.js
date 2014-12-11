@@ -3,25 +3,39 @@
 // var _ = window.server.lodash;
 
 module.exports =  {
-   getDefaultAtomState: function (options) {
-        return {
+   getDefaultAtomState: function (_options) {
+        var options = _options || {};
+
+        var state = {
           appUIStore: this.getDefaultAppUIStoreState(options),
           chartStore: this.getDefaultChartStoreState(options),
           watchListStore: this.getDefaultWatchlistStoreState(options)
         };
+
+        return state;
    },
 
-   getDefaultAppUIStoreState: function (options) {
+   getDefaultAppUIStoreState: function (_options) {
+      var options = _options || {};
+
       return {
           window: {
             width: options.windowW || 600,
             height: options.windowH || 400
           },
+          menus: {
+            timeframeoptions: 'hide',
+            durationtoptions: 'hide',
+            chartlayoutoptions: 'hide',
+            previewstate: 'stop'
+          },
           theme: "blue"
         };
    },
 
-   getDefaultChartStoreState: function (options) {
+   getDefaultChartStoreState: function (_options) {
+      var options = _options || {};
+
       return {
           syncCrosshair: true,
           layout: "chartonly",
@@ -30,7 +44,9 @@ module.exports =  {
         }; //chartStore
    },
 
-   getDefaultChartState: function (options) {
+   getDefaultChartState: function (_options) {
+        var options = _options || {};
+
         return {
             type: "pricechart",
             id: 1,
@@ -95,7 +111,8 @@ module.exports =  {
         }; //chart
    },
 
-   getDefaultWatchlistStoreState: function () {
+   getDefaultWatchlistStoreState: function (_options) {
+        var options = _options || {};
         return {
           layout: "",
           groups: [
