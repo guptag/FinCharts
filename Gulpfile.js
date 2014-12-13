@@ -36,14 +36,13 @@ var paths = {
   all: "**",
   jsx: 'client/**/*.jsx',
   js: 'client/**/*.js',
-  styl: "css/**/*.styl",
-  rootStyl: 'css/index.styl',
-  destStyl: 'css/index.css',
+  styl: "client/**/*.styl",
+  rootStyl: 'index.styl',
+  destStyl: 'index.css',
   rootJS: 'index.js',
   rootHtml: 'index.html',
   html: '**/*.html',
-  md: '**/*.md',
-  cssfolders: 'css/*/**'
+  md: '**/*.md'
 };
 
 var isDevEnvironment = false;
@@ -113,7 +112,7 @@ gulp.task('browserify', ['jshint-react'], function() {
 
 gulp.task('post-build-cleanup', ['stylus', 'browserify'], function() {
   // delete unnecessary files in target
-  return gulp.src([paths.md, paths.styl, paths.jsx, paths.cssfolders, "client", "index.js"], {read: false, cwd: bases.appTarget})
+  return gulp.src([paths.md, paths.styl, paths.jsx, "client", "index.js"], {read: false, cwd: bases.appTarget})
              .pipe(clean({force: true}));
 });
 
