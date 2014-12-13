@@ -16,6 +16,5 @@ serverContext.node_proc = process;
 serverContext.fs        = require('fs');
 serverContext.path      = require('path');
 serverContext.lodash    = require('lodash');
-serverContext.Q         = require('q');
 
 module.exports = serverContext;
