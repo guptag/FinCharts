@@ -12,10 +12,9 @@ var WatchlistStore = require("./stores/watchliststore");
 
 
 function AppContext () {
-    var lastRenderedState,
-        mountConfig;
+    var lastRenderedState;
 
-    this.init = function () {
+    this.init = function (reactClass, domNode) {
         this.atom = new Atom({
             afterCommit: this.afterAtomCommit.bind(this)
         });
@@ -28,10 +27,8 @@ function AppContext () {
         };
 
         this.storeManager = new AtomStoreManager(this.atom, this.stores);
-    };
 
-    this.setMountConfig = function (reactClass, domNode) {
-        mountConfig = {
+        this.mountConfig = {
             reactElementClass: reactClass,
             reactElementFactory: React.createFactory(reactClass),
             domNode: domNode
@@ -80,7 +77,7 @@ function AppContext () {
         try {
             this.logStateBeforeRender();
 
-            /*React.withContext(reactContext, function() {
+            React.withContext(reactContext, function() {
                 console.time("Rendered");
                 React.render(
                     self.mountConfig.reactElementFactory(props),
@@ -89,9 +86,9 @@ function AppContext () {
                         console.timeEnd("Rendered");
                     }
                 );
-            });*/
+            });
         } catch (e) {
-            Logger.error("Could not render application with state ", state.toJS(), e);
+            Logger.error("Could not render application with state ", (state && state.toJS && state.toJS()) || "<null>", e);
             throw e;
         }
     };
@@ -117,7 +114,7 @@ function AppContext () {
         console.debug(
             "####\n# Previous state\n#",
             previousState ? previousState.toJS(): "<nothing>",
-             "####\n# Current state\n#",
+             "\n####\n# Current state\n#",
             currentState ? currentState.toJS() : "<nothing>"
         );
     };

@@ -1,0 +1,375 @@
+#applogo
+    position absolute
+
+    .text
+        font4()
+        letter-spacing 5.5px
+        position absolute
+        top 5px
+        left 7px
+        color screen-font-color
+
+    .icon
+        .axis
+            position absolute
+            top 20px
+            left 5px
+            width 125px
+            height 1px
+            border-radius 2px
+            opacity 0.7
+            background-color screen-font-color-light
+
+        .tri1
+            position absolute
+            top 21px
+            left 5px
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 9.5px 5.5px 0 5.5px;
+            border-color: screen-font-color-light transparent transparent transparent;
+
+        .dot1
+            position absolute
+            top 30px
+            left 8px
+            border-radius: 50%;
+            width: 5px;
+            height: 5px;
+            background-color icon-down-color
+
+        .tri2
+            position absolute
+            top 11px
+            left 120px
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 5.5px 9.5px 5.5px
+            border-color: transparent transparent screen-font-color-light transparent;
+
+        .dot2
+            position absolute
+            top 6px
+            left 123px
+            border-radius: 50%;
+            width: 5px;
+            height: 5px;
+            background-color icon-up-color
+
+
+#topnav
+    z-index 1
+    .topnav-item
+        font4()
+        font-weight bold
+        position relative
+        float right
+        margin 2px 4px 0 4px
+        padding 7px 7px
+        height 30px
+        background-color menu-background-color
+        color screen-font-color-light
+        border 1px solid menu-border-color
+
+        i.fa-chevron-down
+            font-size 0.5em
+            right 3px
+            top 10px
+            position absolute
+            color screen-background-dark
+
+        &:hover
+            background-color menu-background-hover-color
+            box-shadow: 3px 1px 15px 0px menu-boxshadow-color;
+
+    .ticker
+        width 170px
+        text-transform uppercase
+        padding 2px 7px
+        font-weight normal
+
+        &::-webkit-input-placeholder
+            color #FFF
+            font-size 0.8em
+            text-transform none
+
+        &:focus
+            background-color menu-background-hover-color
+            color screen-font-color-light
+
+    .range
+       width 40px
+
+    .timeframe
+        width 60px
+        text-align center
+
+    .layouts
+        width 50px
+        position relative
+
+        .layoutbutton
+            &[data-layout='1a'],
+            &[data-layout='2a'],
+            &[data-layout='2b'],
+            &[data-layout='3a'],
+            &[data-layout='3b'],
+            &[data-layout='3c']
+                display none
+
+            .box
+                border: 1px solid screen-font-color;
+                position: absolute;
+
+        &.layout-1a .layoutbutton[data-layout='1a'],
+        &.layout-2a .layoutbutton[data-layout='2a'],
+        &.layout-2b .layoutbutton[data-layout='2b'],
+        &.layout-3a .layoutbutton[data-layout='3a'],
+        &.layout-3b .layoutbutton[data-layout='3b'],
+        &.layout-3c .layoutbutton[data-layout='3c']
+            display block
+            .box
+                border-color screen-font-color-light
+
+
+        .layoutbutton[data-layout='1a']
+            .box1
+                height: 18px;
+                width: 25px;
+                top: 5px;
+                left: 4px;
+
+
+        .layoutbutton[data-layout='2a']
+            .box1
+                height: 18px;
+                width: 13px;
+                top: 5px;
+                left: 4px;
+
+            .box2
+                height: 18px;
+                width: 13px;
+                top: 5px;
+                left: 20px;
+
+        .layoutbutton[data-layout='2b']
+            .box1
+                height: 9px;
+                width: 25px;
+                top: 4px;
+                left: 4px;
+
+            .box2
+                height: 9px;
+                width: 25px;
+                top: 15px;
+                left: 4px;
+
+        .layoutbutton[data-layout='3a']
+            .box1
+                height: 18px;
+                width: 7px;
+                top: 5px;
+                left: 4px;
+
+            .box2
+                height: 18px;
+                width: 7px;
+                top: 5px;
+                left: 15px;
+
+            .box3
+                height: 18px;
+                width: 7px;
+                top: 5px;
+                left: 25px;
+
+        .layoutbutton[data-layout='3b']
+            .box1
+                height: 5px;
+                width: 26px;
+                top: 5px;
+                left: 4px;
+
+            .box2
+                height: 5px;
+                width: 26px;
+                top: 12px;
+                left: 4px;
+
+            .box3
+                height: 5px;
+                width: 26px;
+                top: 19px;
+                left: 4px;
+
+        .layoutbutton[data-layout='3c']
+            .box1
+                height: 20px;
+                width: 12px;
+                top: 4px;
+                left: 4px;
+
+            .box2
+                height: 9px;
+                width: 12px;
+                top: 4px;
+                left: 18px;
+
+            .box3
+                height: 9px;
+                width: 12px;
+                top: 15px;
+                left: 18px;
+
+    .preview
+        width 160px
+        padding 2px 7px
+
+        button.play
+            margin 2px
+            width 60px
+            background-color transparent
+            border 1px solid screen-font-color-light
+            border-radius 3px
+
+        button.stop
+            width 30px
+            margin 2px
+            background-color transparent
+            border 1px solid screen-font-color-light
+            border-radius 3px
+
+        button.pause
+            width 30px
+            margin 2px
+            background-color transparent
+            border 1px solid screen-font-color-light
+            border-radius 3px
+
+        button.disabled
+            opacity 0.4
+
+            &:hover
+                background-color menu-background-color
+
+        button:hover
+            background-color menu-background-hover-color
+
+        &:hover
+            background-color menu-background-color
+            box-shadow none
+
+    .compare
+        font5()
+        width 110px
+        padding 6px 7px
+
+    .signals
+        font5()
+        width 95px
+        padding 6px 7px
+
+    .indicators
+        font5()
+        width 115px
+        padding 6px 7px
+
+
+#topnav
+    .navitem-options
+        font5()
+        position absolute
+        top 40px
+        left 0
+        width 100px
+        background-color menu-background-color
+        color screen-font-color
+
+
+        &:before
+            position absolute
+            top -8px
+            left 15px
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 5.5px 9.5px 5.5px
+            border-color: transparent transparent menu-border-color transparent;
+            content: ''
+
+
+        .option
+            float left
+            height 28px
+            width 33.3%
+            padding 8px 0px
+            text-align center
+            border 1px solid menu-border-color
+            border-right none
+            border-bottom none
+
+            &:hover
+                background-color menu-background-hover-color
+                color screen-font-color-light
+
+            &.selected
+                color screen-font-color-light
+
+
+    .range .navitem-options
+        width 230px
+
+        .option
+            height 28px
+            width 33.3%
+            border-bottom 1px solid menu-border-color
+
+            &:nth-child(3)
+                border-right 1px solid menu-border-color
+
+
+    .timeframe .navitem-options
+        width 300px
+
+        &:before
+            left 25px
+
+        .option
+            padding 14px 0 0 0
+            height 40px
+            width 25%
+
+            &:nth-child(4),
+            &:nth-child(8),
+            &:nth-child(12)
+                border-right 1px solid menu-border-color
+
+            &:nth-child(9),
+            &:nth-child(10),
+            &:nth-child(11),
+            &:nth-child(12)
+                border-bottom 1px solid menu-border-color
+
+    .layouts .navitem-options
+        width 120px
+
+        .option
+            height 28px
+            width 33.3%
+            position relative
+
+            &:nth-child(3),
+            &:nth-child(6)
+                border-right 1px solid menu-border-color
+
+            &:nth-child(4),
+            &:nth-child(5),
+            &:nth-child(6)
+                border-bottom 1px solid menu-border-color
+
+            .layoutbutton
+                display block

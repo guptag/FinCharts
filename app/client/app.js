@@ -7,21 +7,10 @@
 // https://github.com/joyent/node/issues/2479
 
 
-
-/*var React = require('react');
-
-var TodoApp = require('ui/components/TodoApp.react');
-
-module.exports = {
-  init: function() {
-    React.renderComponent(
-              <TodoApp />,
-              document.getElementById('todoapp'));
-  }
-};*/
-
-
-//var React = require("react/addons");
+var React = require("react/addons");
+var Header = require("./ui/components/header/header.react");
+var Main = require("./ui/components/main/index.react");
+var jQuery = require("jquery");
 
 var AppContext = require("./ui/core/appcontext");
 var AtomCommand = require("./ui/core/atomcommand");
@@ -60,12 +49,23 @@ function testAtom () {
     console.log(AppContext.stores.chartStore.getRange());
 }
 
+
+var Application = React.createClass({
+    render: function() {
+        return (
+            <section id="application">
+              <Header/>
+              <Main/>
+            </section>
+        );
+    }
+});
+
+
 module.exports = {
   init: function() {
-    /*React.renderComponent(
-              <TodoApp />,
-              document.getElementById('todoapp'));*/
-    AppContext.init();
+    AppContext.init(Application, jQuery("#root")[0]);
+    AppContext.renderAtomState();
 
     testAtom();
   }
