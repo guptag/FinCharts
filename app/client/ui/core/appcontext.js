@@ -10,8 +10,6 @@ var ChartStore = require("./stores/chartstore");
 var LayoutStore = require("./stores/layoutstore");
 var WatchlistStore = require("./stores/watchliststore");
 
-// var _ = window.server.lodash;
-
 
 function AppContext () {
     var lastRenderedState,

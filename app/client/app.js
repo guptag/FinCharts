@@ -27,13 +27,8 @@ var AppContext = require("./ui/core/appcontext");
 var AtomCommand = require("./ui/core/atomcommand");
 var AtomConstants = require("./ui/core/atomconstants");
 
-module.exports = {
-  init: function() {
-    /*React.renderComponent(
-              <TodoApp />,
-              document.getElementById('todoapp'));*/
-    AppContext.init();
-
+// TODO: move to unit tests
+function testAtom () {
     console.log(AppContext.stores.chartStore.getTicker());
     console.log(AppContext.stores.chartStore.getTimeframe());
     console.log(AppContext.stores.chartStore.getRange());
@@ -63,6 +58,16 @@ module.exports = {
     console.log(AppContext.stores.chartStore.getTicker());
     console.log(AppContext.stores.chartStore.getTimeframe());
     console.log(AppContext.stores.chartStore.getRange());
+}
+
+module.exports = {
+  init: function() {
+    /*React.renderComponent(
+              <TodoApp />,
+              document.getElementById('todoapp'));*/
+    AppContext.init();
+
+    testAtom();
   }
 };
 

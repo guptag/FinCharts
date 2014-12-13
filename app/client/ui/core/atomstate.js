@@ -50,7 +50,6 @@ module.exports =  {
         return {
             type: "pricechart",
             id: 1,
-            layout: "chart_1a_1",
             keys: {
               ticker: options.ticker || "MSFT",
               timeframe:  {
@@ -60,12 +59,7 @@ module.exports =  {
               range: "daily"
             },
             ui: {
-              rect: {
-                width: 600,
-                height: 400,
-                top: 50,
-                left: 0
-              },
+              layout: "chart_1a_1",
               renderer: "candlestick",
               axis: {
                 value: {

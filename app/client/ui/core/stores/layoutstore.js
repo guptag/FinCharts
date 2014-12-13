@@ -11,7 +11,6 @@ var commandHandlers = {
 
 function LayoutStore(atom) {
     BaseStore.call(this, atom);
-
 }
 
 LayoutStore.prototype = _.create(BaseStore.prototype, {
