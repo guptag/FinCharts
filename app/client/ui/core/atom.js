@@ -1,7 +1,5 @@
 var Immutable = require('immutable');
-var _ = window.server.lodash;
-
-
+var _ = require("lodash");
 var Logger = require("./utils/logger");
 var AtomState = require("./atomstate");
 

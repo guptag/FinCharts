@@ -1,6 +1,5 @@
 
-var _ = window.server.lodash;
-
+var _ = require("lodash");
 var AtomCommand = require("./atomcommand");
 var Logger = require("./utils/logger");
 

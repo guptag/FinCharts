@@ -1,7 +1,5 @@
 
 
-// var _ = window.server.lodash;
-
 module.exports =  {
    getDefaultAtomState: function (_options) {
         var options = _options || {};
