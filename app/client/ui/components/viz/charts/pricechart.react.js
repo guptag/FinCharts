@@ -2,12 +2,12 @@
 
 var React = require("react/addons");
 
-var GridX = require("../core/elements/gridx.react");
-var GridY = require("../core/elements/gridy.react");
-var Volume = require("./volume.react");
-var CandleStickRenderer = require("../core/renderers/candlestick.react");
-var ChartInfo = require("./chartinfo.react");
-var CrossHairs = require("./crosshairs.react");
+var GridX = require("../elements/gridx.react");
+var GridY = require("../elements/gridy.react");
+var CandleStickRenderer = require("../renderers/candlestick.react");
+var Volume     = require("../controls/volume.react");
+var ChartInfo  = require("../controls/chartinfo.react");
+var CrossHairs = require("../controls/crosshairs.react");
 
 var PriceChart = React.createClass({
     render: function() {
