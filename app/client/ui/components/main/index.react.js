@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require("react/addons");
-var PriceChart = require('../visualization/charts/pricechart.react');
+var PriceChart = require('../viz/charts/pricechart.react');
 
 var AppMain = React.createClass({
     render: function() {
