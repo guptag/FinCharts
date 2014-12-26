@@ -14,6 +14,7 @@ var gulp        = require('gulp'),
     //watchify    = require('watchify');
     uglify      = require('gulp-uglify')
     seq         = require('run-sequence'),
+    symlink     = require('gulp-symlink'),
     react       = require('gulp-react'),
     //reactify    = require('reactify');
     exec        = require('child_process').exec,
@@ -58,8 +59,19 @@ gulp.task('clean-target', function() {
 });
 
 gulp.task('copy', function() {
-  return gulp.src(paths.all, {cwd: bases.src, dot: true})
+  return gulp.src(paths.all, {cwd: bases.src/*, dot: true*/})
              .pipe(gulp.dest(bases.appTarget));
+});
+
+gulp.task('symlink', ['copy'], function() {
+  return gulp.src(['client/finlib/',
+                   'client/chartlib/',
+                   'client/ui/',
+                   'client/data'], {cwd: bases.appTarget})
+              .pipe(symlink(['./node_modules/finlib',
+                './node_modules/chartlib',
+                './node_modules/ui',
+                './node_modules/data'], {cwd: bases.appTarget, force: true}));
 });
 
 gulp.task('stylus', ['copy'], function () {
@@ -70,7 +82,7 @@ gulp.task('stylus', ['copy'], function () {
             .pipe(gulp.dest(bases.appTarget));
 });
 
-gulp.task('jshint-react', ['copy'], function () {
+gulp.task('jshint-react', ['copy', 'symlink'], function () {
   return gulp.src([paths.js, paths.jsx, paths.rootJS], {cwd: bases.appTarget})
             .pipe(react({harmony:true}))
             .on('error', function(e) {
@@ -172,7 +184,7 @@ gulp.task('package-app', ['build'], function () {
 });
 
 
-gulp.task('build', ['copy', 'stylus', 'jshint-react', 'browserify', 'post-build-cleanup', 'post-process-files', 'notify']);
+gulp.task('build', ['copy', 'symlink', 'stylus', 'jshint-react', 'browserify', 'post-build-cleanup', 'post-process-files', 'notify']);
 
 gulp.task('default', function () {
   seq('clean-target', ['build', 'open']);

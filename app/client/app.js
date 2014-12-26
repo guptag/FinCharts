@@ -8,13 +8,13 @@
 
 
 var React = require("react/addons");
-var Header = require("./ui/components/header/header.react");
-var Main = require("./ui/components/main/index.react");
+var Header = require("ui/components/header/header.react");
+var Main = require("ui/components/main/index.react");
 var jQuery = require("jquery");
 
-var AppContext = require("./ui/core/appcontext");
-var AtomCommand = require("./ui/core/atomcommand");
-var ChartActions = require("./ui/core/actions/chartactions");
+var AppContext = require("ui/core/appcontext");
+var AtomCommand = require("ui/core/atomcommand");
+var ChartActions = require("ui/core/actions/chartactions");
 
 // TODO: move to unit tests
 function testAtom () {

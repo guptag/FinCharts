@@ -1,14 +1,14 @@
 // Credit - https://github.com/stample/atom-react/blob/master/src/atomReactContext.js
 
 var React = require("react/addons");
-var Atom  = require("./atom");
-var AtomStoreManager = require("./atomstoremanager");
-var Logger = require("./utils/logger");
+var Atom  = require("ui/core/atom");
+var AtomStoreManager = require("ui/core/atomstoremanager");
+var Logger = require("ui/core/utils/logger");
 
-var AppUIStore = require("./stores/appuistore");
-var ChartStore = require("./stores/chartstore");
-var LayoutStore = require("./stores/layoutstore");
-var WatchlistStore = require("./stores/watchliststore");
+var AppUIStore = require("ui/core/stores/appuistore");
+var ChartStore = require("ui/core/stores/chartstore");
+var LayoutStore = require("ui/core/stores/layoutstore");
+var WatchlistStore = require("ui/core/stores/watchliststore");
 
 
 function AppContext () {

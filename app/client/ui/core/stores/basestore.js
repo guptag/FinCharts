@@ -1,5 +1,5 @@
 var _ = require("lodash");
-var Logger = require("../utils/logger");
+var Logger = require("ui/core/utils/logger");
 
 function BaseStore(atom) {
     this.commandHandlers = {};

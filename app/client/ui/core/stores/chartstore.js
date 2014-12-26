@@ -3,7 +3,7 @@ var _ = require("lodash");
 var Immutable = require('immutable');
 
 var BaseStore = require("./basestore");
-var Commands = require("../atomconstants").commands;
+var Commands = require("ui/core/atomconstants").commands;
 
 var commandHandlers = {
     /**

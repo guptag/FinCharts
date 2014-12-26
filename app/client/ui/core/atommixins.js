@@ -2,8 +2,8 @@
 var React = require("react/addons");
 
 // var Atom = require("./atom");
-var AppContext = require("./appcontext");
-var Logger = require("./utils/logger");
+var AppContext = require("ui/core/appcontext");
+var Logger = require("ui/core/utils/logger");
 
 // https://github.com/stample/atom-react/blob/master/src/atomReact.js
 function shallowEqualObjects(prev, next) {
