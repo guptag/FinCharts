@@ -1,4 +1,4 @@
-var AtomConstants = require("./atomconstants");
+var AtomConstants = require("ui/core/atomconstants");
 
 var AtomCommand = function (name, payload) {
     this.name = name;

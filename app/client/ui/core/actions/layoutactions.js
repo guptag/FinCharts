@@ -1,4 +1,4 @@
-var AppContext = require("./ui/core/appcontext");
+var AppContext = require("ui/core/appcontext");
 
 var layoutActions = {
     updateChartsLayout: function (layoutId) {

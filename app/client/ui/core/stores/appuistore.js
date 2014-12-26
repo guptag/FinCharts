@@ -1,6 +1,6 @@
 var _ = require("lodash");
-var BaseStore = require("./basestore");
-var Commands = require("../atomconstants").commands;
+var BaseStore = require("ui/core/stores/basestore");
+var Commands = require("ui/core/atomconstants").commands;
 
 var commandHandlers = {
     toggleTimeframeOptions: function (payload) {

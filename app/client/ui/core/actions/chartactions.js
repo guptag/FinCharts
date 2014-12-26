@@ -1,6 +1,6 @@
-var AppContext = require("../appcontext"),
-    AtomCommand = require("../atomcommand"),
-    PriceDataApi = require("../../../data/api/pricedata");
+var AppContext = require("ui/core/appcontext"),
+    AtomCommand = require("ui/core/atomcommand"),
+    PriceDataApi = require("data/api/pricedata");
 
 var chartActions = {
 
