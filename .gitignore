@@ -33,3 +33,5 @@ node_modules
 # ignore data and temp folders
 .appdata
 .tmp
+
+tempdb/*.csv

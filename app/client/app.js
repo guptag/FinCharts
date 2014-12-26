@@ -14,16 +14,16 @@ var jQuery = require("jquery");
 
 var AppContext = require("./ui/core/appcontext");
 var AtomCommand = require("./ui/core/atomcommand");
-var AtomConstants = require("./ui/core/atomconstants");
+var ChartActions = require("./ui/core/actions/chartactions");
 
 // TODO: move to unit tests
 function testAtom () {
     console.log(AppContext.stores.chartStore.getTicker());
     console.log(AppContext.stores.chartStore.getTimeframe());
-    console.log(AppContext.stores.chartStore.getRange());
+    console.log(AppContext.stores.chartStore.getDuration());
 
     AppContext.publishCommand(new AtomCommand(
-        AtomConstants.commands.CHART_UPDATE_TICKER,
+        AtomCommand.commands.CHART_UPDATE_TICKER,
         {ticker: "GOOGL"}
       ));
 
@@ -31,22 +31,26 @@ function testAtom () {
 
     AppContext.publishBatchCommands([
       new AtomCommand(
-        AtomConstants.commands.CHART_UPDATE_TICKER,
+        AtomCommand.commands.CHART_UPDATE_TICKER,
         {ticker: "IBM"}
       ),
       new AtomCommand(
-        AtomConstants.commands.CHART_UPDATE_TIMEFRAME,
+        AtomCommand.commands.CHART_UPDATE_TIMEFRAME,
         {timeframe: {from: new Date(), to: new Date()}}
       ),
       new AtomCommand(
-        AtomConstants.commands.CHART_UPDATE_RANGE,
-        {range: "weekly"}
+        AtomCommand.commands.CHART_UPDATE_DURATION,
+        {duration: "weekly"}
       )
     ]);
 
     console.log(AppContext.stores.chartStore.getTicker());
     console.log(AppContext.stores.chartStore.getTimeframe());
-    console.log(AppContext.stores.chartStore.getRange());
+    console.log(AppContext.stores.chartStore.getDuration());
+}
+
+function testActions() {
+    ChartActions.updateTicker("ibm");
 }
 
 
@@ -67,7 +71,8 @@ module.exports = {
     AppContext.init(Application, jQuery("#root")[0]);
     AppContext.renderAtomState();
 
-    testAtom();
+    //testAtom();
+    testActions();
   }
 };
 

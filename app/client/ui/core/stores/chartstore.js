@@ -36,15 +36,84 @@ var commandHandlers = {
 
     /**
      * [updateRange description]
-     * @param  {[type]} payload {range: 'daily'}
+     * @param  {[type]} payload {duration: 'daily'}
      * @return {[type]}         [description]
      */
-    updateRange: function (payload) {
+    updateDuration: function (payload) {
         this.atom.transact(function (state) {
             var activeChartIndex = this.getActiveChartIndex();
-            return state.updateIn(['chartStore', 'charts', activeChartIndex, 'keys', 'range'], function (value) {
-                return payload.range;
+            return state.updateIn(['chartStore', 'charts', activeChartIndex, 'keys', 'duration'], function (value) {
+                return payload.duration;
             });
+        }.bind(this));
+    },
+
+    /**
+     * [updatePriceData description]
+     * @param  {[type]} payload {
+     *   data: {
+              status: "loaded",
+              series: [{
+                    date: Date.parse(record[0]),
+                    open: +parseFloat(record[1]).toFixed(2),
+                    high: +parseFloat(record[2]).toFixed(2),
+                    low: +parseFloat(record[3]).toFixed(2),
+                    close: +parseFloat(record[4]).toFixed(2),
+                    volume: +parseFloat(record[5]).toFixed(2),
+                    adjClose: +parseFloat(record[6]).toFixed(2),
+              }, ...],
+              min: 0,
+              max: 0,
+              minVolume: 0,
+              maxVolume: 0
+            }
+     * }
+     * @return {[type]}         [description]
+     */
+    updatePriceData: function (payload) {
+        this.atom.transact(function (state) {
+            var activeChartIndex = this.getActiveChartIndex();
+            return state.updateIn(['chartStore', 'charts', activeChartIndex, 'data'], function (value) {
+                return payload.data;
+            });
+        }.bind(this));
+    },
+
+    /**
+     * [updatePriceData description]
+     * @param  {[type]} payload  {
+     *   data: {
+              status: "loading",
+              series: [{
+                    date: Date.parse(record[0]),
+                    open: +parseFloat(record[1]).toFixed(2),
+                    high: +parseFloat(record[2]).toFixed(2),
+                    low: +parseFloat(record[3]).toFixed(2),
+                    close: +parseFloat(record[4]).toFixed(2),
+                    volume: +parseFloat(record[5]).toFixed(2),
+                    adjClose: +parseFloat(record[6]).toFixed(2),
+              }, ...],
+              min: 0,
+              max: 0,
+              minVolume: 0,
+              maxVolume: 0
+            }
+     * }
+     * @return {[type]} [description]
+     */
+    setDataToLoading: function (/*payload*/) {
+        this.atom.transact(function (state) {
+            var activeChartIndex = this.getActiveChartIndex();
+            return state.updateIn(['chartStore', 'charts', activeChartIndex, 'data'], function (value) {
+                return {
+                          status: "loading",
+                          series: [],
+                          min: 0,
+                          max: 0,
+                          minVolume: 0,
+                          maxVolume: 0
+                        };
+                });
         }.bind(this));
     }
 };
@@ -54,9 +123,12 @@ function ChartsStore(atom) {
     BaseStore.call(this, atom);
     this.registerCommandHandlers([
         { key: Commands.CHART_UPDATE_TICKER,    value: commandHandlers.updateTicker.bind(this) },
-        { key: Commands.CHART_UPDATE_RANGE,  value: commandHandlers.updateRange.bind(this) },
-        { key: Commands.CHART_UPDATE_TIMEFRAME, value: commandHandlers.updateTimeFrame.bind(this) }
+        { key: Commands.CHART_UPDATE_DURATION,  value: commandHandlers.updateDuration.bind(this) },
+        { key: Commands.CHART_UPDATE_TIMEFRAME, value: commandHandlers.updateTimeFrame.bind(this) },
+        { key: Commands.CHART_DATA_LOADING, value: commandHandlers.setDataToLoading.bind(this) },
+        { key: Commands.CHART_DATA_FETCHED, value: commandHandlers.updatePriceData.bind(this) },
     ]);
+    this.priceChartModel = null;
 }
 
 ChartsStore.prototype = _.create(BaseStore.prototype, {
@@ -79,8 +151,12 @@ ChartsStore.prototype = _.create(BaseStore.prototype, {
         return atomState.getIn(['chartStore', 'activeChartIndex']);
     },
 
-    getActiveChartJS: function () {
+    getActiveChart: function () {
         return this._getActiveChart().toJS();
+    },
+
+    getChartKeys: function () {
+        return this._getChartKeys().toJS();
     },
 
     getTicker: function () {
@@ -91,8 +167,8 @@ ChartsStore.prototype = _.create(BaseStore.prototype, {
         return this._getChartKeys().getIn(['timeframe']).toJS();
     },
 
-    getRange: function () {
-        return this._getChartKeys().getIn(['range']);
+    getDuration: function () {
+        return this._getChartKeys().getIn(['duration']);
     }
 });
 

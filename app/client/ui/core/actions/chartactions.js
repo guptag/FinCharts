@@ -1,8 +1,56 @@
-var AppContext = require("./ui/core/appcontext");
+var AppContext = require("../appcontext"),
+    AtomCommand = require("../atomcommand"),
+    PriceDataApi = require("../../../data/api/pricedata");
 
 var chartActions = {
+
+    updateTicker: function (ticker) {
+        AppContext.publishBatchCommands([
+              new AtomCommand(
+                AtomCommand.commands.CHART_UPDATE_TICKER,
+                {ticker: ticker}
+              ),
+              new AtomCommand(
+                AtomCommand.commands.CHART_DATA_LOADING,
+                {}
+              )
+            ]);
+
+        this.fetchPriceDate(AppContext.stores.chartStore.getChartKeys());
+    },
+
+    updateTimeframe: function (fromDate, toDate) {
+        AppContext.publishBatchCommands([
+               new AtomCommand(
+                AtomCommand.commands.CHART_UPDATE_TIMEFRAME,
+                {timeframe: {from: fromDate, to: toDate}}
+              ),
+              new AtomCommand(
+                AtomCommand.commands.CHART_DATA_LOADING,
+                {}
+              )
+            ]);
+
+        this.fetchPriceDate(AppContext.stores.chartStore.getChartKeys());
+    },
+
+    updateDuration: function (duration) {
+        AppContext.publishBatchCommands([
+               new AtomCommand(
+                AtomCommand.commands.CHART_UPDATE_DURATION,
+                {duration: duration}
+              ),
+              new AtomCommand(
+                AtomCommand.commands.CHART_DATA_LOADING,
+                {}
+              )
+            ]);
+
+        this.fetchPriceDate(AppContext.stores.chartStore.getChartKeys());
+    },
+
     /**
-     *  data: {
+     *  chartKeys: {
      *      ticker: "MSFT",
      *      timeframe: {
      *          from: <Date>,
@@ -11,8 +59,20 @@ var chartActions = {
      *      duration: 'daily'
      *  }
      */
-    fetchPriceDate: function (data) {
+    fetchPriceDate: function (chartKeys) {
+        /*AppContext.publishCommand(new AtomCommand(
+            AtomCommand.commands.CHART_DATA_LOADING,
+            {}
+        ));*/
 
+        PriceDataApi.getTickerDataAsync(chartKeys)
+                    .then(function (priceData) {
+                        AppContext.publishCommand(
+                          new AtomCommand(
+                            AtomCommand.commands.CHART_DATA_FETCHED,
+                            {data: priceData}
+                          ));
+                    });
     },
 
     updateRenderer: function (renderer) {
