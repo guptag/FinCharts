@@ -1,4 +1,4 @@
-
+var moment = require("moment");
 
 module.exports =  {
    getDefaultAtomState: function (_options) {
@@ -23,11 +23,11 @@ module.exports =  {
           },
           menus: {
             timeframeoptions: 'hide',
-            durationtoptions: 'hide',
+            durationoptions: 'hide',
             chartlayoutoptions: 'hide',
             previewstate: 'stop'
           },
-          theme: "blue"
+          theme: "pink"
         };
    },
 
@@ -46,17 +46,25 @@ module.exports =  {
         var options = _options || {};
 
         return {
-            type: "pricechart",
             id: 1,
+            type: "pricechart",
             keys: {
               ticker: options.ticker || "MSFT",
               timeframe:  {
-                from: new Date(),
-                to: new Date()
+                to: moment().toDate(),
+                from: moment(moment().toDate()).subtract(12, 'months').toDate()
               },
-              range: "daily"
+              duration: "daily"
             },
-            ui: {
+            data: {
+              status: "loading",
+              series: [],
+              min: 0,
+              max: 0,
+              minVolume: 0,
+              maxVolume: 0
+            },
+            settings: {
               layout: "chart_1a_1",
               renderer: "candlestick",
               axis: {
@@ -172,7 +180,7 @@ var defaultState = {
               from: new Date(),
               to: new Date()
             },
-            range: "daily"
+            duration: "daily"
           },
           ui: {
             rect: {

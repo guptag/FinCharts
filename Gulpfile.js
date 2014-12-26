@@ -58,7 +58,7 @@ gulp.task('clean-target', function() {
 });
 
 gulp.task('copy', function() {
-  return gulp.src(paths.all, {cwd: bases.src})
+  return gulp.src(paths.all, {cwd: bases.src, dot: true})
              .pipe(gulp.dest(bases.appTarget));
 });
 
@@ -72,7 +72,7 @@ gulp.task('stylus', ['copy'], function () {
 
 gulp.task('jshint-react', ['copy'], function () {
   return gulp.src([paths.js, paths.jsx, paths.rootJS], {cwd: bases.appTarget})
-            .pipe(react())
+            .pipe(react({harmony:true}))
             .on('error', function(e) {
                 console.error(e.message + '\n  in ' + e.fileName);
             })
