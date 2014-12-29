@@ -54,7 +54,13 @@ module.exports =  {
                 to: moment().toDate(),
                 from: moment(moment().toDate()).subtract(12, 'months').toDate()
               },
-              duration: "daily"
+              duration: "daily",
+              positionRect: {
+                top: 0,
+                left: 0,
+                width: 1400,
+                height: 700
+              }
             },
             data: {
               status: "loading",
@@ -65,7 +71,7 @@ module.exports =  {
               maxVolume: 0
             },
             settings: {
-              layout: "chart_1a_1",
+              layoutId: "chart_1a_1",
               renderer: "candlestick",
               axis: {
                 value: {

@@ -1,12 +1,26 @@
 /** @jsx React.DOM */
 
-var React = require("react/addons");
+var React = require("react/addons"),
+    _     = require("lodash");
 
 var GridX = React.createClass({
     render: function() {
+        var childElements = _.map(this.props.model.elements, function (element) {
+            return React.DOM[element.type](element.props, element.children);
+        });
+
         return (
             <g className="grid-x">
-                <path d="M0,613L1388,613" className="axis"></path>
+                {childElements}
+            </g>
+        );
+    }
+});
+
+module.exports = GridX;
+
+/*
+<path d="M0,613L1388,613" className="axis"></path>
                 <path d="M2,537L1353,537" className="axis"></path>
                 <text x="1354.5" y="540.35" className="pricelabel">34</text>
                 <path d="M2,461L1353,461" className="axis"></path>
@@ -23,9 +37,5 @@ var GridX = React.createClass({
                 <text x="1354.5" y="84.35" className="pricelabel">46</text>
                 <path d="M2,5L1353,5" className="axis"></path>
                 <text x="1354.5" y="8.35" className="pricelabel">48</text>
-            </g>
-        );
-    }
-});
 
-module.exports = GridX;
+ */
