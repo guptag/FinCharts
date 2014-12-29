@@ -16,7 +16,7 @@ var chartActions = {
               )
             ]);
 
-        this.fetchPriceDate(AppContext.stores.chartStore.getChartKeys());
+        this.loadActiveChart(AppContext.stores.chartStore.getChartKeys());
     },
 
     updateTimeframe: function (fromDate, toDate) {
@@ -31,7 +31,7 @@ var chartActions = {
               )
             ]);
 
-        this.fetchPriceDate(AppContext.stores.chartStore.getChartKeys());
+        this.loadActiveChart(AppContext.stores.chartStore.getChartKeys());
     },
 
     updateDuration: function (duration) {
@@ -46,7 +46,7 @@ var chartActions = {
               )
             ]);
 
-        this.fetchPriceDate(AppContext.stores.chartStore.getChartKeys());
+        this.loadActiveChart(AppContext.stores.chartStore.getChartKeys());
     },
 
     /**
@@ -59,7 +59,7 @@ var chartActions = {
      *      duration: 'daily'
      *  }
      */
-    fetchPriceDate: function (chartKeys) {
+    loadActiveChart: function (chartKeys) {
         /*AppContext.publishCommand(new AtomCommand(
             AtomCommand.commands.CHART_DATA_LOADING,
             {}

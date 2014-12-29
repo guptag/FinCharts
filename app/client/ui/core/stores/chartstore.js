@@ -29,7 +29,7 @@ var commandHandlers = {
         this.atom.transact(function (state) {
             var activeChartIndex = this.getActiveChartIndex();
             return state.updateIn(['chartStore', 'charts', activeChartIndex, 'keys', 'timeframe'], function (value) {
-                return Immutable.fromJS(payload.timeframe);
+                return Immutable.fromJS(payload.timeframe); //remove fromJS() ??
             });
         }.bind(this));
     },
@@ -74,7 +74,7 @@ var commandHandlers = {
         this.atom.transact(function (state) {
             var activeChartIndex = this.getActiveChartIndex();
             return state.updateIn(['chartStore', 'charts', activeChartIndex, 'data'], function (value) {
-                return payload.data;
+                return payload.data; //set raw json (immutable map not needed, also speeeds up the lookup)
             });
         }.bind(this));
     },
@@ -169,6 +169,16 @@ ChartsStore.prototype = _.create(BaseStore.prototype, {
 
     getDuration: function () {
         return this._getChartKeys().getIn(['duration']);
+    },
+
+    getPositionRect: function () {
+      return this._getChartKeys().getIn(['positionRect']).toJS();
+    },
+
+    getPriceData: function () {
+      var activeChartIndex = this.getActiveChartIndex();
+      var data = this._getActiveChart().getIn(['data']);
+      return data.toJS ? data.toJS() : data;
     }
 });
 

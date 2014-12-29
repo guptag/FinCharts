@@ -128,4 +128,8 @@ function parseData(data) {
     return parseDeferred.promise;
 }
 
+function formatNumber(number) {
+      return +number.toFixed(3);
+}
+
 module.exports = PriceDataApi;

@@ -9,6 +9,9 @@ var Volume     = require("../controls/volume.react");
 var ChartInfo  = require("../controls/chartinfo.react");
 var CrossHairs = require("../controls/crosshairs.react");
 
+var PriceChartModel = require("ui/components/viz/models/pricechartmodel");
+
+
 var PriceChart = React.createClass({
     render: function() {
         var chartStyle = {
@@ -19,11 +22,13 @@ var PriceChart = React.createClass({
             left: '0px'
         };
 
+        var priceChartModel = new PriceChartModel();
+
         return (
             <section id="chart1" className="chartcontainer active" data-layout="chartslayout_1a_1" style={chartStyle}>
                 <svg className="pricechart" data-ticker="MSFT">
                     <defs></defs>
-                    <GridX/>
+                    <GridX model={priceChartModel.gridXModel}/>
                     <GridY/>
                     <Volume/>
                     <CandleStickRenderer/>
