@@ -1,10 +1,32 @@
 /** @jsx React.DOM */
 
-var React = require("react/addons");
+var React = require("react/addons"),
+    _     = require("lodash"),
+    GridYModel = require("ui/components/viz/models/gridymodel");
 
 var GridY = React.createClass({
     render: function() {
+        var chartInfo = this.props.chartModel.chartInfo;
+        var gridYModel = new GridYModel(chartInfo);
+
+        var childElements = _.map(gridYModel.elements, function (element) {
+            return React.DOM[element.type](element.props, element.children);
+        });
+
         return (
+            <g className="grid-y">
+                {childElements}
+            </g>
+        );
+    }
+});
+
+module.exports = GridY;
+
+
+/*
+
+return (
             <g className="grid-y">
                 <path d="M1348,638L1348,0" className="axis"></path>
                 <path d="M83.468,5L83.468,618" className="axis"></path>
@@ -45,7 +67,5 @@ var GridY = React.createClass({
                 <text x="1313.205" y="630"  className="datetimelabel month">Oct</text>
             </g>
         );
-    }
-});
 
-module.exports = GridY;
+ */
