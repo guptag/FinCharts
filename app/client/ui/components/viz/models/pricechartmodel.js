@@ -2,9 +2,6 @@ var AppContext = require("ui/core/appcontext");
 
 var PriceMarkerHelper = require("chartlib/pricemarkers");
 
-var GridXModel = require("./gridxmodel");
-
-
 var chartMargin = {
             top: 5,
             bottom: 25,
@@ -14,12 +11,12 @@ var chartMargin = {
 
 function PriceChartModel() {
     var chartStore = AppContext.stores.chartStore;
-    var chartPositionRect = chartStore.getPositionRect();
+    var positionRect = chartStore.getPositionRect();
     var priceData = chartStore.getPriceData();
 
     var canvas =  {
-            width: chartPositionRect.width - chartMargin.left - chartMargin.right,
-            height: chartPositionRect.height - chartMargin.top - chartMargin.bottom
+            width: positionRect.width - chartMargin.left - chartMargin.right,
+            height: positionRect.height - chartMargin.top - chartMargin.bottom
         };
 
     var priceMarkers = PriceMarkerHelper.generate(priceData.min,
@@ -38,7 +35,7 @@ function PriceChartModel() {
 
     this.chartInfo = {
         margin: chartMargin,
-        positionRect: chartPositionRect,
+        positionRect: positionRect,
         canvas: canvas,
         priceMarkers: priceMarkers,
         extendedPrices: extendedPrices,

@@ -20,7 +20,7 @@ function GridXModel(chartInfo) {
     var margin = chartInfo.margin;
     var canvas = chartInfo.canvas;
     var positionRect = chartInfo.positionRect;
-    var priceMarkers = _.clone(chartInfo.priceMarkers);
+    var priceMarkers = _.clone(chartInfo.priceMarkers); //clone as data will be changed
     var extendedPrices = chartInfo.extendedPrices;
     var scaleRatio = chartInfo.scaleRatio;
 
