@@ -10,7 +10,8 @@ var TopNav = React.createClass({
             width: '1000px',
             height: '40px',
             top: '0px',
-            right: '60px'
+            right: '60px',
+            overflow: 'hidden'
         };
 
         return (

@@ -10,7 +10,8 @@ var AppMain = React.createClass({
             width: '1400px',
             height: '660px',
             top: '40px',
-            left: '0px'
+            left: '0px',
+            overflow: 'hidden'
         };
 
         return (
