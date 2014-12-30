@@ -42,24 +42,24 @@ function VolumeModel(chartInfo) {
 
     //console.log(options.data.series.minVolume, options.data.series.maxVolume);
 
-    this.bars = _.forEach(priceData.series, function(data, index) {
-                    var path = PathHelper()
-                                .moveto(toPlotX(index), toPlotY(data.volume))
-                                .lineto(formatNumber(toPlotX(index) + barWidth), toPlotY(data.volume)) //top edge
-                                .lineto(formatNumber(toPlotX(index) + barWidth), toPlotY(0)) //right edge
-                                .lineto(toPlotX(index), toPlotY(0)) //bottom edge
-                                .lineto(toPlotX(index), toPlotY(data.volume)) //left edge
-                                .closepath();
+    _.forEach(priceData.series, function(data, index) {
+        var path = PathHelper()
+                    .moveto(toPlotX(index), toPlotY(data.volume))
+                    .lineto(formatNumber(toPlotX(index) + barWidth), toPlotY(data.volume)) //top edge
+                    .lineto(formatNumber(toPlotX(index) + barWidth), toPlotY(0)) //right edge
+                    .lineto(toPlotX(index), toPlotY(0)) //bottom edge
+                    .lineto(toPlotX(index), toPlotY(data.volume)) //left edge
+                    .closepath();
 
-                    self.elements.push({
-                                type: "path",
-                                props: {
-                                    d : path.print(),
-                                    className: data.open > data.close ? "down" : "up"
-                                }
-                            });
-
+        self.elements.push({
+                    type: "path",
+                    props: {
+                        d : path.print(),
+                        className: data.open > data.close ? "down" : "up"
+                    }
                 });
+
+    });
 }
 
 function formatNumber(number) {
