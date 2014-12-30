@@ -1,10 +1,32 @@
 /** @jsx React.DOM */
 
-var React = require("react/addons");
+var React = require("react/addons"),
+    _     = require("lodash");
+
+var VolumeModel = require("ui/components/viz/models/volumemodel");
 
 var Volume = React.createClass({
     render: function() {
+        var chartInfo = this.props.chartModel.chartInfo;
+        var volumeModel = new VolumeModel(chartInfo);
+
+        var childElements = _.map(volumeModel.elements, function (element) {
+            return React.DOM[element.type](element.props, element.children);
+        });
+
         return (
+            <g className="volume">
+                {childElements}
+            </g>
+        );
+    }
+});
+
+module.exports = Volume;
+
+/*
+
+return (
             <g className="volume">
                 <path d="M2.496,573.729L8.588,573.729L8.588,613L2.496,613L2.496,573.729" className="down"></path>
                 <path d="M9.58,580.755L15.672,580.755L15.672,613L9.58,613L9.58,580.755" className="up"></path>
@@ -197,8 +219,6 @@ var Volume = React.createClass({
                 <path d="M1334.327,583.771L1340.419,583.771L1340.419,613L1334.327,613L1334.327,583.771" className="up"></path>
                 <path d="M1341.412,594.505L1347.504,594.505L1347.504,613L1341.412,613L1341.412,594.505" className="down"></path>
             </g>
-        );
-    }
-});
 
-module.exports = Volume;
+
+ */

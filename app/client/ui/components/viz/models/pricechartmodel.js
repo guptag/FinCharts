@@ -46,6 +46,7 @@ function PriceChartModel() {
         priceMarkers: priceMarkers,
         datetimeMarkers: datetimeMarkers,
         extendedPrices: extendedPrices,
+        priceData: priceData,
         scaleRatio: scaleRatio,
         tickMargin: scaleRatio.x / 2
     };
