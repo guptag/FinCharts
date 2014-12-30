@@ -28,7 +28,7 @@ var PriceChart = React.createClass({
             <section id="chart1" className="chartcontainer active" data-layout="chartslayout_1a_1" style={chartStyle}>
                 <svg className="pricechart" data-ticker="MSFT">
                     <defs></defs>
-                    <GridX model={priceChartModel.gridXModel}/>
+                    <GridX chartModel={priceChartModel}/>
                     <GridY/>
                     <Volume/>
                     <CandleStickRenderer/>

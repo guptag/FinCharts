@@ -3,9 +3,14 @@
 var React = require("react/addons"),
     _     = require("lodash");
 
+var GridXModel = require("ui/components/viz/models/gridxmodel");
+
 var GridX = React.createClass({
     render: function() {
-        var childElements = _.map(this.props.model.elements, function (element) {
+        var chartInfo = this.props.chartModel.chartInfo;
+        var gridXModel = new GridXModel(chartInfo);
+
+        var childElements = _.map(gridXModel.elements, function (element) {
             return React.DOM[element.type](element.props, element.children);
         });
 
