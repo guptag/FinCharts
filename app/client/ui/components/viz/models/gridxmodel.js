@@ -3,8 +3,8 @@ var PathHelper = require("paths-js/path");
 
 /**
  * [GridXModel description]
- * @param {[type]} options {
- *           chartPositionRect: <rect>,
+ * @param {[type]} chartInfo {
+ *           positionRect: <rect>,
  *           canvas: {},
  *           margin: {},
  *           priceMarkers: {},
@@ -12,37 +12,43 @@ var PathHelper = require("paths-js/path");
  *           scaleRatio: {}
  * }
  */
-function GridXModel(options) {
+function GridXModel(chartInfo) {
     var self = this;
-    this.margin = options.margin;
-    this.canvas = options.canvas;
-    this.chartPositionRect = options.chartPositionRect;
-    this.priceMarkers = options.priceMarkers;
-    this.extendedPrices = options.extendedPrices;
-    this.scaleRatio = options.scaleRatio;
-
-    // X-axis bar
-    var path = PathHelper();
-    path.moveto(0, this.margin.top + this.canvas.height);
-    path.lineto(this.chartPositionRect.width, this.margin.top + this.canvas.height);
-    path.closepath();
 
     this.elements = [];
+
+    var margin = chartInfo.margin;
+    var canvas = chartInfo.canvas;
+    var positionRect = chartInfo.positionRect;
+    var priceMarkers = _.clone(chartInfo.priceMarkers);
+    var extendedPrices = chartInfo.extendedPrices;
+    var scaleRatio = chartInfo.scaleRatio;
+
+    var toPlotY = _.curry(function (margin, canvas, extendedPrices, scaleRatio, dataY) {
+        return formatNumber(margin.top + canvas.height  - ((dataY - extendedPrices.min) * scaleRatio.y));
+    })(margin, canvas, extendedPrices, scaleRatio);
+
+    // X-axis bar
+    var path = PathHelper()
+                .moveto(0, margin.top + canvas.height)
+                .lineto(positionRect.width, margin.top + canvas.height)
+                .closepath();
 
     this.elements.push({
                 type: "path",
                 props: {
-                    pathStr : path.print(),
+                    d : path.print(),
                     className: "axis"
                 }
             });
 
     // X-axis ticks (represents price)
-    this.priceMarkers.shift(); //remove first price item which aligns on x-axis
-    _.each(this.priceMarkers, function(valueMarker) {
+    priceMarkers.shift(); //remove first price item which aligns on x-axis
+
+    _.each(priceMarkers, function(valueMarker) {
             var path = PathHelper()
-                        .moveto(self.margin.left + "," + self.toPlotY(valueMarker))
-                        .lineto((self.margin.left + self.canvas.width + 5 /* ext tick for label */) + "," + self.toPlotY(valueMarker)) //x-axis ticc
+                        .moveto(margin.left + "," + toPlotY(valueMarker))
+                        .lineto((margin.left + canvas.width + 5 /* ext tick for label */) + "," + toPlotY(valueMarker)) //x-axis ticc
                         .closepath();
 
             self.elements.push({
@@ -56,20 +62,13 @@ function GridXModel(options) {
             self.elements.push({
                 type: "text",
                 props: {
-                    x: self.margin.left + self.canvas.width + 6.5 /* beyond extended tick */,
-                    y: self.toPlotY(valueMarker) + 3.35 /* center vertically */,
+                    x: margin.left + canvas.width + 6.5 /* beyond extended tick */,
+                    y: toPlotY(valueMarker) + 3.35 /* center vertically */,
                     className: "pricelabel"
                 },
                 children: +valueMarker.toFixed(3)
             });
         });
-
-
-
-}
-
-GridXModel.prototype.toPlotY = function (dataY) {
-    return formatNumber(this.margin.top + this.canvas.height  - ((dataY - this.extendedPrices.min) * this.scaleRatio.y));
 }
 
 function formatNumber(number) {
