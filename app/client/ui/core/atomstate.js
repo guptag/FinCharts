@@ -59,7 +59,7 @@ module.exports =  {
                 top: 0,
                 left: 0,
                 width: 1400,
-                height: 700
+                height: 660
               }
             },
             data: {

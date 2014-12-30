@@ -56,8 +56,16 @@ function testActions() {
 
 var Application = React.createClass({
     render: function() {
+        var appStyle = {
+            position: 'absolute',
+            width: '1400px',
+            height: '700px',
+            top: '0px',
+            left: '0px'
+        };
+
         return (
-            <section id="application">
+            <section id="application" style={appStyle}>
               <Header/>
               <Main/>
             </section>
