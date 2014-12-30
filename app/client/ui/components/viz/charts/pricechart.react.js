@@ -2,12 +2,12 @@
 
 var React = require("react/addons");
 
-var GridX = require("../elements/gridx.react");
-var GridY = require("../elements/gridy.react");
-var CandleStickRenderer = require("../renderers/candlestick.react");
-var Volume     = require("../controls/volume.react");
-var ChartInfo  = require("../controls/chartinfo.react");
-var CrossHairs = require("../controls/crosshairs.react");
+var GridX = require("ui/components/viz/elements/gridx.react");
+var GridY = require("ui/components/viz/elements/gridy.react");
+var CandleStickRenderer = require("ui/components/viz/renderers/candlestick.react");
+var Volume     = require("ui/components/viz/controls/volume.react");
+var ChartLabel  = require("ui/components/viz/controls/chartlabel.react");
+var CrossHairs = require("ui/components/viz/controls/crosshairs.react");
 
 var PriceChartModel = require("ui/components/viz/models/pricechartmodel");
 
@@ -32,7 +32,7 @@ var PriceChart = React.createClass({
                     <GridY chartModel={priceChartModel}/>
                     <Volume chartModel={priceChartModel}/>
                     <CandleStickRenderer chartModel={priceChartModel}/>
-                    <ChartInfo chartModel={priceChartModel}/>
+                    <ChartLabel chartModel={priceChartModel}/>
                     <CrossHairs chartModel={priceChartModel}/>
                 </svg>
             </section>
