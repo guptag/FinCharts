@@ -1,6 +1,7 @@
 var AppContext = require("ui/core/appcontext");
 
-var PriceMarkerHelper = require("chartlib/pricemarkers");
+var PriceMarkers = require("chartlib/pricemarkers");
+var DateTimeMarkers = require("chartlib/datetimemarkers");
 
 var chartMargin = {
             top: 5,
@@ -13,13 +14,18 @@ function PriceChartModel() {
     var chartStore = AppContext.stores.chartStore;
     var positionRect = chartStore.getPositionRect();
     var priceData = chartStore.getPriceData();
+    var duration = chartStore.getDuration();
 
     var canvas =  {
             width: positionRect.width - chartMargin.left - chartMargin.right,
             height: positionRect.height - chartMargin.top - chartMargin.bottom
         };
 
-    var priceMarkers = PriceMarkerHelper.generate(priceData.min,
+    var datetimeMarkers = DateTimeMarkers.generate(priceData,
+                                    duration,
+                                    canvas.width);
+
+    var priceMarkers = PriceMarkers.generate(priceData.min,
                                     priceData.max,
                                     canvas.height);
 
@@ -38,12 +44,13 @@ function PriceChartModel() {
         positionRect: positionRect,
         canvas: canvas,
         priceMarkers: priceMarkers,
+        datetimeMarkers: datetimeMarkers,
         extendedPrices: extendedPrices,
         scaleRatio: scaleRatio,
         tickMargin: scaleRatio.x / 2
     };
 
-    console.log(this.chartInfo);
+    console.log("ChartInfo:", this.chartInfo);
 }
 
 module.exports = PriceChartModel

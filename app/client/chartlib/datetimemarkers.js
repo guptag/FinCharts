@@ -72,7 +72,7 @@ var _ = require('lodash');
 var shortMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 var DateTimeMarkers = {
-    generate : function (data, range, width) {
+    generate : function (data, duration, width) {
         var minColWidth = 75,
             dayLabelDropDistance = 5,
             monthLabelDropDistance = 5,
@@ -80,7 +80,7 @@ var DateTimeMarkers = {
             columnPerPoints = Math.floor(data.series.length / totalColumns),
             dateTimeLabels = [];
 
-        switch (range.toLowerCase()) {
+        switch (duration.toLowerCase()) {
             /*
                 YEARLY:
                     total labels = width / 100 (1 label per 100px)
@@ -92,7 +92,7 @@ var DateTimeMarkers = {
                                     Show YEAR
 
             */
-            case "y":
+            case "yearly":
                 dateTimeLabels = _.chain(data.series).map(function(data, index) {
                     var dateObj = new Date(data.date);
                     if (columnPerPoints <= 0 || index % columnPerPoints === 0) {
@@ -104,8 +104,8 @@ var DateTimeMarkers = {
                 }).compact().value();
                 break;
 
-            case "m":
-            case "w":
+            case "monthly":
+            case "weekly":
                 /*
                 MONTHLY:
                 WEEKLY:
@@ -164,7 +164,7 @@ var DateTimeMarkers = {
                                 .compact().value();
                 break;
 
-            case "d":
+            case "daily":
                 /*
                 DAILY:
                     total labels = width / 100 (1 label per 100px)
@@ -227,7 +227,8 @@ var DateTimeMarkers = {
                                         return {
                                             dataItemIndex: index,
                                             label: (addYearLabel ? year : (addMonthLabel ? shortMonths[month] : date)) + "",
-                                            isBold: addYearLabel || addMonthLabel
+                                            isMonthLabel: addMonthLabel,
+                                            isYearLabel: addYearLabel
                                         };
                                     }
 
