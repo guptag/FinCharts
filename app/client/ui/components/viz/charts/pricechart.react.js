@@ -30,10 +30,10 @@ var PriceChart = React.createClass({
                     <defs></defs>
                     <GridX chartModel={priceChartModel}/>
                     <GridY chartModel={priceChartModel}/>
-                    <Volume/>
-                    <CandleStickRenderer/>
-                    <ChartInfo/>
-                    <CrossHairs/>
+                    <Volume chartModel={priceChartModel}/>
+                    <CandleStickRenderer chartModel={priceChartModel}/>
+                    <ChartInfo chartModel={priceChartModel}/>
+                    <CrossHairs chartModel={priceChartModel}/>
                 </svg>
             </section>
         );
