@@ -1,17 +1,25 @@
 /** @jsx React.DOM */
 
-var React = require("react/addons");
+var React = require("react/addons"),
+    _     = require("lodash");
 
-var Candle = require("../elements/candle.react");
+var CandleStickModel = require("ui/components/viz/models/candlestickmodel");
 
-var CandleStickChart = React.createClass({
+var CandleSticks = React.createClass({
     render: function() {
+        var chartInfo = this.props.chartModel.chartInfo;
+        var candleStickModel = new CandleStickModel(chartInfo);
+
+        var childElements = _.map(candleStickModel.elements, function (element) {
+            return React.DOM[element.type](element.props, element.children);
+        });
+
         return (
             <g className="candles">
-                <Candle/>
+                {childElements}
             </g>
         );
     }
 });
 
-module.exports = CandleStickChart;
+module.exports = CandleSticks;
