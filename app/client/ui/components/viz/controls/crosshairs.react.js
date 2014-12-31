@@ -1,10 +1,62 @@
 /** @jsx React.DOM */
 
-var React = require("react/addons");
+var React = require("react/addons"),
+    _     = require("lodash"),
+    CrosshairsModel = require("ui/components/viz/models/crosshairsmodel");
 
 var CrossHairs = React.createClass({
+    getInitialState: function () {
+        return {
+            mousePosition: {x: -50, y: -50}
+        };
+    },
+
+    onMouseMove: function (ev) {
+        this.setState({
+            mousePosition: {
+                x: ev.clientX,
+                y: ev.clientY - 40 //todo (fix properly): diff topnav height
+            }
+        });
+    },
+
+    onMouseOut: function (ev) {
+        this.setState({
+            mousePosition: {x: -50, y: -50}
+        });
+    },
+
     render: function() {
+        var chartInfo = this.props.chartModel.chartInfo;
+
+        var crosshairsModel = new CrosshairsModel(chartInfo,
+            this.state.mousePosition,
+            {
+                onMouseMove: this.onMouseMove,
+                onMouseOut: this.onMouseOut
+            });
+
+        var childElements = _.map(crosshairsModel.elements, function (element) {
+            var grandChildren = _.map(element.elements || [], function (innerElement) {
+                return React.DOM[innerElement.type](innerElement.props, innerElement.elements);
+            });
+
+            return React.DOM[element.type](element.props, grandChildren);
+        });
+
+
         return (
+            <g className="crosshairs">
+                {childElements}
+            </g>
+        );
+    }
+});
+
+module.exports = CrossHairs;
+
+/*
+return (
             <g className="crosshairs">
                 <g transform="matrix(1,0,0,1,0,150)" className="value-axis">
                     <path d="M0,0L1346,0" className="axis"></path>
@@ -20,6 +72,5 @@ var CrossHairs = React.createClass({
             </g>
         );
     }
-});
 
-module.exports = CrossHairs;
+ */
