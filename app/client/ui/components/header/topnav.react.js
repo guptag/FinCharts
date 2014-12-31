@@ -1,9 +1,16 @@
 /** @jsx React.DOM */
 
 var React = require("react/addons");
+var ChartActions = require("ui/core/actions/chartactions");
 
 
 var TopNav = React.createClass({
+    onTickerChanged: function (ev) {
+        var keyCode = (ev.keyCode ? ev.keyCode : ev.which);
+        if(keyCode == 13){
+           ChartActions.updateTicker(ev.target.value.trim());
+        }
+    },
     render: function() {
         var topNavStyle = {
             position: 'absolute',
@@ -16,7 +23,7 @@ var TopNav = React.createClass({
 
         return (
             <section id="topnav" style={topNavStyle} className="clearfix">
-                <input id="ticker" className="topnav-item ticker" placeholder="(e.g. msft)"></input>
+                <input id="ticker" ref="tickerInput" className="topnav-item ticker" placeholder="(e.g. msft)" onKeyPress={this.onTickerChanged}></input>
                 <div className="topnav-item range">
                     <i className="fa fa-chevron-down"></i>
                     <span className="value">W</span>
