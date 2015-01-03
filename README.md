@@ -1,8 +1,13 @@
-Run from root('FinCharts'):
+Run from root:
  * npm install (once)
  * gulp (builds and opens the app)
  * gulp dev (builds, adds file watchers and opens the app)
+ 
 
+Design
+------
+
+![screen shot 2015-01-03 at 10 48 14 am](https://cloud.githubusercontent.com/assets/1994225/5603219/4e966f56-9336-11e4-9054-1daafd1393dc.png)
 
 Build
 -----
