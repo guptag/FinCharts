@@ -30,103 +30,106 @@ function generateElements(chartInfo, mousePosition, events) {
 
     var elements = [];
 
+    var price = getPrice(chartInfo, mousePosition.y);
+    var dateAndPosition = getDateAndAxisPosition(chartInfo, mousePosition.x);
+
     // X-axis cross-hair (price)
-    var path = PathHelper()
+    if (_.isFinite(price)) {
+        var path = PathHelper()
                 .moveto(0, 0)
                 .lineto(canvas.width, 0)
                 .closepath();
 
-    var price = getPrice(chartInfo, mousePosition.y);
-    var dateAndPosition = getDateAndAxisPosition(chartInfo, mousePosition.x);
-
-    elements.push({
-        type: "g",
-        id: "crosshairX",
-        props: {
-            className: "value-axis",
-            transform: "translate(0," + mousePosition.y + ")"
-        },
-        elements: [
-            {
-                type: "path",
-                id: "crosshairX-path",
-                props: {
-                    d : path.print(),
-                    className: "axis"
-                }
+        elements.push({
+            type: "g",
+            id: "crosshairX",
+            props: {
+                className: "value-axis",
+                transform: "translate(0," + mousePosition.y + ")"
             },
-            {
-                type: "rect",
-                id: "crosshairX-rect",
-                props: {
-                    x: canvas.width + 2,
-                    y: -10,
-                    width: margin.right + 2,
-                    height: 20,
-                    className: "label-box"
-                }
-            },
-            {
-                type: "text",
-                id: "crosshairX-text",
-                props: {
-                    x: canvas.width + 4,
-                    y: 3,
-                    className: "label"
+            elements: [
+                {
+                    type: "path",
+                    id: "crosshairX-path",
+                    props: {
+                        d : path.print(),
+                        className: "axis"
+                    }
                 },
-                elements: price || ""
-            }
-        ]
-    });
-
+                {
+                    type: "rect",
+                    id: "crosshairX-rect",
+                    props: {
+                        x: canvas.width + 2,
+                        y: -10,
+                        width: margin.right + 2,
+                        height: 20,
+                        className: "label-box"
+                    }
+                },
+                {
+                    type: "text",
+                    id: "crosshairX-text",
+                    props: {
+                        x: canvas.width + 4,
+                        y: 3,
+                        className: "label"
+                    },
+                    elements: formatNumber(price, 2) || ""
+                }
+            ]
+        });
+    }
 
     // y-axis cross-hair (date)
-    var path = PathHelper()
-                .moveto(0, canvas.height)
-                .lineto(0, 0)
-                .closepath();
+    if (dateAndPosition && dateAndPosition.date && _.isFinite(dateAndPosition.position)) {
+        var path = PathHelper()
+                    .moveto(0, canvas.height)
+                    .lineto(0, 0)
+                    .closepath();
 
-    elements.push({
-        type: "g",
-        id: "crosshairY",
-        props: {
-            className: "time-axis",
-            transform: "translate(" + (dateAndPosition && dateAndPosition.position || mousePosition.x) + ", 0)"
-        },
-        elements: [
-            {
-                type: "path",
-                id: "crosshairY-path",
-                props: {
-                    d : path.print(),
-                    className: "axis"
-                }
+        elements.push({
+            type: "g",
+            id: "crosshairY",
+            props: {
+                className: "time-axis",
+                transform: "translate(" + dateAndPosition.position + ", 0)"
             },
-            {
-                type: "rect",
-                id: "crosshairY-rect",
-                props: {
-                    x: -35,
-                    y: canvas.height + 4,
-                    width: 70,
-                    height: 20,
-                    className: "label-box"
-                }
-            },
-            {
-                type: "text",
-                id: "crosshairY-text",
-                props: {
-                    x: -28,
-                    y: canvas.height + 18,
-                    className: "label"
+            elements: [
+                {
+                    type: "path",
+                    id: "crosshairY-path",
+                    props: {
+                        d : path.print(),
+                        className: "axis"
+                    }
                 },
-                elements: dateAndPosition && dateAndPosition.date
-            }
-        ]
-    });
+                {
+                    type: "rect",
+                    id: "crosshairY-rect",
+                    props: {
+                        x: -35,
+                        y: canvas.height + 4,
+                        width: 70,
+                        height: 20,
+                        className: "label-box"
+                    }
+                },
+                {
+                    type: "text",
+                    id: "crosshairY-text",
+                    props: {
+                        x: -28,
+                        y: canvas.height + 18,
+                        className: "label"
+                    },
+                    elements: dateAndPosition.date
+                }
+            ]
+        });
+    }
 
-    //overlay rectangle
+    //overlay rectangle (for capturing mouseover events)
     elements.push({
         type: "rect",
         id: "crosshair-overlay",
@@ -185,8 +188,8 @@ function getDateAndAxisPosition(chartInfo, mouseX) {
 
     //var date = new Date(priceData.series[index].date);
     //var dateStr = date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate();
-    var dateStr = moment(priceData.series[index].date).format("MM-DD-YYYY");
-    var position = formatNumber(margin.left + (scaleRatio.x * index + this.tickMargin));
+    var dateStr = moment.utc(priceData.series[index].date).format("MM-DD-YYYY");
+    var position = formatNumber(margin.left + (scaleRatio.x * index + tickMargin));
 
     return {
         position: position,
@@ -195,8 +198,8 @@ function getDateAndAxisPosition(chartInfo, mouseX) {
 };
 
 
-function formatNumber(number) {
-    return +number.toFixed(3);
+function formatNumber(number, digits) {
+    return +number.toFixed(_.isFinite(digits) ? digits : 3);
 }
 
 module.exports = CrosshairModel;

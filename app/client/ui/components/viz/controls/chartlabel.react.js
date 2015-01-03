@@ -7,7 +7,7 @@ var AppContext = require("ui/core/appcontext");
 var ChartInfo = React.createClass({
     render: function() {
         var chartStore = AppContext.stores.chartStore;
-        var ticker = chartStore.getTicker();
+        var ticker = chartStore.getTicker().toUpperCase();
         var duration = chartStore.getDuration();
         var timeframe = chartStore.getTimeframe();
 
@@ -21,7 +21,7 @@ var ChartInfo = React.createClass({
             <g className="chart-info" transform="translate(10, 30)">
                 <text x="0" y="0" className="ticker">{ticker}</text>
                 <text x="0" y="20" className="range">{timeframeStr}</text>
-                <text x="180" y="20" className="period">{durationStr}</text>
+                <text x="150" y="20" className="period">{durationStr}</text>
             </g>
         );
     }
