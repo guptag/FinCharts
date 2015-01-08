@@ -1,11 +1,28 @@
 /** @jsx React.DOM */
 
+var $ = require("jquery");
 var React = require("react/addons");
 var moment = require("moment");
 var AppContext = require("ui/core/appcontext");
+var ChartActions = require("ui/core/actions/chartactions");
 
 
 var Popups = React.createClass({
+    onDurationChanged: function (evt) {
+        var newDuration = $(evt.target).attr("value");
+        ChartActions.updateDuration(newDuration);
+    },
+    onTimeframeChanged: function (evt) {
+        var chartStore = AppContext.stores.chartStore;
+        var timeframeInMonths = $(evt.target).attr("value");
+        var toDate = moment().toDate();
+        var fromDate = moment(toDate).subtract(timeframeInMonths, 'months').toDate()
+
+        var chartDuration = chartStore.getDuration();
+        chartDuration =  (timeframeInMonths > 60) ? "monthly" : (timeframeInMonths > 18 ? "weekly" : "daily");
+
+        ChartActions.updateTimeframe(fromDate, toDate, chartDuration);
+    },
     render: function() {
         var appUIStore = AppContext.stores.appUIStore;
         var chartStore = AppContext.stores.chartStore;
@@ -26,7 +43,7 @@ var Popups = React.createClass({
                 return currentDuration === value;
             }
 
-            popupDOM =  <div className="range-options nav-options popup" style={popupStyle}>
+            popupDOM =  <div className="range-options nav-options popup" style={popupStyle} onClick={this.onDurationChanged}>
                             <div className={isSelected('daily') ? 'option selected' : 'option'} value="daily">Daily</div>
                             <div className={isSelected('weekly') ? 'option selected' : 'option'} value="weekly">Weekly</div>
                             <div className={isSelected('monthly') ? 'option selected' : 'option'} value="monthly">Monthly</div>
@@ -38,13 +55,11 @@ var Popups = React.createClass({
             var currentTimeframe = chartStore.getTimeframe();
             var timeframeDiffInMonths = Math.ceil(moment(currentTimeframe.to).diff(moment(currentTimeframe.from), 'months', true));
 
-            console.log("diff months", timeframeDiffInMonths);
-
             var isSelected = function (months) {
                 return timeframeDiffInMonths === months;
             };
 
-            popupDOM = <div className="timeframe-options nav-options popup" style={popupStyle}>
+            popupDOM = <div className="timeframe-options nav-options popup" style={popupStyle} onClick={this.onTimeframeChanged}>
                             <div className={isSelected(3) ? 'option selected' : 'option'} value="3">3M</div>
                             <div className={isSelected(6) ? 'option selected' : 'option'} value="6">6M</div>
                             <div className={isSelected(9) ? 'option selected' : 'option'} value="9">9M</div>

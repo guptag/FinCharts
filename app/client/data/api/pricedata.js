@@ -31,7 +31,7 @@ function fetchData(chartKeys) {
     var fromDate = chartKeys.timeframe.from;
     // var toDate = moment().toDate();
     // var fromDate = moment(toDate).subtract(chartKeys.timeframe.from, 'months').toDate();
-    var duration = chartKeys.duration;
+    var duration = chartKeys.duration === "daily" ? "d" : (chartKeys.duration === "weekly" ? "w" : "m");
 
     var dataUrl = sprintf("http://ichart.finance.yahoo.com/table.csv?s=%s&a=%d&b=%d&c=%d&d=%d&e=%d&f=%d&g=%s&ignore=.csv",
                                         ticker,

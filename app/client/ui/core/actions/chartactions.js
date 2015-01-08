@@ -19,11 +19,25 @@ var chartActions = {
         this.loadActiveChart(AppContext.stores.chartStore.getChartKeys());
     },
 
-    updateTimeframe: function (fromDate, toDate) {
+    updateTimeframe: function (fromDate, toDate, duration) {
         AppContext.publishBatchCommands([
-               new AtomCommand(
+              new AtomCommand(
+                AtomCommand.commands.APP_TOGGLE_TIMEFRAME_OPTIONS,
+                {
+                    show: false,
+                    rect: {
+                        top: -50,
+                        left: -50
+                    }
+                }
+              ),
+              new AtomCommand(
                 AtomCommand.commands.CHART_UPDATE_TIMEFRAME,
                 {timeframe: {from: fromDate, to: toDate}}
+              ),
+              new AtomCommand(
+                AtomCommand.commands.CHART_UPDATE_DURATION,
+                {duration: duration}
               ),
               new AtomCommand(
                 AtomCommand.commands.CHART_DATA_LOADING,
@@ -36,7 +50,16 @@ var chartActions = {
 
     updateDuration: function (duration) {
         AppContext.publishBatchCommands([
-               new AtomCommand(
+              new AtomCommand(
+                AtomCommand.commands.APP_TOGGLE_DURATION_OPTIONS,
+                {
+                    show: false,
+                    rect: {
+                        top: -50,
+                        left: -50
+                    }
+                }),
+              new AtomCommand(
                 AtomCommand.commands.CHART_UPDATE_DURATION,
                 {duration: duration}
               ),

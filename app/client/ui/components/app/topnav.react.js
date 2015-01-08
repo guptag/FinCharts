@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 
 var $ = require("jquery");
+var moment = require("moment");
 var React = require("react/addons");
 var AppContext = require("ui/core/appcontext");
 var AtomCommand = require("ui/core/atomcommand");
@@ -95,16 +96,25 @@ var TopNav = React.createClass({
             overflow: 'hidden'
         };
 
+        var chartStore = AppContext.stores.chartStore;
+
+        var currentDuration = chartStore.getDuration();
+        var currentDuraionStr = currentDuration[0].toUpperCase();
+
+        var currentTimeframe = chartStore.getTimeframe();
+        var timeframeDiffInMonths = Math.ceil(moment(currentTimeframe.to).diff(moment(currentTimeframe.from), 'months', true));
+        var timeframeDisplayStr = timeframeDiffInMonths < 12 ? timeframeDiffInMonths + "M" : (timeframeDiffInMonths / 12) + "Y";
+
         return (
             <section id="topnav" style={topNavStyle} className="clearfix">
                 <input id="ticker" ref="tickerInput" className="topnav-item ticker" placeholder="(e.g. msft)" onKeyPress={this.onTickerChanged}></input>
                 <div className="topnav-item range" ref="rangeItem" onClick={this.toggleDurationOptions}>
                     <i className="fa fa-chevron-down"></i>
-                    <span className="value">D</span>
+                    <span className="value">{currentDuraionStr}</span>
                 </div>
                 <div className="topnav-item timeframe" ref="timeframeItem" onClick={this.toggleTimeframeOptions}>
                     <i className="fa fa-chevron-down"></i>
-                    <span className="value">1Y</span>
+                    <span className="value">{timeframeDisplayStr}</span>
                 </div>
                 <div className="layouts topnav-item layout-1a" ref="layoutItem" onClick={this.toggleLayoutOptions}>
                     <i className="fa fa-chevron-down"></i>
