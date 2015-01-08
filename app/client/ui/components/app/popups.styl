@@ -29,6 +29,7 @@
             border 1px solid menu-border-color
             border-right none
             border-bottom none
+            cursor pointer
 
             &:hover
                 background-color menu-background-hover-color
@@ -37,6 +38,14 @@
             &.selected
                 color screen-font-color-light
                 font-weight bold
+
+            &.disabled
+                opacity 0.3
+                cursor not-allowed
+
+                &:hover
+                    background-color menu-background-color
+                    color screen-font-color
 
 
     .range-options
@@ -65,13 +74,15 @@
 
             &:nth-child(4),
             &:nth-child(8),
-            &:nth-child(12)
+            &:nth-child(12),
+            &:nth-child(16),
+            &:nth-child(20)
                 border-right 1px solid menu-border-color
 
-            &:nth-child(9),
-            &:nth-child(10),
-            &:nth-child(11),
-            &:nth-child(12)
+            &:nth-child(17),
+            &:nth-child(18),
+            &:nth-child(19),
+            &:nth-child(20)
                 border-bottom 1px solid menu-border-color
 
     .layouts-options

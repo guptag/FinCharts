@@ -1,5 +1,6 @@
 
 var _ = require("lodash");
+var moment = require("moment");
 var Immutable = require('immutable');
 
 var BaseStore = require("./basestore");
@@ -165,6 +166,11 @@ ChartsStore.prototype = _.create(BaseStore.prototype, {
 
     getTimeframe: function () {
         return this._getChartKeys().getIn(['timeframe']).toJS();
+    },
+
+    getTimeframeInMonths: function () {
+      var timeframe = this.getTimeframe();
+      return Math.ceil(moment(timeframe.to).diff(moment(timeframe.from), 'months', true));
     },
 
     getDuration: function () {
