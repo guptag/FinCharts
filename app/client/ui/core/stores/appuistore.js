@@ -1,23 +1,71 @@
 var _ = require("lodash");
+var Immutable = require('immutable');
 var BaseStore = require("ui/core/stores/basestore");
 var Commands = require("ui/core/atomconstants").commands;
 
 var commandHandlers = {
+    /**
+     * [toggleTimeframeOptions description]
+     * @param  {[type]} payload {
+     *                            show: true/false,
+     *                            rect: {
+     *                              left: 500,
+     *                              top: 200
+     *                           }}
+     * @return {[type]}         [description]
+     */
     toggleTimeframeOptions: function (payload) {
         this.atom.transact(function (state) {
+            var resetFlagsState = this._resetPopupFlags(state);
 
+            if (!payload.show) {
+                return resetFlagsState;
+            }
+
+            var setFlagState = resetFlagsState.updateIn(['appUIStore', 'popup', 'flags', 'timeframeOptions'], function (value) {
+                return true;
+            });
+
+            return setFlagState.updateIn(['appUIStore', 'popup', 'rect'], function (value) {
+                return Immutable.fromJS(payload.rect);
+            });
         }.bind(this));
     },
 
     toggleDurationOptions: function (payload) {
         this.atom.transact(function (state) {
+            var resetFlagsState = this._resetPopupFlags(state);
+
+            if (!payload.show) {
+                return resetFlagsState;
+            }
+
+            var setFlagState = resetFlagsState.updateIn(['appUIStore', 'popup', 'flags', 'durationOptions'], function (value) {
+                return true;
+            });
+
+            return setFlagState.updateIn(['appUIStore', 'popup', 'rect'], function (value) {
+                return Immutable.fromJS(payload.rect);
+            });
 
         }.bind(this));
     },
 
     toggleChartLayoutOptions: function (payload) {
         this.atom.transact(function (state) {
+            var resetFlagsState = this._resetPopupFlags(state);
 
+            if (!payload.show) {
+                return resetFlagsState;
+            }
+
+            var setFlagState = resetFlagsState.updateIn(['appUIStore', 'popup', 'flags', 'chartLayoutOptions'], function (value) {
+                return true;
+            });
+
+            return setFlagState.updateIn(['appUIStore', 'popup', 'rect'], function (value) {
+                return Immutable.fromJS(payload.rect);
+            });
         }.bind(this));
     },
 
@@ -43,16 +91,35 @@ AppUIStore.prototype = _.create(BaseStore.prototype, {
 
     'constructor': AppUIStore,
 
-    isTimeframeMenuOpen: function () {
-
+    _resetPopupFlags: function (state) {
+        return state.updateIn(['appUIStore', 'popup', 'flags'], function (obj) {
+            return Immutable.fromJS(obj.toSeq().map(v => false).toObject());
+        });
     },
 
-    isDurationMenuOpen: function () {
-
+    isDurationPopupOpen: function () {
+        var atomState = this.atom.getState();
+        return atomState.getIn(['appUIStore', 'popup', 'flags', 'durationOptions'])
     },
 
-    isChartLayoutMenuOpen: function () {
+    isTimeframePopupOpen: function () {
+        var atomState = this.atom.getState();
+        return atomState.getIn(['appUIStore', 'popup', 'flags', 'timeframeOptions'])
+    },
 
+    isLayoutPopupOpen: function () {
+        var atomState = this.atom.getState();
+        return atomState.getIn(['appUIStore', 'popup', 'flags', 'chartLayoutOptions'])
+    },
+
+    getPopupFlags: function () {
+        var atomState = this.atom.getState();
+        return atomState.getIn(['appUIStore', 'popup', 'flags']).toJS();
+    },
+
+    getPopupRect: function () {
+        var atomState = this.atom.getState();
+        return atomState.getIn(['appUIStore', 'popup', 'rect']).toJS();
     }
 
 });

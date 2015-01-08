@@ -21,11 +21,16 @@ module.exports =  {
             width: options.windowW || 600,
             height: options.windowH || 400
           },
-          menus: {
-            timeframeoptions: 'hide',
-            durationoptions: 'hide',
-            chartlayoutoptions: 'hide',
-            previewstate: 'stop'
+          popup: {
+            flags: {
+              timeframeOptions: false,
+              durationOptions: false,
+              chartLayoutOptions: false
+            },
+            rect: {
+              top: 0,
+              left: 0
+            }
           },
           theme: "pink"
         };

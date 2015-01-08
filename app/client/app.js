@@ -8,8 +8,9 @@
 
 
 var React = require("react/addons");
-var Header = require("ui/components/header/header.react");
-var Main = require("ui/components/main/index.react");
+var Header = require("ui/components/app/header.react");
+var Main = require("ui/components/app/main.react");
+var Popups = require("ui/components/app/popups.react");
 var jQuery = require("jquery");
 
 var AppContext = require("ui/core/appcontext");
@@ -18,7 +19,7 @@ var ChartActions = require("ui/core/actions/chartactions");
 
 // TODO: move to unit tests
 function testAtom () {
-    console.log(AppContext.stores.chartStore.getTicker());
+   /* console.log(AppContext.stores.chartStore.getTicker());
     console.log(AppContext.stores.chartStore.getTimeframe());
     console.log(AppContext.stores.chartStore.getDuration());
 
@@ -46,7 +47,17 @@ function testAtom () {
 
     console.log(AppContext.stores.chartStore.getTicker());
     console.log(AppContext.stores.chartStore.getTimeframe());
-    console.log(AppContext.stores.chartStore.getDuration());
+    console.log(AppContext.stores.chartStore.getDuration()); */
+
+    /* AppContext.publishCommand(new AtomCommand(
+        AtomCommand.commands.APP_TOGGLE_TIMEFRAME_OPTIONS,
+        {show: true, rect: {top: 50, left: 100}}
+      ));
+
+    AppContext.publishCommand(new AtomCommand(
+        AtomCommand.commands.APP_TOGGLE_DURATION_OPTIONS,
+        {show: true, rect: {top: 150, left: 400}}
+      )); */
 }
 
 function testActions() {
@@ -68,6 +79,7 @@ var Application = React.createClass({
             <section id="application" style={appStyle}>
               <Header/>
               <Main/>
+              <Popups/>
             </section>
         );
     }
@@ -79,7 +91,7 @@ module.exports = {
     AppContext.init(Application, jQuery("#root")[0]);
     AppContext.renderAtomState();
 
-    //testAtom();
+    testAtom();
     testActions();
   }
 };
