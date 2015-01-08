@@ -1,6 +1,9 @@
 /** @jsx React.DOM */
 
+var $ = require("jquery");
 var React = require("react/addons");
+var AppContext = require("ui/core/appcontext");
+var AtomCommand = require("ui/core/atomcommand");
 var ChartActions = require("ui/core/actions/chartactions");
 
 
@@ -11,6 +14,77 @@ var TopNav = React.createClass({
            ChartActions.updateTicker(ev.target.value.trim());
         }
     },
+    toggleDurationOptions: function () {
+        var appUIStore = AppContext.stores.appUIStore;
+        var isShowing = appUIStore.isDurationPopupOpen();
+
+        var showPopup = !isShowing;
+        var navItemRect = showPopup ? this.refs.rangeItem.getDOMNode().getBoundingClientRect() : {
+            left: -50,
+            top: -50,
+            height: -50,
+            width: -50
+        };
+
+        AppContext.publishCommand(new AtomCommand(
+            AtomCommand.commands.APP_TOGGLE_DURATION_OPTIONS,
+            {
+                show: showPopup,
+                rect: {
+                    top: navItemRect.height + 10,
+                    left: navItemRect.left
+                }
+            })
+        );
+    },
+    toggleTimeframeOptions: function () {
+        var appUIStore = AppContext.stores.appUIStore;
+        var isShowing = appUIStore.isTimeframePopupOpen();
+
+        var showPopup = !isShowing;
+        var navItemRect = showPopup ? this.refs.timeframeItem.getDOMNode().getBoundingClientRect() : {
+            left: -50,
+            top: -50,
+            height: -50,
+            width: -50
+        };
+
+        AppContext.publishCommand(new AtomCommand(
+            AtomCommand.commands.APP_TOGGLE_TIMEFRAME_OPTIONS,
+            {
+                show: showPopup,
+                rect: {
+                    top: navItemRect.height + 10,
+                    left: navItemRect.left
+                }
+            })
+        );
+    },
+    toggleLayoutOptions: function () {
+        var appUIStore = AppContext.stores.appUIStore;
+        var isShowing = appUIStore.isLayoutPopupOpen();
+
+        var showPopup = !isShowing;
+        var navItemRect = showPopup ? this.refs.layoutItem.getDOMNode().getBoundingClientRect() : {
+            left: -50,
+            top: -50,
+            height: -50,
+            width: -50
+        };
+
+        AppContext.publishCommand(new AtomCommand(
+            AtomCommand.commands.APP_TOGGLE_CHARTLAYOUT_OPTIONS,
+            {
+                show: showPopup,
+                rect: {
+                    top: navItemRect.height + 10,
+                    left: navItemRect.left
+                }
+            })
+        );
+    },
+
+
     render: function() {
         var topNavStyle = {
             position: 'absolute',
@@ -24,34 +98,15 @@ var TopNav = React.createClass({
         return (
             <section id="topnav" style={topNavStyle} className="clearfix">
                 <input id="ticker" ref="tickerInput" className="topnav-item ticker" placeholder="(e.g. msft)" onKeyPress={this.onTickerChanged}></input>
-                <div className="topnav-item range">
+                <div className="topnav-item range" ref="rangeItem" onClick={this.toggleDurationOptions}>
                     <i className="fa fa-chevron-down"></i>
-                    <span className="value">W</span>
-                    <div className="navitem-options popover clearfix hide">
-                        <div className="option" value="d" selected="true">Daily</div>
-                        <div className="option selected" value="w">Weekly</div>
-                        <div className="option" value="m">Monthly</div>
-                    </div>
+                    <span className="value">D</span>
                 </div>
-                <div className="topnav-item timeframe">
+                <div className="topnav-item timeframe" ref="timeframeItem" onClick={this.toggleTimeframeOptions}>
                     <i className="fa fa-chevron-down"></i>
-                    <span className="value">3M</span>
-                    <div className="navitem-options popover clearfix hide">
-                        <div className="option selected" value="3">3M</div>
-                        <div className="option" value="6">6M</div>
-                        <div className="option" value="9">9M</div>
-                        <div className="option" value="12">1Y</div>
-                        <div className="option" value="18">1.5Y</div>
-                        <div className="option" value="24">2Y</div>
-                        <div className="option" value="30">2.5Y</div>
-                        <div className="option" value="36">3Y</div>
-                        <div className="option" value="60">5Y</div>
-                        <div className="option" value="120">10Y</div>
-                        <div className="option" value="180">15Y</div>
-                        <div className="option" value="240">20Y</div>
-                    </div>
+                    <span className="value">1Y</span>
                 </div>
-                <div className="layouts topnav-item layout-1a">
+                <div className="layouts topnav-item layout-1a" ref="layoutItem" onClick={this.toggleLayoutOptions}>
                     <i className="fa fa-chevron-down"></i>
                     <div className="layoutbutton" data-layout="1a">
                         <span className="box box1"></span>
@@ -78,46 +133,6 @@ var TopNav = React.createClass({
                         <span className="box box1"></span>
                         <span className="box box2"></span>
                         <span className="box box3"></span>
-                    </div>
-                    <div className="navitem-options popover clearfix hide">
-                            <div className="option" value="1a">
-                                <div className="layoutbutton" data-layout="1a">
-                                    <span className="box box1"></span>
-                                </div>
-                            </div>
-                            <div className="option" value="2a">
-                                <div className="layoutbutton" data-layout="2a">
-                                    <span className="box box1"></span>
-                                    <span className="box box2"></span>
-                                </div>
-                            </div>
-                            <div className="option" value="2b">
-                                <div className="layoutbutton" data-layout="2b">
-                                    <span className="box box1"></span>
-                                    <span className="box box2"></span>
-                                </div>
-                            </div>
-                            <div className="option" value="3a">
-                                <div className="layoutbutton" data-layout="3a">
-                                    <span className="box box1"></span>
-                                    <span className="box box2"></span>
-                                    <span className="box box3"></span>
-                                </div>
-                            </div>
-                            <div className="option" value="3b">
-                                <div className="layoutbutton" data-layout="3b">
-                                    <span className="box box1"></span>
-                                    <span className="box box2"></span>
-                                    <span className="box box3"></span>
-                                </div>
-                            </div>
-                            <div className="option" value="3c">
-                                <div className="layoutbutton" data-layout="3c">
-                                    <span className="box box1"></span>
-                                    <span className="box box2"></span>
-                                    <span className="box box3"></span>
-                                </div>
-                            </div>
                     </div>
                 </div>
                 <div className="preview topnav-item">
