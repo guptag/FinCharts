@@ -23,8 +23,8 @@ var TopNav = React.createClass({
         var navItemRect = showPopup ? this.refs.rangeItem.getDOMNode().getBoundingClientRect() : {
             left: -50,
             top: -50,
-            height: -50,
-            width: -50
+            height: 0,
+            width: 0
         };
 
         AppContext.publishCommand(new AtomCommand(
@@ -46,8 +46,8 @@ var TopNav = React.createClass({
         var navItemRect = showPopup ? this.refs.timeframeItem.getDOMNode().getBoundingClientRect() : {
             left: -50,
             top: -50,
-            height: -50,
-            width: -50
+            height: 0,
+            width: 0
         };
 
         AppContext.publishCommand(new AtomCommand(
@@ -69,8 +69,8 @@ var TopNav = React.createClass({
         var navItemRect = showPopup ? this.refs.layoutItem.getDOMNode().getBoundingClientRect() : {
             left: -50,
             top: -50,
-            height: -50,
-            width: -50
+            height: 0,
+            width: 0
         };
 
         AppContext.publishCommand(new AtomCommand(
@@ -84,8 +84,6 @@ var TopNav = React.createClass({
             })
         );
     },
-
-
     render: function() {
         var topNavStyle = {
             position: 'absolute',
@@ -101,8 +99,7 @@ var TopNav = React.createClass({
         var currentDuration = chartStore.getDuration();
         var currentDuraionStr = currentDuration[0].toUpperCase();
 
-        var currentTimeframe = chartStore.getTimeframe();
-        var timeframeDiffInMonths = Math.ceil(moment(currentTimeframe.to).diff(moment(currentTimeframe.from), 'months', true));
+        var timeframeDiffInMonths = chartStore.getTimeframeInMonths();
         var timeframeDisplayStr = timeframeDiffInMonths < 12 ? timeframeDiffInMonths + "M" : (timeframeDiffInMonths / 12) + "Y";
 
         return (
