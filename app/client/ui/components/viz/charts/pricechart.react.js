@@ -2,8 +2,8 @@
 
 var React = require("react/addons");
 
-var GridX = require("ui/components/viz/elements/gridx.react");
-var GridY = require("ui/components/viz/elements/gridy.react");
+var GridX = require("ui/components/viz/controls/gridx.react");
+var GridY = require("ui/components/viz/controls/gridy.react");
 var CandleStickRenderer = require("ui/components/viz/renderers/candlestick.react");
 var Volume     = require("ui/components/viz/controls/volume.react");
 var ChartLabel  = require("ui/components/viz/controls/chartlabel.react");
