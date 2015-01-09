@@ -76,9 +76,9 @@ var Popups = React.createClass({
                     <div className={getCssForOptionItem(24)} value="24">2Y</div>
                     <div className={getCssForOptionItem(30)} value="30">2.5Y</div>
                     <div className={getCssForOptionItem(36)} value="36">3Y</div>
-                    <div className={getCssForOptionItem(42)} value="36">3.5Y</div>
-                    <div className={getCssForOptionItem(48)} value="36">4Y</div>
-                    <div className={getCssForOptionItem(54)} value="36">4.5Y</div>
+                    <div className={getCssForOptionItem(42)} value="42">3.5Y</div>
+                    <div className={getCssForOptionItem(48)} value="48">4Y</div>
+                    <div className={getCssForOptionItem(54)} value="54">4.5Y</div>
                     <div className={getCssForOptionItem(60)} value="60">5Y</div>
                     <div className={getCssForOptionItem(72)} value="72">6Y</div>
                     <div className={getCssForOptionItem(84)} value="84">7Y</div>
