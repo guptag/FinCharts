@@ -32,7 +32,8 @@ module.exports =  {
               left: 0
             }
           },
-          theme: "pink"
+          theme: "pink",
+          layout: "layout1a"
         };
    },
 

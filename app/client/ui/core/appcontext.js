@@ -112,9 +112,9 @@ function AppContext () {
         var currentState = this.atom.getState();
         lastRenderedState = currentState;
         console.debug(
-            "####\n# Previous state\n#",
+            "####\n# Previous state#",
             previousState ? previousState.toJS(): "<nothing>",
-             "\n####\n# Current state\n#",
+             "\n####\n# Current state#",
             currentState ? currentState.toJS() : "<nothing>"
         );
     };
