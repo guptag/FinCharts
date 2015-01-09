@@ -17,10 +17,6 @@ module.exports =  {
       var options = _options || {};
 
       return {
-          window: {
-            width: options.windowW || 600,
-            height: options.windowH || 400
-          },
           popup: {
             flags: {
               timeframeOptions: false,
@@ -61,6 +57,8 @@ module.exports =  {
                 from: moment(moment().toDate()).subtract(12, 'months').toDate()
               },
               duration: "daily",
+              layout: "chartlayout1a_1",
+              timestamp : new Date().getTime(),
               positionRect: {
                 top: 0,
                 left: 0,
@@ -77,7 +75,6 @@ module.exports =  {
               maxVolume: 0
             },
             settings: {
-              layoutId: "chart_1a_1",
               renderer: "candlestick",
               axis: {
                 value: {
