@@ -177,6 +177,11 @@ ChartsStore.prototype = _.create(BaseStore.prototype, {
         return this._getChartKeys().getIn(['duration']);
     },
 
+    getChartLayoutId: function () {
+       return this._getChartKeys().getIn(['layoutId']);
+    },
+
+    // obsolete
     getPositionRect: function () {
       return this._getChartKeys().getIn(['positionRect']).toJS();
     },

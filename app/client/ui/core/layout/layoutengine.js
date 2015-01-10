@@ -21,6 +21,7 @@ LayoutEngine.prototype.addLayout = function (name, measureCb, parentLayout, depe
 }
 
 LayoutEngine.prototype.resolveLayouts = function () {
+    var self = this;
     var $window = $(window);
     var windowW = $window.width();
     var windowH = $window.height();
@@ -29,21 +30,10 @@ LayoutEngine.prototype.resolveLayouts = function () {
 
     // Resolve all the layouts
     _.forEach(this.definitions, function (layout) {
-        resolveLayout(layout, [], windowW, windowH);
+        resolveLayout.call(self, layout, [], windowW, windowH);
     });
 
-    // apply the layout dimentions on the dom elements
-    /* _.forEach(this.resolvedLayouts, function (layout, name) {
-
-        var $element = domCache[name];
-        $element.css({
-            "position": "absolute",
-            "width": layout.width,
-            "height": layout.height,
-            "top": layout.top,
-            "left": layout.left,
-        });
-    }) */
+    //console.log(this.resolvedLayouts);
 }
 
 LayoutEngine.prototype.getLayoutRect = function (layoutName) {
@@ -56,7 +46,7 @@ LayoutEngine.prototype.getLayoutRect = function (layoutName) {
     return rect;
 }
 
-LayoutEngine.prototype.getWindowRect = function (layoutName) {
+LayoutEngine.prototype.getWindowRect = function () {
     var $window = $(window);
     var windowW = $window.width();
     var windowH = $window.height();
@@ -92,13 +82,13 @@ function resolveLayout (layout, cache, windowW, windowH) {
 
     // if parent is not resolved yet
     if (layout.parentLayout && !this.resolvedLayouts[layout.parentLayout]) {
-        resolveLayout(layout.parentLayout, cache, windowW, windowH);
+        resolveLayout.call(this, layout.parentLayout, cache, windowW, windowH);
     }
 
     // if any of the dependencies are not resolved yet
     _.forEach(layout.dependsOn || [], function (layoutName) {
         if (!this.resolvedLayouts[layoutName]) {
-            resolveLayout(layoutName, windowW, windowH);
+            resolveLayout.call(this, layoutName, windowW, windowH);
         }
     });
 

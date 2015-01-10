@@ -2,7 +2,7 @@ var LayoutEngine =  require('./layoutengine');
 
 var LayoutDefinitions = {
     init: function () {
-        LayoutEngine.addLayout("topnavlayout", function(w, h, W, H) {
+        LayoutEngine.addLayout("appheaderlayout", function(w, h, W, H) {
             return {
                 width: w,
                 height: 40,
@@ -10,6 +10,15 @@ var LayoutDefinitions = {
                 left: 0
             };
         });
+
+        LayoutEngine.addLayout("topnavlayout", function(w, h, W, H) {
+            return {
+                width: 0.75 * w,
+                height: 40,
+                top: 0,
+                left: 0.2 * w
+            };
+        }, "appheaderlayout");
 
         LayoutEngine.addLayout("mainlayout", function(w, h, W, H) {
             return {
