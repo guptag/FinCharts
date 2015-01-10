@@ -11,7 +11,8 @@ var React = require("react/addons");
 var Header = require("ui/components/app/header.react");
 var Main = require("ui/components/app/main.react");
 var Popups = require("ui/components/app/popups.react");
-var jQuery = require("jquery");
+var $ = require("jquery");
+var _ = require("lodash");
 
 var LayoutEngine = require("ui/core/layout/layoutengine");
 var LayoutDefinitions = require("ui/core/layout/layoutdefinitions");
@@ -67,14 +68,16 @@ function testActions() {
     ChartActions.updateTicker("ibm");
 }
 
-var Application = React.createClass({
+var AppRoot = React.createClass({
     render: function() {
+        var windowRect = AppContext.getWindowRect();
         var appStyle = {
             position: 'absolute',
-            width: '1400px',
-            height: '700px',
-            top: '0px',
-            left: '0px'
+            width: windowRect.width + "px",
+            height: windowRect.height + "px",
+            top: windowRect.top + "px",
+            left: windowRect.left + "px",
+            overflow: 'hidden'
         };
 
         return (
@@ -91,7 +94,8 @@ var Application = React.createClass({
 module.exports = {
     init: function() {
         LayoutDefinitions.init();
-        AppContext.init(Application, jQuery("#root")[0]);
+        AppContext.init(AppRoot, $("#root")[0]);
+        this.attachEvents();
         this.renderApp();
 
         testAtom();
@@ -100,6 +104,12 @@ module.exports = {
     renderApp: function () {
         LayoutEngine.resolveLayouts();
         AppContext.renderAtomState();
+    },
+    attachEvents: function () {
+        var self = this;
+        $(window).bind("resize", _.debounce(function() {
+            self.renderApp();
+        }, 200));
     }
 };
 

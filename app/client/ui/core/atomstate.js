@@ -57,13 +57,7 @@ module.exports =  {
               },
               duration: "daily",
               layoutId: "chartslayout1a_1",
-              timestamp : new Date().getTime(),
-              positionRect: {
-                top: 0,
-                left: 0,
-                width: 1400,
-                height: 660
-              }
+              timestamp : new Date().getTime()
             },
             data: {
               status: "loading",
