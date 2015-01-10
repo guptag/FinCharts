@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require("react/addons");
-
+var AppContext = require("ui/core/appcontext");
 var GridX = require("ui/components/viz/controls/gridx.react");
 var GridY = require("ui/components/viz/controls/gridy.react");
 var CandleStickRenderer = require("ui/components/viz/renderers/candlestick.react");
@@ -14,18 +14,21 @@ var PriceChartModel = require("ui/components/viz/models/pricechartmodel");
 
 var PriceChart = React.createClass({
     render: function() {
+        var layoutId = AppContext.stores.chartStore.getChartLayoutId();
+        var chartRect = AppContext.getLayoutRect(layoutId);
         var chartStyle = {
             position: 'absolute',
-            width: '1400px',
-            height: '660px',
-            top: '0px',
-            left: '0px'
+            width: chartRect.width + "px",
+            height: chartRect.height + "px",
+            top: chartRect.top + "px",
+            left: chartRect.left + "px",
+            overflow: 'hidden'
         };
 
         var priceChartModel = new PriceChartModel();
 
         return (
-            <section id="chart1" className="chartcontainer active" data-layout="chartslayout_1a_1" style={chartStyle}>
+            <section id="chart1" className="chartcontainer active" style={chartStyle}>
                 <svg className="pricechart" data-ticker="MSFT">
                     <defs></defs>
                     <GridX chartModel={priceChartModel}/>

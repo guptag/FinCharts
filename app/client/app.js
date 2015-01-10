@@ -13,6 +13,9 @@ var Main = require("ui/components/app/main.react");
 var Popups = require("ui/components/app/popups.react");
 var jQuery = require("jquery");
 
+var LayoutEngine = require("ui/core/layout/layoutengine");
+var LayoutDefinitions = require("ui/core/layout/layoutdefinitions");
+
 var AppContext = require("ui/core/appcontext");
 var AtomCommand = require("ui/core/atomcommand");
 var ChartActions = require("ui/core/actions/chartactions");
@@ -64,7 +67,6 @@ function testActions() {
     ChartActions.updateTicker("ibm");
 }
 
-
 var Application = React.createClass({
     render: function() {
         var appStyle = {
@@ -87,13 +89,18 @@ var Application = React.createClass({
 
 
 module.exports = {
-  init: function() {
-    AppContext.init(Application, jQuery("#root")[0]);
-    AppContext.renderAtomState();
+    init: function() {
+        LayoutDefinitions.init();
+        AppContext.init(Application, jQuery("#root")[0]);
+        this.renderApp();
 
-    testAtom();
-    testActions();
-  }
+        testAtom();
+        testActions();
+    },
+    renderApp: function () {
+        LayoutEngine.resolveLayouts();
+        AppContext.renderAtomState();
+    }
 };
 
 

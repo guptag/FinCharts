@@ -1,16 +1,18 @@
 /** @jsx React.DOM */
 
 var React = require("react/addons");
+var AppContext = require("ui/core/appcontext");
 var PriceChart = require('../viz/charts/pricechart.react');
 
 var AppMain = React.createClass({
     render: function() {
+        var mainRect = AppContext.getLayoutRect("mainlayout");
         var mainStyle = {
             position: 'absolute',
-            width: '1400px',
-            height: '660px',
-            top: '40px',
-            left: '0px',
+            width: mainRect.width + "px",
+            height: mainRect.height + "px",
+            top: mainRect.top + "px",
+            left: mainRect.left + "px",
             overflow: 'hidden'
         };
 

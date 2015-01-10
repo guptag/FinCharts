@@ -85,12 +85,13 @@ var TopNav = React.createClass({
         );
     },
     render: function() {
+        var topNavRect = AppContext.getLayoutRect("topnavlayout");
         var topNavStyle = {
             position: 'absolute',
-            width: '1000px',
-            height: '40px',
-            top: '0px',
-            right: '60px',
+            width: topNavRect.width + "px",
+            height: topNavRect.height + "px",
+            top: topNavRect.top + "px",
+            left: topNavRect.left + "px",
             overflow: 'hidden'
         };
 

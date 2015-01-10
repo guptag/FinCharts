@@ -1,16 +1,18 @@
 /** @jsx React.DOM */
 
 var React = require("react/addons");
+var AppContext = require("ui/core/appcontext");
 var TopNav = require('./topnav.react');
 
 var AppHeader = React.createClass({
     render: function() {
+        var headerRect = AppContext.getLayoutRect("appheaderlayout");
         var headerStyle = {
             position: 'absolute',
-            width: '1400px',
-            height: '40px',
-            top: '0px',
-            left: '0px',
+            width: headerRect.width + "px",
+            height: headerRect.height + "px",
+            top: headerRect.top + "px",
+            left: headerRect.left + "px",
             overflow: 'hidden'
         };
 

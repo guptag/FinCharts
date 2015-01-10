@@ -5,6 +5,8 @@ var Atom  = require("ui/core/atom");
 var AtomStoreManager = require("ui/core/atomstoremanager");
 var Logger = require("ui/core/utils/logger");
 
+var LayoutEngine = require("ui/core/layout/layoutengine");
+
 var AppUIStore = require("ui/core/stores/appuistore");
 var ChartStore = require("ui/core/stores/chartstore");
 var LayoutStore = require("ui/core/stores/layoutstore");
@@ -117,6 +119,14 @@ function AppContext () {
              "\n####\n# Current state#",
             currentState ? currentState.toJS() : "<nothing>"
         );
+    };
+
+    this.getLayoutRect = function (layoutName) {
+        return LayoutEngine.getLayoutRect(layoutName);
+    };
+
+    this.getWindowRect = function () {
+        return LayoutEngine.getWindowRect();
     };
 }
 

@@ -28,8 +28,7 @@ module.exports =  {
               left: 0
             }
           },
-          theme: "pink",
-          layout: "layout1a"
+          theme: "pink"
         };
    },
 
@@ -57,7 +56,7 @@ module.exports =  {
                 from: moment(moment().toDate()).subtract(12, 'months').toDate()
               },
               duration: "daily",
-              layout: "chartlayout1a_1",
+              layoutId: "chartslayout1a_1",
               timestamp : new Date().getTime(),
               positionRect: {
                 top: 0,
