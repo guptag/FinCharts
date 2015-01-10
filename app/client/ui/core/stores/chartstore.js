@@ -5,6 +5,7 @@ var Immutable = require('immutable');
 
 var BaseStore = require("./basestore");
 var Commands = require("ui/core/atomconstants").commands;
+var LayoutEngine = require("ui/core/layout/layoutengine");
 
 var commandHandlers = {
     /**
@@ -181,9 +182,8 @@ ChartsStore.prototype = _.create(BaseStore.prototype, {
        return this._getChartKeys().getIn(['layoutId']);
     },
 
-    // obsolete
     getPositionRect: function () {
-      return this._getChartKeys().getIn(['positionRect']).toJS();
+      return LayoutEngine.getLayoutRect(this.getChartLayoutId());
     },
 
     getPriceData: function () {
