@@ -85,12 +85,36 @@ var TopNav = React.createClass({
         );
     },
     startPreview: function () {
-        AppContext.publishCommand(new AtomCommand(
-            AtomCommand.commands.CHART_PREVIEW_STATUS_CHANGE,
-            {
-                status: "play"
-            })
-        );
+        if ($(this.refs.playButton.getDOMNode()).hasClass("disabled")) {
+            return;
+        }
+
+        ChartActions.startPreview();
+
+        $(this.refs.playButton.getDOMNode()).addClass("disabled");
+        $(this.refs.pauseButton.getDOMNode()).removeClass("disabled");
+        $(this.refs.stopButton.getDOMNode()).removeClass("disabled");
+    },
+    stopPreview: function () {
+        if ($(this.refs.stopButton.getDOMNode()).hasClass("disabled")) {
+            return;
+        }
+
+        ChartActions.stopPreview();
+
+        $(this.refs.stopButton.getDOMNode()).addClass("disabled");
+        $(this.refs.pauseButton.getDOMNode()).addClass("disabled");
+        $(this.refs.playButton.getDOMNode()).removeClass("disabled");
+    },
+    pausePreview: function () {
+        if ($(this.refs.pauseButton.getDOMNode()).hasClass("disabled")) {
+            return;
+        }
+        ChartActions.pausePreview();
+
+        $(this.refs.pauseButton.getDOMNode()).addClass("disabled");
+        $(this.refs.playButton.getDOMNode()).removeClass("disabled");
+        $(this.refs.stopButton.getDOMNode()).removeClass("disabled");
     },
     render: function() {
         var topNavRect = AppContext.getLayoutRect("topnavlayout");
@@ -153,13 +177,13 @@ var TopNav = React.createClass({
                 </div>
                 <div className="preview topnav-item">
                     <i className="fa fa-chevron-down"></i>
-                    <button className="play" onClick={this.startPreview}>
+                    <button className="play" ref="playButton" onClick={this.startPreview}>
                         <i className="fa fa-play"></i>
                     </button>
-                    <button className="pause disabled">
+                    <button className="pause disabled" ref="pauseButton" onClick={this.pausePreview}>
                         <i className="fa fa-pause"></i>
                     </button>
-                    <button className="stop disabled">
+                    <button className="stop disabled" ref="stopButton" onClick={this.stopPreview}>
                         <i className="fa fa-stop"></i>
                     </button>
                     <section className="addl hide">
