@@ -8,6 +8,7 @@ var CandleStickRenderer = require("ui/components/viz/renderers/candlestick.react
 var Volume     = require("ui/components/viz/controls/volume.react");
 var ChartLabel  = require("ui/components/viz/controls/chartlabel.react");
 var CrossHairs = require("ui/components/viz/controls/crosshairs.react");
+var ChartPreview = require("ui/components/viz/controls/chartpreview.react");
 
 var PriceChartModel = require("ui/components/viz/models/pricechartmodel");
 
@@ -37,6 +38,7 @@ var PriceChart = React.createClass({
                     <CandleStickRenderer chartModel={priceChartModel}/>
                     <ChartLabel chartModel={priceChartModel}/>
                     <CrossHairs chartModel={priceChartModel}/>
+                    <ChartPreview chartModel={priceChartModel}/>
                 </svg>
             </section>
         );

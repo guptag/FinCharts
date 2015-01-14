@@ -84,6 +84,14 @@ var TopNav = React.createClass({
             })
         );
     },
+    startPreview: function () {
+        AppContext.publishCommand(new AtomCommand(
+            AtomCommand.commands.CHART_PREVIEW_STATUS_CHANGE,
+            {
+                status: "play"
+            })
+        );
+    },
     render: function() {
         var topNavRect = AppContext.getLayoutRect("topnavlayout");
         var topNavStyle = {
@@ -145,7 +153,7 @@ var TopNav = React.createClass({
                 </div>
                 <div className="preview topnav-item">
                     <i className="fa fa-chevron-down"></i>
-                    <button className="play">
+                    <button className="play" onClick={this.startPreview}>
                         <i className="fa fa-play"></i>
                     </button>
                     <button className="pause disabled">
