@@ -75,8 +75,7 @@ module.exports =  {
                 }
               },
               showGrid: true,
-              showCrosshair: true,
-              chartPreview: "stop" /* play, pause, stop */
+              showCrosshair: true
             },
             overlays: {
               compareTickers: ['googl', 'ibm'],

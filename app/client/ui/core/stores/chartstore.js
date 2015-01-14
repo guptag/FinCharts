@@ -117,19 +117,6 @@ var commandHandlers = {
                         };
                 });
         }.bind(this));
-    },
-
-    /**
-     * [setPreviewState description]
-     * @param {String} payload -  {status: play OR pause OR stop }
-     */
-    updatePreviewState: function (payload) {
-      this.atom.transact(function (state) {
-            var activeChartIndex = this.getActiveChartIndex();
-            return state.updateIn(['chartStore', 'charts', activeChartIndex, 'settings', 'chartPreview'], function (value) {
-                return payload.status;
-            });
-        }.bind(this));
     }
 };
 
@@ -141,8 +128,7 @@ function ChartsStore(atom) {
         { key: Commands.CHART_UPDATE_DURATION,       value: commandHandlers.updateDuration.bind(this) },
         { key: Commands.CHART_UPDATE_TIMEFRAME,      value: commandHandlers.updateTimeFrame.bind(this) },
         { key: Commands.CHART_DATA_LOADING,          value: commandHandlers.setDataToLoading.bind(this) },
-        { key: Commands.CHART_DATA_FETCHED,          value: commandHandlers.updatePriceData.bind(this) },
-        { key: Commands.CHART_PREVIEW_STATUS_CHANGE, value: commandHandlers.updatePreviewState.bind(this) }
+        { key: Commands.CHART_DATA_FETCHED,          value: commandHandlers.updatePriceData.bind(this) }
     ]);
     this.priceChartModel = null;
 }
@@ -194,10 +180,6 @@ ChartsStore.prototype = _.create(BaseStore.prototype, {
 
     getChartLayoutId: function () {
        return this._getChartKeys().getIn(['layoutId']);
-    },
-
-    getPreviewState: function () {
-       return this._getActiveChart().getIn(['settings', 'chartPreview']);
     },
 
     getPositionRect: function () {

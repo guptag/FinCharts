@@ -2,13 +2,49 @@
 
 var React = require("react/addons"),
     _     = require("lodash"),
+    AtomConstants = require("ui/core/atomconstants"),
     AppContext = require("ui/core/appcontext");
 
 var ChartPreview = React.createClass({
     getInitialState: function () {
         return {
-            currentIndex: -1
+            currentIndex: -1,
+            previewState: "stop"
         };
+    },
+    componentWillMount: function () {
+        AtomConstants.deferredActions.chartPreview.start.resolve(this.startPreview.bind(this));
+        AtomConstants.deferredActions.chartPreview.stop.resolve(this.stopPreview.bind(this));
+        AtomConstants.deferredActions.chartPreview.pause.resolve(this.pausePreview.bind(this));
+    },
+    startPreview: function () {
+        if (this.state.previewState === "stop") {
+            this.setState({
+                currentIndex: 0,
+                previewState: "start"
+            });
+        }
+        this.configureAnimate();
+    },
+    stopPreview: function () {
+        window.clearInterval(this.intervalId);
+        this.intervalId = null;
+
+        this.setState({
+            currentIndex: -1,
+            previewState: "stop"
+        });
+    },
+    pausePreview: function () {
+        window.clearInterval(this.intervalId);
+        this.intervalId = null;
+
+        this.setState({
+            previewState: "pause"
+        });
+    },
+    componentWillReceiveProps: function (nextProps) {
+        this.stopPreview();
     },
     configureAnimate: function () {
         var self = this;
@@ -18,29 +54,26 @@ var ChartPreview = React.createClass({
         }
 
         this.intervalId = window.setInterval(function () {
-            self.setState({
-                currentIndex: self.state.currentIndex + 1
-            });
+            var currentIndex = self.state.currentIndex;
+            var chartInfo = self.props.chartModel.chartInfo;
+
+            if (currentIndex <= chartInfo.priceData.series.length) {
+                self.setState({
+                    currentIndex: currentIndex + 1
+                });
+            } else {
+                self.stopPreview();
+            }
         }, 700);
     },
     render: function() {
         var chartInfo = this.props.chartModel.chartInfo;
-        var chartStore = AppContext.stores.chartStore;
-        var preivewState = chartStore.getPreviewState();
-        var posX = chartInfo.scaleRatio.x * (this.state.currentIndex + 1) + 2;
-
-        if (this.state.currentIndex > chartInfo.priceData.series.length || preivewState === "stop") {
-            preivewState = "stop";
-            window.clearInterval(this.intervalId);
-            this.intervalId = null;
-            //todo: update state
-        } else {
-            this.configureAnimate();
-        }
+        var preivewState = this.state.previewState;
+        var posX = (chartInfo.scaleRatio.x * this.state.currentIndex) + 2;
 
         var previewRect = {
             x: posX,
-            top: chartInfo.margin.top,
+            y: chartInfo.margin.top,
             width: chartInfo.canvas.width - posX,
             height: chartInfo.canvas.height,
             className: "rect " + (preivewState === "stop" ? "hide" : "")
