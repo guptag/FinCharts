@@ -1,5 +1,6 @@
 var AppContext = require("ui/core/appcontext"),
     AtomCommand = require("ui/core/atomcommand"),
+    AtomConstants = require("ui/core/atomconstants"),
     PriceDataApi = require("data/api/pricedata");
 
 var chartActions = {
@@ -96,6 +97,19 @@ var chartActions = {
                             {data: priceData}
                           ));
                     });
+    },
+
+    startPreview: function () {
+        console.log("start preview");
+        AtomConstants.deferredActions.chartPreview.start.promise.fcall();
+    },
+
+    pausePreview: function () {
+        AtomConstants.deferredActions.chartPreview.pause.promise.fcall();
+    },
+
+    stopPreview: function () {
+        AtomConstants.deferredActions.chartPreview.stop.promise.fcall();
     },
 
     updateRenderer: function (renderer) {

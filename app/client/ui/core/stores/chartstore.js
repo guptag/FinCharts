@@ -124,11 +124,11 @@ var commandHandlers = {
 function ChartsStore(atom) {
     BaseStore.call(this, atom);
     this.registerCommandHandlers([
-        { key: Commands.CHART_UPDATE_TICKER,    value: commandHandlers.updateTicker.bind(this) },
-        { key: Commands.CHART_UPDATE_DURATION,  value: commandHandlers.updateDuration.bind(this) },
-        { key: Commands.CHART_UPDATE_TIMEFRAME, value: commandHandlers.updateTimeFrame.bind(this) },
-        { key: Commands.CHART_DATA_LOADING, value: commandHandlers.setDataToLoading.bind(this) },
-        { key: Commands.CHART_DATA_FETCHED, value: commandHandlers.updatePriceData.bind(this) },
+        { key: Commands.CHART_UPDATE_TICKER,         value: commandHandlers.updateTicker.bind(this) },
+        { key: Commands.CHART_UPDATE_DURATION,       value: commandHandlers.updateDuration.bind(this) },
+        { key: Commands.CHART_UPDATE_TIMEFRAME,      value: commandHandlers.updateTimeFrame.bind(this) },
+        { key: Commands.CHART_DATA_LOADING,          value: commandHandlers.setDataToLoading.bind(this) },
+        { key: Commands.CHART_DATA_FETCHED,          value: commandHandlers.updatePriceData.bind(this) }
     ]);
     this.priceChartModel = null;
 }
@@ -170,8 +170,8 @@ ChartsStore.prototype = _.create(BaseStore.prototype, {
     },
 
     getTimeframeInMonths: function () {
-      var timeframe = this.getTimeframe();
-      return Math.ceil(moment(timeframe.to).diff(moment(timeframe.from), 'months', true));
+        var timeframe = this.getTimeframe();
+        return Math.ceil(moment(timeframe.to).diff(moment(timeframe.from), 'months', true));
     },
 
     getDuration: function () {
