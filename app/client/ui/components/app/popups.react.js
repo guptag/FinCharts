@@ -93,39 +93,39 @@ var Popups = React.createClass({
     },
     getChartLayoutPopupDOM: function (popupStyle) {
         return <div className="layouts-options nav-options popup" style={popupStyle}>
-                    <div className="option selected" value="1a">
-                        <div className="layoutbutton" data-layout="1a">
+                    <div className="option selected" value="chartslayout1a">
+                        <div className="layoutbutton" data-layout="chartslayout1a">
                             <span className="box box1"></span>
                         </div>
                     </div>
-                    <div className="option" value="2a">
-                        <div className="layoutbutton" data-layout="2a">
-                            <span className="box box1"></span>
-                            <span className="box box2"></span>
-                        </div>
-                    </div>
-                    <div className="option" value="2b">
-                        <div className="layoutbutton" data-layout="2b">
+                    <div className="option" value="chartslayout2a">
+                        <div className="layoutbutton" data-layout="chartslayout2a">
                             <span className="box box1"></span>
                             <span className="box box2"></span>
                         </div>
                     </div>
-                    <div className="option" value="3a">
-                        <div className="layoutbutton" data-layout="3a">
+                    <div className="option" value="chartslayout2b">
+                        <div className="layoutbutton" data-layout="chartslayout2b">
                             <span className="box box1"></span>
                             <span className="box box2"></span>
-                            <span className="box box3"></span>
                         </div>
                     </div>
-                    <div className="option" value="3b">
-                        <div className="layoutbutton" data-layout="3b">
+                    <div className="option" value="chartslayout3a">
+                        <div className="layoutbutton" data-layout="chartslayout3a">
                             <span className="box box1"></span>
                             <span className="box box2"></span>
                             <span className="box box3"></span>
                         </div>
                     </div>
-                    <div className="option" value="3c">
-                        <div className="layoutbutton" data-layout="3c">
+                    <div className="option" value="chartslayout3b">
+                        <div className="layoutbutton" data-layout="chartslayout3b">
+                            <span className="box box1"></span>
+                            <span className="box box2"></span>
+                            <span className="box box3"></span>
+                        </div>
+                    </div>
+                    <div className="option" value="chartslayout3c">
+                        <div className="layoutbutton" data-layout="chartslayout3c">
                             <span className="box box1"></span>
                             <span className="box box2"></span>
                             <span className="box box3"></span>

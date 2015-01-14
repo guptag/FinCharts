@@ -161,30 +161,30 @@ var TopNav = React.createClass({
                     <i className="fa fa-chevron-down"></i>
                     <span className="value">{timeframeDisplayStr}</span>
                 </div>
-                <div className="layouts topnav-item layout-1a" ref="layoutItem" onClick={this.toggleLayoutOptions}>
+                <div className="layouts topnav-item chartslayout1a" ref="layoutItem" onClick={this.toggleLayoutOptions}>
                     <i className="fa fa-chevron-down"></i>
-                    <div className="layoutbutton" data-layout="1a">
+                    <div className="layoutbutton" data-layout="chartslayout1a">
                         <span className="box box1"></span>
                     </div>
-                    <div className="layoutbutton" data-layout="2a">
-                        <span className="box box1"></span>
-                        <span className="box box2"></span>
-                    </div>
-                    <div className="layoutbutton" data-layout="2b">
+                    <div className="layoutbutton" data-layout="chartslayout2a">
                         <span className="box box1"></span>
                         <span className="box box2"></span>
                     </div>
-                    <div className="layoutbutton" data-layout="3a">
+                    <div className="layoutbutton" data-layout="chartslayout2b">
                         <span className="box box1"></span>
                         <span className="box box2"></span>
-                        <span className="box box3"></span>
                     </div>
-                    <div className="layoutbutton" data-layout="3b">
+                    <div className="layoutbutton" data-layout="chartslayout3a">
                         <span className="box box1"></span>
                         <span className="box box2"></span>
                         <span className="box box3"></span>
                     </div>
-                    <div className="layoutbutton" data-layout="3c">
+                    <div className="layoutbutton" data-layout="chartslayout3b">
+                        <span className="box box1"></span>
+                        <span className="box box2"></span>
+                        <span className="box box3"></span>
+                    </div>
+                    <div className="layoutbutton" data-layout="chartslayout3c">
                         <span className="box box1"></span>
                         <span className="box box2"></span>
                         <span className="box box3"></span>

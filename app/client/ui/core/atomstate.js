@@ -37,7 +37,7 @@ module.exports =  {
 
       return {
           syncCrosshair: true,
-          layout: "chartonly",
+          layoutId: "chartslayout1a",
           activeChartIndex: 0,
           charts: [ this.getDefaultChartState(options) ]
         }; //chartStore
