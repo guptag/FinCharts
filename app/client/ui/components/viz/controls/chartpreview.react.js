@@ -21,7 +21,7 @@ var ChartPreview = React.createClass({
             self.setState({
                 currentIndex: self.state.currentIndex + 1
             });
-        }, 50);
+        }, 700);
     },
     render: function() {
         var chartInfo = this.props.chartModel.chartInfo;
@@ -34,6 +34,8 @@ var ChartPreview = React.createClass({
             window.clearInterval(this.intervalId);
             this.intervalId = null;
             //todo: update state
+        } else {
+            this.configureAnimate();
         }
 
         var previewRect = {
@@ -41,10 +43,8 @@ var ChartPreview = React.createClass({
             top: chartInfo.margin.top,
             width: chartInfo.canvas.width - posX,
             height: chartInfo.canvas.height,
-            className: "chartpreview " + (preivewState === "stop" ? "hide" : "")
+            className: "rect " + (preivewState === "stop" ? "hide" : "")
         };
-
-        this.configureAnimate();
 
         return (
             <g className="chartpreview">
