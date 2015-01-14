@@ -9,6 +9,16 @@ var ChartActions = require("ui/core/actions/chartactions");
 
 
 var TopNav = React.createClass({
+    getInitialState: function () {
+        return {
+            previewState: "stop"
+        };
+    },
+    componentWillReceiveProps: function (nextProps) {
+        this.setState({
+            previewState: "stop"
+        });
+    },
     onTickerChanged: function (ev) {
         var keyCode = (ev.keyCode ? ev.keyCode : ev.which);
         if(keyCode == 13){
@@ -84,6 +94,38 @@ var TopNav = React.createClass({
             })
         );
     },
+    startPreview: function () {
+        if ($(this.refs.playButton.getDOMNode()).hasClass("disabled")) {
+            return;
+        }
+
+        ChartActions.startPreview();
+
+        this.setState({
+            previewState: "start"
+        });
+    },
+    stopPreview: function () {
+        if ($(this.refs.stopButton.getDOMNode()).hasClass("disabled")) {
+            return;
+        }
+
+        ChartActions.stopPreview();
+
+        this.setState({
+            previewState: "stop"
+        });
+    },
+    pausePreview: function () {
+        if ($(this.refs.pauseButton.getDOMNode()).hasClass("disabled")) {
+            return;
+        }
+        ChartActions.pausePreview();
+
+        this.setState({
+            previewState: "pause"
+        });
+    },
     render: function() {
         var topNavRect = AppContext.getLayoutRect("topnavlayout");
         var topNavStyle = {
@@ -94,6 +136,11 @@ var TopNav = React.createClass({
             left: topNavRect.left + "px",
             overflow: 'hidden'
         };
+
+        var playButtonCSS = "play " + (this.state.previewState === "start" ? "disabled" : "");
+        var pauseButtonCSS = "pause " + (this.state.previewState === "pause" ||
+                                            this.state.previewState === "stop" ? "disabled" : "");
+        var stopButtonCSS = "stop " + (this.state.previewState === "stop" ? "disabled" : "");
 
         var chartStore = AppContext.stores.chartStore;
 
@@ -145,13 +192,13 @@ var TopNav = React.createClass({
                 </div>
                 <div className="preview topnav-item">
                     <i className="fa fa-chevron-down"></i>
-                    <button className="play">
+                    <button className={playButtonCSS} ref="playButton" onClick={this.startPreview}>
                         <i className="fa fa-play"></i>
                     </button>
-                    <button className="pause disabled">
+                    <button className={pauseButtonCSS}  ref="pauseButton" onClick={this.pausePreview}>
                         <i className="fa fa-pause"></i>
                     </button>
-                    <button className="stop disabled">
+                    <button className={stopButtonCSS}  ref="stopButton" onClick={this.stopPreview}>
                         <i className="fa fa-stop"></i>
                     </button>
                     <section className="addl hide">
