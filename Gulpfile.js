@@ -11,16 +11,19 @@ var gulp        = require('gulp'),
     preprocess  = require('gulp-preprocess'),
     minifyCSS   = require('gulp-minify-css'),
     browserify  = require('browserify'),
-    watchify    = require('watchify');
+    //watchify    = require('watchify');
     uglify      = require('gulp-uglify')
     seq         = require('run-sequence'),
+    symlink     = require('gulp-symlink'),
     react       = require('gulp-react'),
-    reactify    = require('reactify');
+    //reactify    = require('reactify');
     exec        = require('child_process').exec,
     NwBuilder   = require('node-webkit-builder'),
     gutil       = require('gulp-util'),
     Notifier    = new require('node-notifier')();
 
+// load other gulp tasks
+require('./Gulpfilemocks')(gulp);
 
 var bases = {
  root: '.',
@@ -34,14 +37,13 @@ var paths = {
   all: "**",
   jsx: 'client/**/*.jsx',
   js: 'client/**/*.js',
-  styl: "css/**/*.styl",
-  rootStyl: 'css/index.styl',
-  destStyl: 'css/index.css',
+  styl: "client/**/*.styl",
+  rootStyl: 'index.styl',
+  destStyl: 'index.css',
   rootJS: 'index.js',
   rootHtml: 'index.html',
   html: '**/*.html',
-  md: '**/*.md',
-  cssfolders: 'css/*/**'
+  md: '**/*.md'
 };
 
 var isDevEnvironment = false;
@@ -57,8 +59,19 @@ gulp.task('clean-target', function() {
 });
 
 gulp.task('copy', function() {
-  return gulp.src(paths.all, {cwd: bases.src})
+  return gulp.src(paths.all, {cwd: bases.src/*, dot: true*/})
              .pipe(gulp.dest(bases.appTarget));
+});
+
+gulp.task('symlink', ['copy'], function() {
+  return gulp.src(['client/finlib/',
+                   'client/chartlib/',
+                   'client/ui/',
+                   'client/data'], {cwd: bases.appTarget})
+              .pipe(symlink(['./node_modules/finlib',
+                './node_modules/chartlib',
+                './node_modules/ui',
+                './node_modules/data'], {cwd: bases.appTarget, force: true}));
 });
 
 gulp.task('stylus', ['copy'], function () {
@@ -69,9 +82,12 @@ gulp.task('stylus', ['copy'], function () {
             .pipe(gulp.dest(bases.appTarget));
 });
 
-gulp.task('jshint-react', ['copy'], function () {
+gulp.task('jshint-react', ['copy', 'symlink'], function () {
   return gulp.src([paths.js, paths.jsx, paths.rootJS], {cwd: bases.appTarget})
-            .pipe(react())
+            .pipe(react({harmony:true}))
+            .on('error', function(e) {
+                console.error(e.message + '\n  in ' + e.fileName);
+            })
             .pipe(jshint('./.jshintrc'))
             .pipe(jshint.reporter(stylish))
             .pipe(gulp.dest(bases.appTarget + "/client"));
@@ -108,7 +124,7 @@ gulp.task('browserify', ['jshint-react'], function() {
 
 gulp.task('post-build-cleanup', ['stylus', 'browserify'], function() {
   // delete unnecessary files in target
-  return gulp.src([paths.md, paths.styl, paths.jsx, paths.cssfolders, "client", "index.js"], {read: false, cwd: bases.appTarget})
+  return gulp.src([paths.md, paths.styl, paths.jsx, "client", "index.js"], {read: false, cwd: bases.appTarget})
              .pipe(clean({force: true}));
 });
 
@@ -125,7 +141,7 @@ gulp.task('post-process-files', ['post-build-cleanup'], function () {
 
 gulp.task('notify', ['post-build-cleanup'], function() {
   Notifier.notify({
-        title: 'Build Completed',
+        title: 'FinCharts (App): Build Completed',
         message: 'App will be auto refreshed in a moment...'
     });
 })
@@ -168,7 +184,7 @@ gulp.task('package-app', ['build'], function () {
 });
 
 
-gulp.task('build', ['copy', 'stylus', 'jshint-react', 'browserify', 'post-build-cleanup', 'post-process-files', 'notify']);
+gulp.task('build', ['copy', 'symlink', 'stylus', 'jshint-react', 'browserify', 'post-build-cleanup', 'post-process-files', 'notify']);
 
 gulp.task('default', function () {
   seq('clean-target', ['build', 'open']);
@@ -179,6 +195,12 @@ gulp.task('dev', function () {
   seq('setDevEnv', 'clean-target', ['build', 'watch', 'open']);
 });
 
+// builds mocks project
+gulp.task('mocks', ['build'], function () {
+  seq('mocks-build', 'mocks-app-watch', 'mocks-watch', 'mocks-open');
+})
+
+// packages the app
 gulp.task('package', function () {
   seq('clean-target', 'package-app');
 });

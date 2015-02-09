@@ -1,0 +1,105 @@
+#popups
+    .nav-options
+        font5()
+        position absolute
+        top 40px
+        width 100px
+        background-color menu-background-color
+        color screen-font-color
+
+
+        &:before
+            position absolute
+            top -8px
+            left 15px
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 5.5px 9.5px 5.5px
+            border-color: transparent transparent menu-border-color transparent;
+            content: ''
+
+
+        .option
+            float left
+            height 28px
+            width 33.3%
+            padding 6px 0px
+            text-align center
+            border 1px solid menu-border-color
+            border-right none
+            border-bottom none
+            cursor pointer
+
+            &:hover
+                background-color menu-background-hover-color
+                color screen-font-color-light
+
+            &.selected
+                color screen-font-color-light
+                font-weight bold
+
+            &.disabled
+                opacity 0.3
+                cursor not-allowed
+
+                &:hover
+                    background-color menu-background-color
+                    color screen-font-color
+
+
+    .range-options
+        width 230px
+        right 45px
+
+        .option
+            height 28px
+            width 33.3%
+            border-bottom 1px solid menu-border-color
+
+            &:nth-child(3)
+                border-right 1px solid menu-border-color
+
+
+    .timeframe-options
+        width 300px
+
+        &:before
+            left 25px
+
+        .option
+            padding 14px 0 0 0
+            height 40px
+            width 25%
+
+            &:nth-child(4),
+            &:nth-child(8),
+            &:nth-child(12),
+            &:nth-child(16),
+            &:nth-child(20)
+                border-right 1px solid menu-border-color
+
+            &:nth-child(17),
+            &:nth-child(18),
+            &:nth-child(19),
+            &:nth-child(20)
+                border-bottom 1px solid menu-border-color
+
+    .layouts-options
+        width 120px
+
+        .option
+            height 28px
+            width 33.3%
+            position relative
+
+            &:nth-child(3),
+            &:nth-child(6)
+                border-right 1px solid menu-border-color
+
+            &:nth-child(4),
+            &:nth-child(5),
+            &:nth-child(6)
+                border-bottom 1px solid menu-border-color
+
+        @import 'layoutbuttons.styl'

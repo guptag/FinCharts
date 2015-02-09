@@ -1,10 +1,10 @@
 // target will be recreated for every change
 // just watch for a change in a small dir
 var path = process.cwd() + '/css';
-var fs = window.Server.fs;
+var fs = window.server.fs;
 
 // Attach the watcher only once per app restart
-if (!process.refreshConfigured) {
+if (!process.appRefreshConfigured) {
     fs.watch(path, function() {
         if (!window.refreshing) {
           // stop watching further updates
@@ -18,7 +18,7 @@ if (!process.refreshConfigured) {
           }, 2500);
         }
     });
-    process.refreshConfigured = true;
+    process.appRefreshConfigured = true;
 }
 
 

@@ -1,0 +1,138 @@
+#topnav
+    .topnav-item
+        font4()
+        font-weight bold
+        position relative
+        float right
+        margin 2px 4px 0 4px
+        padding 7px 7px
+        height 30px
+        background-color menu-background-color
+        color screen-font-color-light
+        border 1px solid menu-border-color
+        cursor pointer
+
+        i.fa-chevron-down
+            font-size 0.5em
+            right 3px
+            top 10px
+            position absolute
+            color screen-background-dark
+
+        &:hover
+            background-color menu-background-hover-color
+            box-shadow: 3px 1px 15px 0px menu-boxshadow-color;
+
+    .ticker
+        width 170px
+        text-transform uppercase
+        padding 2px 7px
+        font-weight normal
+
+        &::-webkit-input-placeholder
+            color #FFF
+            font-size 0.8em
+            text-transform none
+
+        &:focus
+            background-color menu-background-hover-color
+            color screen-font-color-light
+
+    .range
+       width 40px
+
+    .timeframe
+        width 60px
+        text-align center
+
+    .layouts
+        width 50px
+        position relative
+
+        .layoutbutton
+            &[data-layout='1a'],
+            &[data-layout='2a'],
+            &[data-layout='2b'],
+            &[data-layout='3a'],
+            &[data-layout='3b'],
+            &[data-layout='3c']
+                display none
+
+        &.layout-1a .layoutbutton[data-layout='1a'],
+        &.layout-2a .layoutbutton[data-layout='2a'],
+        &.layout-2b .layoutbutton[data-layout='2b'],
+        &.layout-3a .layoutbutton[data-layout='3a'],
+        &.layout-3b .layoutbutton[data-layout='3b'],
+        &.layout-3c .layoutbutton[data-layout='3c']
+            display block
+            .box
+                border-color screen-font-color-light
+
+
+        @import 'layoutbuttons.styl'
+
+
+    .preview
+        width 160px
+        padding 2px 7px
+
+        button.play
+            margin 2px
+            width 60px
+            background-color transparent
+            border 1px solid screen-font-color-light
+            border-radius 3px
+            outline none
+
+        button.stop
+            width 30px
+            margin 2px
+            background-color transparent
+            border 1px solid screen-font-color-light
+            border-radius 3px
+            outline none
+
+        button.pause
+            width 30px
+            margin 2px
+            background-color transparent
+            border 1px solid screen-font-color-light
+            border-radius 3px
+            outline none
+
+        button.disabled
+            opacity 0.4
+
+            &:hover
+                background-color menu-background-color
+
+        button:hover
+            background-color menu-background-hover-color
+
+        &:hover
+            background-color menu-background-color
+            box-shadow none
+
+    .compare
+        font5()
+        width 110px
+        padding 6px 7px
+
+        span
+            padding-left 3px
+
+    .signals
+        font5()
+        width 95px
+        padding 6px 7px
+
+        span
+            padding-left 3px
+
+    .indicators
+        font5()
+        width 115px
+        padding 6px 7px
+
+        span
+            padding-left 3px
