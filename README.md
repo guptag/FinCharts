@@ -22,32 +22,31 @@ Build
 Architecture (draft)
 --------------------
 
-* Application will follow [React's Flux](https://github.com/facebook/flux) model.
-* [D3.js](https://github.com/mbostock/d3) for chart components.
-* OM style cursors to propagate specific application state to the views (looks like [React Cursor](https://github.com/dustingetz/react-cursor) is a perfect fit)
+* Application leverages [React's Flux](http://fluxxor.com/what-is-flux.html) architecture where the data/state changes flow in an uni-directional way making the application easy to reason about.
+* Describes the entire state of the application in an immutable data structure (using immutable.js) similar to OM's style of global atom state. Any user action creates an action message which updates the app state creating a new state reference and triggering a re-render of the app. React components leverage "canComponentUpdate" to compare the state references to speed up the rendering on top of virtual dom comparision provided by React.
 * Q promises for coordinating async tasks.
 * Downloaded ticker data will be stored on disk (for now).
 
 
 
-Chart Components (todo)
+Chart Components
 -----------------------
-* [ ] Axis, Labels
-* [ ] Y-axis (Prices, Percentages)
+* [x] Axis, Labels
+* [x] Y-axis (Prices, Percentages)
 * [ ] Scale (normal, log)
-* [ ] Grid Lines
-* [ ] Main chart (line, area, candlestick, OHL, OHLC)
-* [ ] Volume bars
-* [ ] Crosshairs
+* [x] Grid Lines
+* [x] Main chart (line, area, candlestick, OHL, OHLC)
+* [x] Volume bars
+* [x] Crosshairs
 * [ ] Split view (compare ticker, RSI, ADX etc)
 * [ ] Multi chart layout (3H, 3V, 2H, 2V)
 * [ ] Animate chart
 * [ ] Listing of added modules on the chart (with remove option)
 
-Settings (todo)
+Settings
 ---------------
-* [ ] Timeframe (3m, 6m, 1y, 3y, 5y, all, custom)
-* [ ] Daily, Weekly, Monthly
+* [x] Timeframe (3m, 6m, 1y, 3y, 5y, all, custom)
+* [x] Daily, Weekly, Monthly
 * [ ] Sync crosshairs
 * [ ] Compare tickers
 * [ ] Technical indicators
