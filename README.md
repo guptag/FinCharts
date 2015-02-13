@@ -3,6 +3,10 @@ Design
 
 ![screen shot 2015-01-03 at 10 48 14 am](https://cloud.githubusercontent.com/assets/1994225/5603219/4e966f56-9336-11e4-9054-1daafd1393dc.png)
 
+Perf metrics
+------------
+![screen shot 2015-02-13 at 4 44 03 am](https://cloud.githubusercontent.com/assets/1994225/6187428/4deb3094-b33b-11e4-9867-3248ae81917d.png)
+
 Architecture (draft)
 --------------------
 
