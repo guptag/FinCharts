@@ -5,6 +5,7 @@ var Immutable = require('immutable');
 
 var BaseStore = require("./basestore");
 var Commands = require("ui/core/atomconstants").commands;
+var AtomState = require("ui/core/atomstate");
 var LayoutEngine = require("ui/core/layout/layoutengine");
 
 var commandHandlers = {
@@ -117,7 +118,60 @@ var commandHandlers = {
                         };
                 });
         }.bind(this));
-    }
+    },
+
+    /**
+     * [updateChartLayout description]
+     * @param  {[type]} layoutId [description]
+     * @return {[type]}          [description]
+     */
+    updateChartLayout: function (payload) {
+        var _this = this;
+        // TODO: CLEANUP
+        this.atom.transact(function (state) {
+            debugger;
+            var totalChartsToRender = parseInt(payload.layoutId.replace("chartslayout", ""));
+
+            var atomState = _this.atom.getState();
+            var currentCharts = atomState.getIn(['chartStore', 'charts']);
+            var currentChartCount = currentCharts.size;
+
+            if (totalChartsToRender == currentChartCount) return state;
+
+            if (totalChartsToRender > currentChartCount) {
+              // Clone the additional charts from the getDefaultChartState
+              // update layoutids, chartid
+              // set ticker, keys, data from active charts
+
+              var chartsToAdd = totalChartsToRender - currentChartCount;
+              _.times(chartsToAdd, function (index) {
+                  var chart = AtomState.getDefaultChartState();
+                  chart.id = currentChartCount + index;
+                  chart.chartKeys = _this._getChartKeys();
+                  chart.chartKeys.layoutId = payload.layoutId + "_" + chart.id;
+
+                  // immutable obj
+                  chart = Immutable.fromJS(chart);
+                  chart = chart.updateIn(['data'], function () {
+                      return _this.getPriceData();
+                  });
+                  currentCharts = currentCharts.push(chart);
+              });
+
+              return atomState.updateIn(['chartStore', 'charts'], function () {
+                  return currentCharts;
+              })
+
+            } else {
+
+            }
+
+            return state;
+
+        }.bind(this));
+
+
+    },
 };
 
 
@@ -128,7 +182,8 @@ function ChartsStore(atom) {
         { key: Commands.CHART_UPDATE_DURATION,       value: commandHandlers.updateDuration.bind(this) },
         { key: Commands.CHART_UPDATE_TIMEFRAME,      value: commandHandlers.updateTimeFrame.bind(this) },
         { key: Commands.CHART_DATA_LOADING,          value: commandHandlers.setDataToLoading.bind(this) },
-        { key: Commands.CHART_DATA_FETCHED,          value: commandHandlers.updatePriceData.bind(this) }
+        { key: Commands.CHART_DATA_FETCHED,          value: commandHandlers.updatePriceData.bind(this) },
+        { key: Commands.CHART_UPDATE_LAYOUT,         value: commandHandlers.updateChartLayout.bind(this)}
     ]);
     this.priceChartModel = null;
 }

@@ -112,6 +112,14 @@ var chartActions = {
         AtomConstants.deferredActions.chartPreview.stop.promise.fcall();
     },
 
+    updateChartLayout: function (chartLayoutId) {
+        AppContext.publishCommand(
+            new AtomCommand(
+              AtomCommand.commands.CHART_UPDATE_LAYOUT,
+              {layoutId: chartLayoutId}
+            ));
+    },
+
     updateRenderer: function (renderer) {
 
     },

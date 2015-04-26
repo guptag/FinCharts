@@ -26,6 +26,23 @@ var Popups = React.createClass({
 
         ChartActions.updateTimeframe(fromDate, toDate, chartDuration);
     },
+    onChartLayoutChanged: function (evt) {
+        var $target = $(evt.target);
+
+        var index = 0, chartLayoutId;
+        for (index = 0; index < 3; ++index) {
+            if ($target.hasClass("layoutbutton") && $target.attr("data-layout"))
+            {
+                chartLayoutId = $target.attr("data-layout");
+                break;
+            }
+            $target = $target.parent();
+        }
+
+        if (chartLayoutId) {
+            ChartActions.updateChartLayout(chartLayoutId);
+        }
+    },
     getDurationPopupDOM: function (popupStyle) {
         var chartStore = AppContext.stores.chartStore;
         var currentDuration = chartStore.getDuration();
@@ -92,7 +109,7 @@ var Popups = React.createClass({
 
     },
     getChartLayoutPopupDOM: function (popupStyle) {
-        return <div className="layouts-options nav-options popup" style={popupStyle}>
+        return <div className="layouts-options nav-options popup" style={popupStyle} onClick={this.onChartLayoutChanged}>
                     <div className="option selected" value="chartslayout1a">
                         <div className="layoutbutton" data-layout="chartslayout1a">
                             <span className="box box1"></span>

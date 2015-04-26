@@ -37,7 +37,6 @@ module.exports =  {
 
       return {
           syncCrosshair: true,
-          layoutId: "chartslayout1a",
           activeChartIndex: 0,
           charts: [ this.getDefaultChartState(options) ]
         }; //chartStore
@@ -47,7 +46,7 @@ module.exports =  {
         var options = _options || {};
 
         return {
-            id: 1,
+            id: options.id || 1,
             type: "pricechart",
             keys: {
               ticker: options.ticker || "MSFT",
@@ -56,7 +55,7 @@ module.exports =  {
                 from: moment(moment().toDate()).subtract(12, 'months').toDate()
               },
               duration: "daily",
-              layoutId: "chartslayout1a_1",
+              layoutId: options.layoutId || "chartslayout1a_1",
               timestamp : new Date().getTime()
             },
             data: {
