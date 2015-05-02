@@ -34,10 +34,11 @@ module.exports =  {
 
    getDefaultChartStoreState: function (_options) {
       var options = _options || {};
+      options.id = options.id || new Date().getTime();
 
       return {
           syncCrosshair: true,
-          activeChartIndex: 0,
+          activeChartId: options.id,
           charts: [ this.getDefaultChartState(options) ]
         }; //chartStore
    },
@@ -46,7 +47,7 @@ module.exports =  {
         var options = _options || {};
 
         return {
-            id: options.id || 1,
+            id: options.id,
             type: "pricechart",
             keys: {
               ticker: options.ticker || "MSFT",
@@ -155,7 +156,7 @@ module.exports =  {
 
 
 /*
-
+// http://plnkr.co/edit/JKPJHgNH96NvZXcZvIhY?p=preview
 
 console.time("immutable-load");
 var defaultState = {
@@ -169,7 +170,7 @@ var defaultState = {
     chartStore: {
       syncCrosshair: true,
       layout: "chartonly",
-      activeChartIndex: 0,
+      activeChartId: 1,
       charts: [
         {
           type: "pricechart",
@@ -245,21 +246,23 @@ console.time("addnew");
 var newChart = _.clone(defaultState.chartStore.charts[0]);
 newChart.id = 2;
 newChart.keys.ticker = "IBM";
-var appState1 = appState.updateIn(['chartStore', 'activeChartIndex'], function (value) { return value + 1; })
+var appState1 = appState.updateIn(['chartStore', 'activeChartId'], function (value) { return newChart.id; })
      .updateIn(['chartStore', 'charts'], function (list) {
           return list.push(Immutable.fromJS(newChart));
         });
 console.timeEnd("addnew");
 console.log(appState1.toJS());
 
-
 console.time("getActiveChart");
-var activeChartIndex = appState1.getIn(['chartStore', 'activeChartIndex']);
-console.log(activeChartIndex, appState1.getIn(['chartStore', 'charts', activeChartIndex]).toJS());
+var activeChartId = appState1.getIn(['chartStore', 'activeChartId']);
+console.log(activeChartId, appState1
+                               .getIn(['chartStore', 'charts'])
+                               .find(function(chart) {
+                                 return (chart.getIn(['id']) === activeChartId);
+                               }).toJS());
 console.timeEnd("getActiveChart");
 
 console.time("compare_states_1");
-var activeChartIndex = appState1.getIn(['chartStore', 'activeChartIndex']);
 console.log("Is chart0 same in both states", appState.getIn(['chartStore', 'charts', 0]) === appState1.getIn(['chartStore', 'charts', 0]));
 console.log("Is chartStore same in both states", appState.getIn(['chartStore']) === appState1.getIn(['chartStore']));
 console.timeEnd("compare_states_1");
@@ -281,15 +284,20 @@ console.timeEnd("compare_states_2");
 
 
 console.time("deletechart");
-var newChart = _.clone(defaultState.chartStore.charts[0]);
-newChart.id = Date.now;
-newChart.keys.ticker = "IBM";
-var appState3 = appState2.updateIn(['chartStore', 'activeChartIndex'], function (value) { return value + 1; })
-     .updateIn(['chartStore', 'charts'], function (list) {
-          return list.filterNot(function (chart) {
-              return chart.getIn(['id']) === 2
-          });
-        });
+var deleteChartId = 2;
+var appState3 = appState2.updateIn(['chartStore', 'charts'], function (list) {
+                  return list.filterNot(function (chart) {
+                      return chart.getIn(['id']) === deleteChartId
+                  });
+                });
+var appState3  = appState3.updateIn(['chartStore', 'activeChartId'], function (value) {
+                    if (deleteChartId === value) {
+                        return appState.getIn(['chartStore', 'charts', 0, "id"]);
+                    } else
+                    {
+                      return value;
+                    }
+                });
 console.timeEnd("deletechart");
 console.log(appState3.toJS());
 
@@ -304,8 +312,24 @@ _.times(100, function (index) {
 console.time("tickerList");
 var tickerState = Immutable.fromJS(tickerList);
 console.timeEnd("tickerList");
-console.log(tickerState);
+console.log(tickerState.toJS());
 
-//debugger;
+console.time("find");
+var newChart = _.clone(defaultState.chartStore.charts[0]);
+newChart.id = 3;
+newChart.keys.ticker = "IBM";
+var appState4 = appState3.updateIn(['chartStore', 'activeChartId'], function (value) { return newChart.id; })
+     .updateIn(['chartStore', 'charts'], function (list) {
+          return list.push(Immutable.fromJS(newChart));
+        });
+
+var foundChart = appState4.getIn(['chartStore', 'charts'])
+                         .find(function(item) {
+                           //console.log(item.toJS());
+                           return (item.getIn(['id']) === newChart.id);
+                         });
+console.log(foundChart.toJS());
+
+console.timeEnd("find");
 
 */
