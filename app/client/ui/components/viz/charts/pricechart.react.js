@@ -16,7 +16,7 @@ var PriceChartModel = require("ui/components/viz/models/pricechartmodel");
 var PriceChart = React.createClass({
     render: function() {
         var chartId = this.props.chartId;
-        var layoutId = AppContext.stores.chartStore.getChartLayoutId();
+        var layoutId = AppContext.stores.chartStore.getChartLayoutId(chartId);
         var chartRect = AppContext.getLayoutRect(layoutId);
         var chartStyle = {
             position: 'absolute',

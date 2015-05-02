@@ -129,26 +129,21 @@ var commandHandlers = {
         var _this = this;
         // TODO: CLEANUP
         this.atom.transact(function (state) {
-            debugger;
+            // debugger;
             var totalChartsToRender = parseInt(payload.layoutId.replace("chartslayout", ""));
 
             var atomState = _this.atom.getState();
             var currentCharts = atomState.getIn(['chartStore', 'charts']);
             var currentChartCount = currentCharts.size;
 
-            if (totalChartsToRender == currentChartCount) return state;
-
             if (totalChartsToRender > currentChartCount) {
               // Clone the additional charts from the getDefaultChartState
               // update layoutids, chartid
               // set ticker, keys, data from active charts
-
               var chartsToAdd = totalChartsToRender - currentChartCount;
               _.times(chartsToAdd, function (index) {
                   var chart = AtomState.getDefaultChartState();
                   chart.id = new Date().getTime();
-                  chart.chartKeys = _this._getChartKeys();
-                  chart.chartKeys.layoutId = payload.layoutId + "_" + chart.id;
 
                   // immutable obj
                   chart = Immutable.fromJS(chart);
@@ -157,16 +152,22 @@ var commandHandlers = {
                   });
                   currentCharts = currentCharts.push(chart);
               });
-
-              return atomState.updateIn(['chartStore', 'charts'], function () {
-                  return currentCharts;
-              })
-
-            } else {
-
+            } else if (totalChartsToRender < currentChartCount)  {
+                var chartsToRemove = currentChartCount - totalChartsToRender;
+                currentCharts = currentCharts.splice(-chartsToRemove);
             }
 
-            return state;
+            // update layout id for all the remaining charts
+            currentCharts = currentCharts.map(function (chart, index) {
+                  return chart.updateIn(['keys', 'layoutId'], function (value) {
+                      return payload.layoutId + "_" + (index + 1)
+                  });
+                  //console.log(chart.toJS());
+              });
+
+            return atomState.updateIn(['chartStore', 'charts'], function () {
+                  return currentCharts;
+              });
 
         }.bind(this));
 

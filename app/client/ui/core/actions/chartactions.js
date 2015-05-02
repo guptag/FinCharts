@@ -113,11 +113,20 @@ var chartActions = {
     },
 
     updateChartLayout: function (chartLayoutId) {
-        AppContext.publishCommand(
-            new AtomCommand(
-              AtomCommand.commands.CHART_UPDATE_LAYOUT,
-              {layoutId: chartLayoutId}
-            ));
+        AppContext.publishBatchCommands([
+              new AtomCommand(
+                AtomCommand.commands.APP_TOGGLE_CHARTLAYOUT_OPTIONS,
+                {
+                    show: false,
+                    rect: {
+                        top: -50,
+                        left: -50
+                    }
+                }),
+              new AtomCommand(
+                AtomCommand.commands.CHART_UPDATE_LAYOUT,
+                {layoutId: chartLayoutId}
+              )]);
     },
 
     updateRenderer: function (renderer) {

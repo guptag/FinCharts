@@ -30,7 +30,7 @@ var Popups = React.createClass({
         var $target = $(evt.target);
 
         var index = 0, chartLayoutId;
-        for (index = 0; index < 3; ++index) {
+        for (index = 0; index < 5; ++index) {
             if ($target.hasClass("layoutbutton") && $target.attr("data-layout"))
             {
                 chartLayoutId = $target.attr("data-layout");
