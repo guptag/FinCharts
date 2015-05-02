@@ -15,13 +15,12 @@ var ChartInfo = React.createClass({
                                 " - " +
                                 moment(timeframe.to).format("ll")
 
-        var durationStr = "(" + duration + ")";
+        var tickerAndDuration = ticker + " " + "(" + duration + ")";
 
         return (
             <g className="chart-info" transform="translate(10, 30)">
-                <text x="0" y="0" className="ticker">{ticker}</text>
+                <text x="0" y="0" className="ticker">{tickerAndDuration}</text>
                 <text x="0" y="20" className="range">{timeframeStr}</text>
-                <text x="150" y="20" className="period">{durationStr}</text>
             </g>
         );
     }
