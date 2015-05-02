@@ -17,13 +17,17 @@ var PriceChart = React.createClass({
     render: function() {
         var chartId = this.props.chartId;
         var layoutId = AppContext.stores.chartStore.getChartLayoutId(chartId);
-        var chartRect = AppContext.getLayoutRect(layoutId);
+
+        var chartStore = AppContext.stores.chartStore;
+        var chartRect = chartStore.getPositionRect(chartId);
+
         var chartStyle = {
             position: 'absolute',
             width: chartRect.width + "px",
             height: chartRect.height + "px",
             top: chartRect.top + "px",
             left: chartRect.left + "px",
+            border: '1px dashed #805656',
             overflow: 'hidden'
         };
 

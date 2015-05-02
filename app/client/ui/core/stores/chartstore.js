@@ -261,7 +261,13 @@ ChartsStore.prototype = _.create(BaseStore.prototype, {
     },
 
     getPositionRect: function (id) {
-      return LayoutEngine.getLayoutRect(this.getChartLayoutId(id));
+      var chartRect = LayoutEngine.getLayoutRect(this.getChartLayoutId(id));
+      return {
+        width: chartRect.width - 16,
+        height: chartRect.height - 16,
+        top: chartRect.top + 8,
+        left: chartRect.left + 8
+      };
     },
 
     getPriceData: function (id) {
