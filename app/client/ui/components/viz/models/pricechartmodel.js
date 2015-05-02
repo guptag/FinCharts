@@ -15,6 +15,8 @@ function PriceChartModel() {
     var positionRect = chartStore.getPositionRect();
     var priceData = chartStore.getPriceData();
     var duration = chartStore.getDuration();
+    var ticker = chartStore.getTicker();
+    var timeframe = chartStore.getTimeframe();
 
     var canvas =  {
             width: positionRect.width - chartMargin.left - chartMargin.right,
@@ -40,6 +42,9 @@ function PriceChartModel() {
     };
 
     this.chartInfo = {
+        ticker: ticker,
+        duration: duration,
+        timeframe: timeframe,
         margin: chartMargin,
         positionRect: positionRect,
         canvas: canvas,
