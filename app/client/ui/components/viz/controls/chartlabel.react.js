@@ -2,14 +2,13 @@
 
 var React = require("react/addons");
 var moment = require("moment");
-var AppContext = require("ui/core/appcontext");
 
 var ChartInfo = React.createClass({
     render: function() {
-        var chartStore = AppContext.stores.chartStore;
-        var ticker = chartStore.getTicker().toUpperCase();
-        var duration = chartStore.getDuration();
-        var timeframe = chartStore.getTimeframe();
+        var chartInfo = this.props.chartModel.chartInfo;
+        var ticker = chartInfo.ticker.toUpperCase();
+        var duration = chartInfo.duration;
+        var timeframe = chartInfo.timeframe;
 
         var timeframeStr =  moment(timeframe.from).format("ll") +
                                 " - " +

@@ -10,11 +10,13 @@ var chartMargin = {
             right: 40
         };
 
-function PriceChartModel() {
+function PriceChartModel(chartId) {
     var chartStore = AppContext.stores.chartStore;
-    var positionRect = chartStore.getPositionRect();
-    var priceData = chartStore.getPriceData();
-    var duration = chartStore.getDuration();
+    var positionRect = chartStore.getPositionRect(chartId);
+    var priceData = chartStore.getPriceData(chartId);
+    var duration = chartStore.getDuration(chartId);
+    var ticker = chartStore.getTicker(chartId);
+    var timeframe = chartStore.getTimeframe(chartId);
 
     var canvas =  {
             width: positionRect.width - chartMargin.left - chartMargin.right,
@@ -40,6 +42,9 @@ function PriceChartModel() {
     };
 
     this.chartInfo = {
+        ticker: ticker,
+        duration: duration,
+        timeframe: timeframe,
         margin: chartMargin,
         positionRect: positionRect,
         canvas: canvas,

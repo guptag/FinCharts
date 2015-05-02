@@ -146,7 +146,7 @@ var commandHandlers = {
               var chartsToAdd = totalChartsToRender - currentChartCount;
               _.times(chartsToAdd, function (index) {
                   var chart = AtomState.getDefaultChartState();
-                  chart.id = currentChartCount + index;
+                  chart.id = new Date().getTime();
                   chart.chartKeys = _this._getChartKeys();
                   chart.chartKeys.layoutId = payload.layoutId + "_" + chart.id;
 
@@ -192,58 +192,79 @@ ChartsStore.prototype = _.create(BaseStore.prototype, {
 
     'constructor': ChartsStore,
 
-    _getActiveChart: function () {
+    _getActiveChart: function (id) {
         var atomState = this.atom.getState();
-        var activeChartIndex = this.getActiveChartIndex();
-        return atomState.getIn(['chartStore', 'charts', activeChartIndex]);
+        var activeChartId = id || this.getActiveChartId();
+        return atomState
+                .getIn(['chartStore', 'charts'])
+                  .find(function(item) {
+                    return (item.getIn(['id']) === activeChartId);
+                  });
     },
 
-    _getChartKeys: function () {
-        var activeChartIndex = this.getActiveChartIndex();
-        return this._getActiveChart().getIn(['keys']);
+    _getChartKeys: function (id) {
+        return this._getActiveChart(id).getIn(['keys']);
     },
 
-    getActiveChartIndex: function () {
+    getActiveChartId: function (id) {
         var atomState = this.atom.getState();
-        return atomState.getIn(['chartStore', 'activeChartIndex']);
+        return atomState.getIn(['chartStore', 'activeChartId']);
     },
 
-    getActiveChart: function () {
-        return this._getActiveChart().toJS();
+    getActiveChartIndex: function (id) {
+        var atomState = this.atom.getState();
+        var activeChartId = id || this.getActiveChartId();
+        return atomState
+                .getIn(['chartStore', 'charts'])
+                  .findIndex(function(item) {
+                    return (item.getIn(['id']) === activeChartId);
+                  });
     },
 
-    getChartKeys: function () {
-        return this._getChartKeys().toJS();
+    getAllChartIds: function () {
+        var atomState = this.atom.getState();
+        return atomState
+                .getIn(['chartStore', 'charts'])
+                .map(function(item) {
+                  return (item.getIn(['id']));
+                }).toJS();
     },
 
-    getTicker: function () {
-        return this._getChartKeys().getIn(['ticker']);
+    getActiveChart: function (id) {
+        return this._getActiveChart(id).toJS();
     },
 
-    getTimeframe: function () {
-        return this._getChartKeys().getIn(['timeframe']).toJS();
+    getChartKeys: function (id) {
+        return this._getChartKeys(id).toJS();
     },
 
-    getTimeframeInMonths: function () {
-        var timeframe = this.getTimeframe();
+    getTicker: function (id) {
+        return this._getChartKeys(id).getIn(['ticker']);
+    },
+
+    getTimeframe: function (id) {
+        return this._getChartKeys(id).getIn(['timeframe']).toJS();
+    },
+
+    getTimeframeInMonths: function (id) {
+        var timeframe = this.getTimeframe(id);
         return Math.ceil(moment(timeframe.to).diff(moment(timeframe.from), 'months', true));
     },
 
-    getDuration: function () {
-        return this._getChartKeys().getIn(['duration']);
+    getDuration: function (id) {
+        return this._getChartKeys(id).getIn(['duration']);
     },
 
-    getChartLayoutId: function () {
-       return this._getChartKeys().getIn(['layoutId']);
+    getChartLayoutId: function (id) {
+       return this._getChartKeys(id).getIn(['layoutId']);
     },
 
-    getPositionRect: function () {
-      return LayoutEngine.getLayoutRect(this.getChartLayoutId());
+    getPositionRect: function (id) {
+      return LayoutEngine.getLayoutRect(this.getChartLayoutId(id));
     },
 
-    getPriceData: function () {
-      var activeChartIndex = this.getActiveChartIndex();
-      var data = this._getActiveChart().getIn(['data']);
+    getPriceData: function (id) {
+      var data = this._getActiveChart(id).getIn(['data']);
       return data.toJS ? data.toJS() : data;
     }
 });
