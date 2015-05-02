@@ -221,6 +221,15 @@ ChartsStore.prototype = _.create(BaseStore.prototype, {
                   });
     },
 
+    getAllChartIds: function () {
+        var atomState = this.atom.getState();
+        return atomState
+                .getIn(['chartStore', 'charts'])
+                .map(function(item) {
+                  return (item.getIn(['id']));
+                }).toJS();
+    },
+
     getActiveChart: function (id) {
         return this._getActiveChart(id).toJS();
     },

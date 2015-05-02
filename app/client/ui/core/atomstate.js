@@ -314,7 +314,7 @@ var tickerState = Immutable.fromJS(tickerList);
 console.timeEnd("tickerList");
 console.log(tickerState.toJS());
 
-console.time("find");
+console.time("find-a-chart");
 var newChart = _.clone(defaultState.chartStore.charts[0]);
 newChart.id = 3;
 newChart.keys.ticker = "IBM";
@@ -329,7 +329,15 @@ var foundChart = appState4.getIn(['chartStore', 'charts'])
                            return (item.getIn(['id']) === newChart.id);
                          });
 console.log(foundChart.toJS());
+console.timeEnd("find-a-chart");
 
-console.timeEnd("find");
+console.time("find-all-charts");
+var allCharts = appState4.getIn(['chartStore', 'charts'])
+                         .map(function(item) {
+                           //console.log(item.toJS());
+                           return item.getIn(['id']);
+                         });
+console.log(allCharts.toJS());
+console.timeEnd("find-all-charts");
 
 */

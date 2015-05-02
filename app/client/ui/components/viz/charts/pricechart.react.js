@@ -15,6 +15,7 @@ var PriceChartModel = require("ui/components/viz/models/pricechartmodel");
 
 var PriceChart = React.createClass({
     render: function() {
+        var chartId = this.props.chartId;
         var layoutId = AppContext.stores.chartStore.getChartLayoutId();
         var chartRect = AppContext.getLayoutRect(layoutId);
         var chartStyle = {
@@ -26,10 +27,10 @@ var PriceChart = React.createClass({
             overflow: 'hidden'
         };
 
-        var priceChartModel = new PriceChartModel();
+        var priceChartModel = new PriceChartModel(chartId);
 
         return (
-            <section id="chart1" className="chartcontainer active" style={chartStyle}>
+            <section id={chartId} className="chartcontainer active" style={chartStyle}>
                 <svg className="pricechart" data-ticker="MSFT">
                     <defs></defs>
                     <GridX chartModel={priceChartModel}/>
