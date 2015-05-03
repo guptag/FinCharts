@@ -31,13 +31,12 @@ var Popups = React.createClass({
 
         var index = 0, chartLayoutId;
         for (index = 0; index < 5; ++index) {
-            if ($target.hasClass("layoutbutton") && $target.attr("data-layout"))
-            {
-                chartLayoutId = $target.attr("data-layout");
-                break;
-            }
+            var chartLayoutId = $target.attr("value") || $target.attr("data-layout");
+            if (chartLayoutId) break;
             $target = $target.parent();
         }
+
+        console.log("LAYOUT CHANGED", chartLayoutId);
 
         if (chartLayoutId) {
             ChartActions.updateChartLayout(chartLayoutId);

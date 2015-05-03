@@ -11,31 +11,43 @@ var CrossHairs = require("ui/components/viz/controls/crosshairs.react");
 var ChartPreview = require("ui/components/viz/controls/chartpreview.react");
 
 var PriceChartModel = require("ui/components/viz/models/pricechartmodel");
+var ChartActions = require("ui/core/actions/chartactions");
 
 
 var PriceChart = React.createClass({
+    onChartSelected: function () {
+        console.log("chart selected");
+        var chartStore = AppContext.stores.chartStore;
+        var chartId = this.props.chartId;
+        var activeChartId = chartStore.getActiveChartId();
+        if (chartId !== activeChartId) {
+            ChartActions.updateActiveChart(chartId);
+        }
+
+    },
+
     render: function() {
         var chartId = this.props.chartId;
         var layoutId = AppContext.stores.chartStore.getChartLayoutId(chartId);
 
         var chartStore = AppContext.stores.chartStore;
         var chartRect = chartStore.getPositionRect(chartId);
+        var activeChartId = chartStore.getActiveChartId();
 
         var chartStyle = {
-            position: 'absolute',
             width: chartRect.width + "px",
             height: chartRect.height + "px",
             top: chartRect.top + "px",
-            left: chartRect.left + "px",
-            border: '1px dashed #805656',
-            overflow: 'hidden'
+            left: chartRect.left + "px"
         };
+
+        var className = (chartId === activeChartId) ? "chartcontainer active" : "chartcontainer";
 
         var priceChartModel = new PriceChartModel(chartId);
 
         return (
-            <section id={chartId} className="chartcontainer active" style={chartStyle}>
-                <svg className="pricechart" data-ticker="MSFT">
+            <section id={chartId} className={className} style={chartStyle}>
+                <svg className="pricechart" data-ticker="MSFT" onClick={this.onChartSelected}>
                     <defs></defs>
                     <GridX chartModel={priceChartModel}/>
                     <GridY chartModel={priceChartModel}/>

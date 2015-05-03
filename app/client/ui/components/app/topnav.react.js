@@ -150,6 +150,10 @@ var TopNav = React.createClass({
         var timeframeDiffInMonths = chartStore.getTimeframeInMonths();
         var timeframeDisplayStr = timeframeDiffInMonths < 12 ? timeframeDiffInMonths + "M" : (timeframeDiffInMonths / 12) + "Y";
 
+        var layoutId = chartStore.getChartLayoutId().split("_")[0];
+        var layoutsClass = "layouts topnav-item " + layoutId;
+
+
         return (
             <section id="topnav" style={topNavStyle} className="clearfix">
                 <input id="ticker" ref="tickerInput" className="topnav-item ticker" placeholder="(e.g. msft)" onKeyPress={this.onTickerChanged}></input>
@@ -161,7 +165,7 @@ var TopNav = React.createClass({
                     <i className="fa fa-chevron-down"></i>
                     <span className="value">{timeframeDisplayStr}</span>
                 </div>
-                <div className="layouts topnav-item chartslayout1a" ref="layoutItem" onClick={this.toggleLayoutOptions}>
+                <div className={layoutsClass} ref="layoutItem" onClick={this.toggleLayoutOptions}>
                     <i className="fa fa-chevron-down"></i>
                     <div className="layoutbutton" data-layout="chartslayout1a">
                         <span className="box box1"></span>

@@ -99,6 +99,14 @@ var chartActions = {
                     });
     },
 
+    updateActiveChart: function (chartId) {
+        AppContext.publishCommand(
+            new AtomCommand(
+              AtomCommand.commands.CHART_UPDATE_ACTIVECHART,
+              {chartId: chartId}
+            ));
+    },
+
     startPreview: function () {
         console.log("start preview");
         AtomConstants.deferredActions.chartPreview.start.promise.fcall();

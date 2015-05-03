@@ -51,6 +51,20 @@ var commandHandlers = {
         }.bind(this));
     },
 
+     /**
+     * [updateActiveChart description]
+     * @param  {[type]} payload {chartId: '23523525'}
+     * @return {[type]}         [description]
+     */
+    updateActiveChart: function (payload) {
+        this.atom.transact(function (state) {
+            var activeChartIndex = this.getActiveChartIndex();
+            return state.updateIn(['chartStore', 'activeChartId'], function (value) {
+                return payload.chartId;
+            });
+        }.bind(this));
+    },
+
     /**
      * [updatePriceData description]
      * @param  {[type]} payload {
@@ -142,8 +156,9 @@ var commandHandlers = {
               // set ticker, keys, data from active charts
               var chartsToAdd = totalChartsToRender - currentChartCount;
               _.times(chartsToAdd, function (index) {
-                  var chart = AtomState.getDefaultChartState();
-                  chart.id = new Date().getTime();
+                  var chart = _this.getActiveChart();
+                  chart.id = new Date().getTime() + Math.floor(Math.random() * (1000 - 50)) + 50;
+                  chart.data = null;
 
                   // immutable obj
                   chart = Immutable.fromJS(chart);
@@ -184,7 +199,8 @@ function ChartsStore(atom) {
         { key: Commands.CHART_UPDATE_TIMEFRAME,      value: commandHandlers.updateTimeFrame.bind(this) },
         { key: Commands.CHART_DATA_LOADING,          value: commandHandlers.setDataToLoading.bind(this) },
         { key: Commands.CHART_DATA_FETCHED,          value: commandHandlers.updatePriceData.bind(this) },
-        { key: Commands.CHART_UPDATE_LAYOUT,         value: commandHandlers.updateChartLayout.bind(this)}
+        { key: Commands.CHART_UPDATE_LAYOUT,         value: commandHandlers.updateChartLayout.bind(this)},
+        { key: Commands.CHART_UPDATE_ACTIVECHART,    value: commandHandlers.updateActiveChart.bind(this)}
     ]);
     this.priceChartModel = null;
 }

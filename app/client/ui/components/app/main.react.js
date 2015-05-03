@@ -12,12 +12,10 @@ var AppMain = React.createClass({
 
         var mainRect = AppContext.getLayoutRect("mainlayout");
         var mainStyle = {
-            position: 'absolute',
             width: mainRect.width + "px",
             height: mainRect.height + "px",
             top: mainRect.top + "px",
-            left: mainRect.left + "px",
-            overflow: 'hidden'
+            left: mainRect.left + "px"
         };
 
         var childElements = _.map(allChartsId, function (chartId) {
