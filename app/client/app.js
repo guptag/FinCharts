@@ -18,7 +18,6 @@ var LayoutEngine = require("ui/core/layout/layoutengine");
 var LayoutDefinitions = require("ui/core/layout/layoutdefinitions");
 
 var AppContext = require("ui/core/appcontext");
-var AtomCommand = require("ui/core/atomcommand");
 var ChartActions = require("ui/core/actions/chartactions");
 
 // TODO: move to unit tests

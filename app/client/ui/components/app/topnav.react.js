@@ -1,7 +1,6 @@
 /** @jsx React.DOM */
 
 var $ = require("jquery");
-var moment = require("moment");
 var React = require("react/addons");
 var AppContext = require("ui/core/appcontext");
 var AtomCommand = require("ui/core/atomcommand");
@@ -14,14 +13,14 @@ var TopNav = React.createClass({
             previewState: "stop"
         };
     },
-    componentWillReceiveProps: function (nextProps) {
+    componentWillReceiveProps: function (/*nextProps*/) {
         this.setState({
             previewState: "stop"
         });
     },
     onTickerChanged: function (ev) {
         var keyCode = (ev.keyCode ? ev.keyCode : ev.which);
-        if(keyCode == 13){
+        if(keyCode === 13){
            ChartActions.updateTicker(ev.target.value.trim());
         }
     },

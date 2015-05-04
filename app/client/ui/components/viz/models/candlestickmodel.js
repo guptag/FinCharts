@@ -19,9 +19,9 @@ function CandleStickModel(chartInfo) {
 
     var margin = chartInfo.margin;
     var canvas = chartInfo.canvas;
-    var positionRect = chartInfo.positionRect;
+    //var positionRect = chartInfo.positionRect;
     var priceData = chartInfo.priceData;
-    var priceMarkers = chartInfo.priceMarkers;
+    //var priceMarkers = chartInfo.priceMarkers;
     var extendedPrices = chartInfo.extendedPrices;
     var scaleRatio = chartInfo.scaleRatio;
 

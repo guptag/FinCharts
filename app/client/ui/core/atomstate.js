@@ -13,8 +13,8 @@ module.exports =  {
         return state;
    },
 
-   getDefaultAppUIStoreState: function (_options) {
-      var options = _options || {};
+   getDefaultAppUIStoreState: function (/*_options*/) {
+      //var options = _options || {};
 
       return {
           popup: {
@@ -113,8 +113,8 @@ module.exports =  {
         }; //chart
    },
 
-   getDefaultWatchlistStoreState: function (_options) {
-        var options = _options || {};
+   getDefaultWatchlistStoreState: function (/*_options*/) {
+        //var options = _options || {};
         return {
           layout: "",
           groups: [

@@ -18,7 +18,7 @@ var Popups = React.createClass({
     onTimeframeChanged: function (evt) {
         var timeframeInMonths = $(evt.target).attr("value");
         var toDate = moment().toDate();
-        var fromDate = moment(toDate).subtract(timeframeInMonths, 'months').toDate()
+        var fromDate = moment(toDate).subtract(timeframeInMonths, 'months').toDate();
 
         var chartStore = AppContext.stores.chartStore;
         var chartDuration = chartStore.getDuration();
@@ -31,7 +31,7 @@ var Popups = React.createClass({
 
         var index = 0, chartLayoutId;
         for (index = 0; index < 5; ++index) {
-            var chartLayoutId = $target.attr("value") || $target.attr("data-layout");
+            chartLayoutId = $target.attr("value") || $target.attr("data-layout");
             if (chartLayoutId) break;
             $target = $target.parent();
         }
@@ -60,7 +60,7 @@ var Popups = React.createClass({
             }
 
             return className;
-        }
+        };
 
         return  <div className="range-options nav-options popup" style={popupStyle} onClick={this.onDurationChanged}>
                     <div className={getCssForOptionItem('daily')} value="daily">Daily</div>
@@ -81,7 +81,7 @@ var Popups = React.createClass({
             }
 
             return className;
-        }
+        };
 
         return <div className="timeframe-options nav-options popup" style={popupStyle} onClick={this.onTimeframeChanged}>
                     <div className={getCssForOptionItem(3)} value="3">3M</div>

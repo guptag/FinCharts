@@ -1,15 +1,15 @@
-var AppContext = require("ui/core/appcontext");
+//var AppContext = require("ui/core/appcontext");
 
 var layoutActions = {
-    updateChartsLayout: function (layoutId) {
+    updateChartsLayout: function (/*layoutId*/) {
 
     },
 
-    updateRenderer: function (renderer) {
+    updateRenderer: function (/*renderer*/) {
 
     },
 
-    updateValueAxisScale: function (scale /* log, auto, linear */) {
+    updateValueAxisScale: function (/* scale */) { /* log, auto, linear */
 
     },
 

@@ -12,7 +12,7 @@ var ChartInfo = React.createClass({
 
         var timeframeStr =  moment(timeframe.from).format("ll") +
                                 " - " +
-                                moment(timeframe.to).format("ll")
+                                moment(timeframe.to).format("ll");
 
         var tickerAndDuration = ticker + " " + "(" + duration + ")";
 
