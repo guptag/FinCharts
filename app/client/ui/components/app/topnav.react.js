@@ -153,10 +153,16 @@ var TopNav = React.createClass({
         var layoutId = chartStore.getChartLayoutId().split("_")[0];
         var layoutsClass = "layouts topnav-item " + layoutId;
 
+        // hacky to touch the dom directly (todo: refacor)
+        var ticker = chartStore.getTicker();
+        setTimeout(function () {
+            $("#ticker").val(ticker).focus().select();
+        });
+
 
         return (
             <section id="topnav" style={topNavStyle} className="clearfix">
-                <input id="ticker" ref="tickerInput" className="topnav-item ticker" placeholder="(e.g. msft)" onKeyPress={this.onTickerChanged}></input>
+                <input id="ticker" ref="tickerInput" className="topnav-item ticker" defaultValue={ticker} placeholder="(e.g. msft)" onKeyPress={this.onTickerChanged}></input>
                 <div className="topnav-item range" ref="rangeItem" onClick={this.toggleDurationOptions}>
                     <i className="fa fa-chevron-down"></i>
                     <span className="value">{currentDuraionStr}</span>
