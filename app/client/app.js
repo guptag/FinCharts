@@ -98,8 +98,10 @@ module.exports = {
         this.attachEvents();
         this.renderApp();
 
-        testAtom();
-        testActions();
+        ChartActions.updateTicker("spy");
+
+        //testAtom();
+        //testActions();
     },
     renderApp: function () {
         LayoutEngine.resolveLayouts();

@@ -50,7 +50,7 @@ module.exports =  {
             id: options.id,
             type: "pricechart",
             keys: {
-              ticker: options.ticker || "MSFT",
+              ticker: options.ticker || "SPY",
               timeframe:  {
                 to: moment().toDate(),
                 from: moment(moment().toDate()).subtract(12, 'months').toDate()
