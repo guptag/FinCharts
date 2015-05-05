@@ -1,9 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require("react/addons"),
-    _     = require("lodash"),
-    AtomConstants = require("ui/core/atomconstants"),
-    AppContext = require("ui/core/appcontext");
+    AtomConstants = require("ui/core/atomconstants");
 
 var ChartPreview = React.createClass({
     getInitialState: function () {
@@ -43,7 +41,7 @@ var ChartPreview = React.createClass({
             previewState: "pause"
         });
     },
-    componentWillReceiveProps: function (nextProps) {
+    componentWillReceiveProps: function (/*nextProps*/) {
         this.stopPreview();
     },
     configureAnimate: function () {

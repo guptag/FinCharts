@@ -28,7 +28,7 @@ var PriceChart = React.createClass({
 
     render: function() {
         var chartId = this.props.chartId;
-        var layoutId = AppContext.stores.chartStore.getChartLayoutId(chartId);
+        //var layoutId = AppContext.stores.chartStore.getChartLayoutId(chartId);
 
         var chartStore = AppContext.stores.chartStore;
         var chartRect = chartStore.getPositionRect(chartId);

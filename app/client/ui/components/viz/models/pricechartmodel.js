@@ -59,4 +59,4 @@ function PriceChartModel(chartId) {
     console.log("ChartInfo:", this.chartInfo);
 }
 
-module.exports = PriceChartModel
+module.exports = PriceChartModel;

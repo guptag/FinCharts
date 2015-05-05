@@ -1,6 +1,6 @@
 var app = require("./client/app.js");
 var $ = require('jquery');
-var _ = require('lodash');
+//var _ = require('lodash');
 
 $(document).ready(function () {
     // console.log("app init 123", $, _);

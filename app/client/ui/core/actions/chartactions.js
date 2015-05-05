@@ -137,11 +137,11 @@ var chartActions = {
               )]);
     },
 
-    updateRenderer: function (renderer) {
+    updateRenderer: function (/*renderer*/) {
 
     },
 
-    updateValueAxisScale: function (scale /* log, auto, linear */) {
+    updateValueAxisScale: function (/*scale*/) { /* log, auto, linear */
 
     },
 

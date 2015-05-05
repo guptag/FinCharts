@@ -19,7 +19,7 @@ var AppMain = React.createClass({
         };
 
         var childElements = _.map(allChartsId, function (chartId) {
-            return <PriceChart chartId={chartId}/>
+            return <PriceChart chartId={chartId}/>;
         });
 
         return (

@@ -18,7 +18,7 @@ LayoutEngine.prototype.addLayout = function (name, measureCb, parentLayout, depe
         parentLayout: parentLayout,
         dependsOn: dependsOn
     });
-}
+};
 
 LayoutEngine.prototype.resolveLayouts = function () {
     var self = this;
@@ -34,7 +34,7 @@ LayoutEngine.prototype.resolveLayouts = function () {
     });
 
     //console.log(this.resolvedLayouts);
-}
+};
 
 LayoutEngine.prototype.getLayoutRect = function (layoutName) {
     var rect = this.resolvedLayouts[layoutName];
@@ -44,7 +44,7 @@ LayoutEngine.prototype.getLayoutRect = function (layoutName) {
     }
 
     return rect;
-}
+};
 
 LayoutEngine.prototype.getWindowRect = function () {
     var $window = $(window);
@@ -57,12 +57,12 @@ LayoutEngine.prototype.getWindowRect = function () {
         top: 0,
         left: 0
     };
-}
+};
 
 LayoutEngine.prototype.clear = function () {
     this.resolvedLayoutsLayouts = {};
     this.definitions = {};
-}
+};
 
 
 function resolveLayout (layout, cache, windowW, windowH) {

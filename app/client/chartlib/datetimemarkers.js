@@ -78,7 +78,9 @@ var DateTimeMarkers = {
             monthLabelDropDistance = 5,
             totalColumns = Math.floor(width / minColWidth),
             columnPerPoints = Math.floor(data.series.length / totalColumns),
-            dateTimeLabels = [];
+            dateTimeLabels = [],
+            currentYear,
+            currentMonth;
 
         switch (duration.toLowerCase()) {
             /*
@@ -122,13 +124,12 @@ var DateTimeMarkers = {
                         if (current index % columnPerPoints === 0)
                             show MONTH
                 */
-                var currentYear;
                 dateTimeLabels = _.chain(data.series)
                                   .map(function(data, index) {
                                         var dateObj = new Date(data.date);
                                         var addYearLabel = false, addMonthLabel = false;
 
-                                        var date = dateObj.getUTCDate(),
+                                        var /*date = dateObj.getUTCDate(),*/
                                             month = dateObj.getUTCMonth(),
                                             year = dateObj.getUTCFullYear();
 
@@ -186,7 +187,6 @@ var DateTimeMarkers = {
                         if (current index % columnPerPoints === 0)
                             show DAY
                 */
-                var currentYear, currentMonth;
                 dateTimeLabels = _.chain(data.series)
                                 .map(function(data, index) {
                                     var dateObj = new Date(data.date);
@@ -252,17 +252,21 @@ var DateTimeMarkers = {
 
             if (isDayLabel) {
 
+                /*jshint -W018 */
                 isPrevLabelWithinReach = !!(Math.abs(dateTimeLabels[i-1].dataItemIndex - dateTimeLabels[i].dataItemIndex) < dayLabelDropDistance);
                 isPrevLabelSpecialMarker = (dateTimeLabels[i-1].label.length === 3 || dateTimeLabels[i-1].label.length === 4); //month or year
 
+                /*jshint -W018 */
                 isNextLabelWithinReach = !!(Math.abs(dateTimeLabels[i+1].dataItemIndex - dateTimeLabels[i].dataItemIndex) < dayLabelDropDistance);
                 isNextLabelSpecialMarker = (dateTimeLabels[i+1].label.length === 3 || dateTimeLabels[i+1].label.length === 4); //month or year
 
             } else if (isMonthLabel) {
 
+                /*jshint -W018 */
                 isPrevLabelWithinReach = !!(Math.abs(dateTimeLabels[i-1].dataItemIndex - dateTimeLabels[i].dataItemIndex) < monthLabelDropDistance);
                 isPrevLabelSpecialMarker = dateTimeLabels[i-1].label.length === 4; //year
 
+                /*jshint -W018 */
                 isNextLabelWithinReach = !!(Math.abs(dateTimeLabels[i+1].dataItemIndex - dateTimeLabels[i].dataItemIndex) < monthLabelDropDistance);
                 isNextLabelSpecialMarker = dateTimeLabels[i+1].label.length === 4; //year
             }
@@ -278,6 +282,6 @@ var DateTimeMarkers = {
 
         return filteredDateTimeLabels;
     }
-}
+};
 
 module.exports = DateTimeMarkers;
