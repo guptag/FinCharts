@@ -42,6 +42,7 @@ function PriceChartModel(chartId) {
     };
 
     this.chartInfo = {
+        chartId: chartId,
         ticker: ticker,
         duration: duration,
         timeframe: timeframe,

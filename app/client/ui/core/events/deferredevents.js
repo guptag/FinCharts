@@ -1,9 +1,16 @@
 var _ = require("lodash");
-var q = require("q");
+var Q = require("q");
 
 function DeferredEvents() {
     this.events = {};
 }
+
+DeferredEvents.prototype.Keys = {
+  StartPreview: "startPreview",
+  StopPreview: "stopPreview",
+  PausePreview: "pausePreview",
+  ResetPreviewOptions: "ResetPreviewOptions"
+};
 
 DeferredEvents.prototype.register = function (id, cb) {
     if (!this.events[id]) {

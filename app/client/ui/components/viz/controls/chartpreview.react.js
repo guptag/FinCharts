@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require("react/addons"),
+    DeferredEvents = require("ui/core/events/deferredevents");
     AtomConstants = require("ui/core/atomconstants");
 
 var ChartPreview = React.createClass({
@@ -11,9 +12,12 @@ var ChartPreview = React.createClass({
         };
     },
     componentWillMount: function () {
-        AtomConstants.deferredActions.chartPreview.start.resolve(this.startPreview.bind(this));
-        AtomConstants.deferredActions.chartPreview.stop.resolve(this.stopPreview.bind(this));
-        AtomConstants.deferredActions.chartPreview.pause.resolve(this.pausePreview.bind(this));
+        // chart id won't change for this preview instance
+        // no need to rebind in "componentwillreceiveprops"
+        var chartId = this.props.chartModel.chartInfo.chartId;
+        DeferredEvents.register(chartId + DeferredEvents.Keys.StartPreview, this.startPreview.bind(this));
+        DeferredEvents.register(chartId + DeferredEvents.Keys.StopPreview, this.stopPreview.bind(this));
+        DeferredEvents.register(chartId + DeferredEvents.Keys.PausePreview, this.pausePreview.bind(this));
     },
     startPreview: function () {
         if (this.state.previewState === "stop") {
@@ -41,7 +45,7 @@ var ChartPreview = React.createClass({
             previewState: "pause"
         });
     },
-    componentWillReceiveProps: function (/*nextProps*/) {
+    componentWillReceiveProps: function (nextProps) {
         this.stopPreview();
     },
     configureAnimate: function () {
@@ -61,6 +65,9 @@ var ChartPreview = React.createClass({
                 });
             } else {
                 self.stopPreview();
+
+                // reset top nav preview options
+                DeferredEvents.trigger(DeferredEvents.Keys.ResetPreviewOptions);
             }
         }, 700);
     },
@@ -72,7 +79,7 @@ var ChartPreview = React.createClass({
         var previewRect = {
             x: posX,
             y: chartInfo.margin.top,
-            width: chartInfo.canvas.width - posX,
+            width: chartInfo.canvas.width - posX + 2,
             height: chartInfo.canvas.height,
             className: "rect " + (preivewState === "stop" ? "hide" : "")
         };
@@ -82,6 +89,12 @@ var ChartPreview = React.createClass({
                 <rect x={previewRect.x} y={previewRect.y} width={previewRect.width} height={previewRect.height} className={previewRect.className}></rect>
             </g>
         );
+    },
+    componentWillUnmount: function () {
+        var chartId = this.props.chartModel.chartInfo.chartId;
+        DeferredEvents.clear(chartId + DeferredEvents.Keys.StartPreview);
+        DeferredEvents.clear(chartId + DeferredEvents.Keys.StopPreview);
+        DeferredEvents.clear(chartId + DeferredEvents.Keys.PausePreview);
     }
 });
 

@@ -1,7 +1,8 @@
 var AppContext = require("ui/core/appcontext"),
     AtomCommand = require("ui/core/atomcommand"),
     AtomConstants = require("ui/core/atomconstants"),
-    PriceDataApi = require("data/api/pricedata");
+    PriceDataApi = require("data/api/pricedata"),
+    DeferredEvents = require("ui/core/events/deferredevents");
 
 var chartActions = {
 
@@ -107,17 +108,17 @@ var chartActions = {
             ));
     },
 
-    startPreview: function () {
+    startPreview: function (chartId) {
         console.log("start preview");
-        AtomConstants.deferredActions.chartPreview.start.promise.fcall();
+        DeferredEvents.trigger(chartId + DeferredEvents.Keys.StartPreview);
     },
 
-    pausePreview: function () {
-        AtomConstants.deferredActions.chartPreview.pause.promise.fcall();
+    pausePreview: function (chartId) {
+        DeferredEvents.trigger(chartId + DeferredEvents.Keys.PausePreview);
     },
 
-    stopPreview: function () {
-        AtomConstants.deferredActions.chartPreview.stop.promise.fcall();
+    stopPreview: function (chartId) {
+       DeferredEvents.trigger(chartId + DeferredEvents.Keys.StopPreview);
     },
 
     updateChartLayout: function (chartLayoutId) {

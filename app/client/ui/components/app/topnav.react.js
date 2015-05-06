@@ -5,6 +5,7 @@ var React = require("react/addons");
 var AppContext = require("ui/core/appcontext");
 var AtomCommand = require("ui/core/atomcommand");
 var ChartActions = require("ui/core/actions/chartactions");
+var DeferredEvents = require("ui/core/events/deferredevents");
 
 
 var TopNav = React.createClass({
@@ -17,6 +18,13 @@ var TopNav = React.createClass({
         this.setState({
             previewState: "stop"
         });
+    },
+    componentWillMount: function () {
+        DeferredEvents.register(DeferredEvents.Keys.ResetPreviewOptions, function () {
+            this.setState({
+                previewState: "stop"
+            });
+        }.bind(this));
     },
     onTickerChanged: function (ev) {
         var keyCode = (ev.keyCode ? ev.keyCode : ev.which);
@@ -98,7 +106,10 @@ var TopNav = React.createClass({
             return;
         }
 
-        ChartActions.startPreview();
+        var chartStore = AppContext.stores.chartStore;
+        var chartId = chartStore.getActiveChartId();
+
+        ChartActions.startPreview(chartId);
 
         this.setState({
             previewState: "start"
@@ -109,7 +120,10 @@ var TopNav = React.createClass({
             return;
         }
 
-        ChartActions.stopPreview();
+        var chartStore = AppContext.stores.chartStore;
+        var chartId = chartStore.getActiveChartId();
+
+        ChartActions.stopPreview(chartId);
 
         this.setState({
             previewState: "stop"
@@ -119,7 +133,11 @@ var TopNav = React.createClass({
         if ($(this.refs.pauseButton.getDOMNode()).hasClass("disabled")) {
             return;
         }
-        ChartActions.pausePreview();
+
+        var chartStore = AppContext.stores.chartStore;
+        var chartId = chartStore.getActiveChartId();
+
+        ChartActions.pausePreview(chartId);
 
         this.setState({
             previewState: "pause"
