@@ -148,6 +148,7 @@ var commandHandlers = {
 
             var atomState = _this.atom.getState();
             var currentCharts = atomState.getIn(['chartStore', 'charts']);
+            var activeChartId = atomState.getIn(['chartStore', 'activeChartId']);
             var currentChartCount = currentCharts.size;
 
             if (totalChartsToRender > currentChartCount) {
@@ -172,16 +173,26 @@ var commandHandlers = {
                 currentCharts = currentCharts.splice(-chartsToRemove);
             }
 
-            // update layout id for all the remaining charts
+            var validActiveChartId = false, newActiveChartId;
+
+            // update layout id for all the remaining charts and find if activeChartId needs an update
             currentCharts = currentCharts.map(function (chart, index) {
+                  if (!validActiveChartId && chart.getIn(['id']) === activeChartId) {
+                    validActiveChartId = true;
+                  }
+
                   return chart.updateIn(['keys', 'layoutId'], function (value) {
                       return payload.layoutId + "_" + (index + 1)
                   });
-                  //console.log(chart.toJS());
               });
+
+            //reset active chartId (if needed due to removed charts);
+            newActiveChartId = (!validActiveChartId) ? currentCharts.getIn([0, 'id']) : activeChartId;
 
             return atomState.updateIn(['chartStore', 'charts'], function () {
                   return currentCharts;
+              }).updateIn(['chartStore', 'activeChartId'], function (value) {
+                return newActiveChartId;
               });
 
         }.bind(this));
