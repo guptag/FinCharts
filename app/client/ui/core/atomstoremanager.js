@@ -1,7 +1,7 @@
 
 var _ = require("lodash");
 var AtomCommand = require("ui/core/atomcommand");
-var Logger = require("ui/core/utils/logger");
+
 
 
 function AtomStoreManager(atom, stores) {

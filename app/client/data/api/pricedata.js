@@ -1,12 +1,11 @@
 var request = window.server.request,
     fs = window.server.fs,
     csv = window.server.csv,
-    util = window.server.util,
     Q = require("q"),
     moment = require('moment'),
     sprintf = require("sprintf-js").sprintf;
 
-var PriceDataApi = new function() {
+var PriceDataApi = {
     /**
      *  chartKeys: {
      *      ticker: "MSFT",
@@ -17,7 +16,7 @@ var PriceDataApi = new function() {
      *      duration: 'daily'
      *  }
      */
-    this.getTickerDataAsync = function (chartKeys) {
+    getTickerDataAsync: function (chartKeys) {
         return fetchData(chartKeys)
                  .then(parseData);
     }
@@ -82,7 +81,7 @@ function parseData(data) {
     csv()
         .from
         .stream(fs.createReadStream(data.fileName))
-        .on('record', function (record, index) {
+        .on('record', function (record/*, index*/) {
             if (record.length !== 7 || isNaN(record[1]) || isNaN(record[2]) ||
                 isNaN(record[3]) || isNaN(record[4]) || isNaN(record[5]) ||
                 isNaN(record[6])) {
@@ -96,7 +95,7 @@ function parseData(data) {
                 low: +parseFloat(record[3]).toFixed(2),
                 close: +parseFloat(record[4]).toFixed(2),
                 volume: +parseFloat(record[5]).toFixed(2),
-                adjClose: +parseFloat(record[6]).toFixed(2),
+                adjClose: +parseFloat(record[6]).toFixed(2)
             };
 
             // adjust prices for splits (unfortunately yahoo includes dividends in adjClose)
@@ -121,15 +120,15 @@ function parseData(data) {
             if (data.volume > returnData.maxVolume)
                 returnData.maxVolume = data.volume;
         })
-        .on('end', function(count) {
+        .on('end', function(/*count*/) {
             parseDeferred.resolve(returnData);
         });
 
     return parseDeferred.promise;
 }
 
-function formatNumber(number) {
+/*function formatNumber(number) {
       return +number.toFixed(3);
-}
+}*/
 
 module.exports = PriceDataApi;

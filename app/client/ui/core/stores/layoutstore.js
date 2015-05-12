@@ -5,8 +5,8 @@ var _ = require("lodash");
 var BaseStore = require("./basestore");
 //var Commands = require("ui/core/atomconstants").commands;
 
-var commandHandlers = {
-};
+/*var commandHandlers = {
+};*/
 
 
 function LayoutStore(atom) {

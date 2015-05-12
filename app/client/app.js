@@ -18,12 +18,11 @@ var LayoutEngine = require("ui/core/layout/layoutengine");
 var LayoutDefinitions = require("ui/core/layout/layoutdefinitions");
 
 var AppContext = require("ui/core/appcontext");
-var AtomCommand = require("ui/core/atomcommand");
 var ChartActions = require("ui/core/actions/chartactions");
 
 // TODO: move to unit tests
-function testAtom () {
-   /* console.log(AppContext.stores.chartStore.getTicker());
+/*function testAtom () {
+    console.log(AppContext.stores.chartStore.getTicker());
     console.log(AppContext.stores.chartStore.getTimeframe());
     console.log(AppContext.stores.chartStore.getDuration());
 
@@ -51,9 +50,9 @@ function testAtom () {
 
     console.log(AppContext.stores.chartStore.getTicker());
     console.log(AppContext.stores.chartStore.getTimeframe());
-    console.log(AppContext.stores.chartStore.getDuration()); */
+    console.log(AppContext.stores.chartStore.getDuration());
 
-    /* AppContext.publishCommand(new AtomCommand(
+     AppContext.publishCommand(new AtomCommand(
         AtomCommand.commands.APP_TOGGLE_TIMEFRAME_OPTIONS,
         {show: true, rect: {top: 50, left: 100}}
       ));
@@ -61,12 +60,12 @@ function testAtom () {
     AppContext.publishCommand(new AtomCommand(
         AtomCommand.commands.APP_TOGGLE_DURATION_OPTIONS,
         {show: true, rect: {top: 150, left: 400}}
-      )); */
-}
+      ));
+}*/
 
-function testActions() {
+/*function testActions() {
     ChartActions.updateTicker("ibm");
-}
+}*/
 
 var AppRoot = React.createClass({
     render: function() {
@@ -98,8 +97,10 @@ module.exports = {
         this.attachEvents();
         this.renderApp();
 
-        testAtom();
-        testActions();
+        ChartActions.updateTicker("spy");
+
+        //testAtom();
+        //testActions();
     },
     renderApp: function () {
         LayoutEngine.resolveLayouts();

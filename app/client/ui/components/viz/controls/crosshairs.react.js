@@ -11,7 +11,7 @@ var CrossHairs = React.createClass({
         };
     },
 
-    componentWillReceiveProps: function (nextProps) {
+    componentWillReceiveProps: function (/*nextProps*/) {
         // reset crosshairs when re-rendered
         this.setState(this.getInitialState());
     },
@@ -25,7 +25,7 @@ var CrossHairs = React.createClass({
         });
     },
 
-    onMouseOut: function (ev) {
+    onMouseOut: function (/*ev*/) {
         this.setState({
             mousePosition: {x: -50, y: -50}
         });

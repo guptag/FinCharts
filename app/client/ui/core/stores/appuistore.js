@@ -22,11 +22,11 @@ var commandHandlers = {
                 return resetFlagsState;
             }
 
-            var setFlagState = resetFlagsState.updateIn(['appUIStore', 'popup', 'flags', 'timeframeOptions'], function (value) {
+            var setFlagState = resetFlagsState.updateIn(['appUIStore', 'popup', 'flags', 'timeframeOptions'], function (/*value*/) {
                 return true;
             });
 
-            return setFlagState.updateIn(['appUIStore', 'popup', 'rect'], function (value) {
+            return setFlagState.updateIn(['appUIStore', 'popup', 'rect'], function (/*value*/) {
                 return Immutable.fromJS(payload.rect);
             });
         }.bind(this));
@@ -40,11 +40,11 @@ var commandHandlers = {
                 return resetFlagsState;
             }
 
-            var setFlagState = resetFlagsState.updateIn(['appUIStore', 'popup', 'flags', 'durationOptions'], function (value) {
+            var setFlagState = resetFlagsState.updateIn(['appUIStore', 'popup', 'flags', 'durationOptions'], function (/*value*/) {
                 return true;
             });
 
-            return setFlagState.updateIn(['appUIStore', 'popup', 'rect'], function (value) {
+            return setFlagState.updateIn(['appUIStore', 'popup', 'rect'], function (/*value*/) {
                 return Immutable.fromJS(payload.rect);
             });
 
@@ -59,18 +59,18 @@ var commandHandlers = {
                 return resetFlagsState;
             }
 
-            var setFlagState = resetFlagsState.updateIn(['appUIStore', 'popup', 'flags', 'chartLayoutOptions'], function (value) {
+            var setFlagState = resetFlagsState.updateIn(['appUIStore', 'popup', 'flags', 'chartLayoutOptions'], function (/*value*/) {
                 return true;
             });
 
-            return setFlagState.updateIn(['appUIStore', 'popup', 'rect'], function (value) {
+            return setFlagState.updateIn(['appUIStore', 'popup', 'rect'], function (/*value*/) {
                 return Immutable.fromJS(payload.rect);
             });
         }.bind(this));
     },
 
-    onWindowResize: function (payload) {
-        this.atom.transact(function (state) {
+    onWindowResize: function (/*payload*/) {
+        this.atom.transact(function (/*state*/) {
 
         }.bind(this));
     }
@@ -93,23 +93,23 @@ AppUIStore.prototype = _.create(BaseStore.prototype, {
 
     _resetPopupFlags: function (state) {
         return state.updateIn(['appUIStore', 'popup', 'flags'], function (obj) {
-            return Immutable.fromJS(obj.toSeq().map(v => false).toObject());
+            return Immutable.fromJS(obj.toSeq().map(function() { return false; }).toObject());
         });
     },
 
     isDurationPopupOpen: function () {
         var atomState = this.atom.getState();
-        return atomState.getIn(['appUIStore', 'popup', 'flags', 'durationOptions'])
+        return atomState.getIn(['appUIStore', 'popup', 'flags', 'durationOptions']);
     },
 
     isTimeframePopupOpen: function () {
         var atomState = this.atom.getState();
-        return atomState.getIn(['appUIStore', 'popup', 'flags', 'timeframeOptions'])
+        return atomState.getIn(['appUIStore', 'popup', 'flags', 'timeframeOptions']);
     },
 
     isLayoutPopupOpen: function () {
         var atomState = this.atom.getState();
-        return atomState.getIn(['appUIStore', 'popup', 'flags', 'chartLayoutOptions'])
+        return atomState.getIn(['appUIStore', 'popup', 'flags', 'chartLayoutOptions']);
     },
 
     getPopupFlags: function () {

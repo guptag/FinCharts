@@ -1,5 +1,3 @@
-var Q = require("q");
-
 module.exports = {
     commands: {
         APP_WINDOW_RESIZE: 'APP_WINDOW_RESIZE',
@@ -16,13 +14,5 @@ module.exports = {
         CHART_DATA_ERROR: 'CHART_DATA_ERROR',
         CHART_UPDATE_LAYOUT: 'CHART_UPDATE_LAYOUT',
         CHART_PREVIEW_STATUS_CHANGE: 'CHART_PREVIEW_STATUS_CHANGE'
-    },
-
-    deferredActions: {
-        chartPreview: {
-            start: Q.defer(),
-            pause: Q.defer(),
-            stop: Q.defer()
-        }
     }
 };

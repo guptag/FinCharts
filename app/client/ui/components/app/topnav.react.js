@@ -1,11 +1,11 @@
 /** @jsx React.DOM */
 
 var $ = require("jquery");
-var moment = require("moment");
 var React = require("react/addons");
 var AppContext = require("ui/core/appcontext");
 var AtomCommand = require("ui/core/atomcommand");
 var ChartActions = require("ui/core/actions/chartactions");
+var DeferredEvents = require("ui/core/events/deferredevents");
 
 
 var TopNav = React.createClass({
@@ -14,14 +14,21 @@ var TopNav = React.createClass({
             previewState: "stop"
         };
     },
-    componentWillReceiveProps: function (nextProps) {
+    componentWillReceiveProps: function (/*nextProps*/) {
         this.setState({
             previewState: "stop"
         });
     },
+    componentWillMount: function () {
+        DeferredEvents.register(DeferredEvents.Keys.ResetPreviewOptions, function () {
+            this.setState({
+                previewState: "stop"
+            });
+        }.bind(this));
+    },
     onTickerChanged: function (ev) {
         var keyCode = (ev.keyCode ? ev.keyCode : ev.which);
-        if(keyCode == 13){
+        if(keyCode === 13){
            ChartActions.updateTicker(ev.target.value.trim());
         }
     },
@@ -99,7 +106,10 @@ var TopNav = React.createClass({
             return;
         }
 
-        ChartActions.startPreview();
+        var chartStore = AppContext.stores.chartStore;
+        var chartId = chartStore.getActiveChartId();
+
+        ChartActions.startPreview(chartId);
 
         this.setState({
             previewState: "start"
@@ -110,7 +120,10 @@ var TopNav = React.createClass({
             return;
         }
 
-        ChartActions.stopPreview();
+        var chartStore = AppContext.stores.chartStore;
+        var chartId = chartStore.getActiveChartId();
+
+        ChartActions.stopPreview(chartId);
 
         this.setState({
             previewState: "stop"
@@ -120,7 +133,11 @@ var TopNav = React.createClass({
         if ($(this.refs.pauseButton.getDOMNode()).hasClass("disabled")) {
             return;
         }
-        ChartActions.pausePreview();
+
+        var chartStore = AppContext.stores.chartStore;
+        var chartId = chartStore.getActiveChartId();
+
+        ChartActions.pausePreview(chartId);
 
         this.setState({
             previewState: "pause"
@@ -150,9 +167,19 @@ var TopNav = React.createClass({
         var timeframeDiffInMonths = chartStore.getTimeframeInMonths();
         var timeframeDisplayStr = timeframeDiffInMonths < 12 ? timeframeDiffInMonths + "M" : (timeframeDiffInMonths / 12) + "Y";
 
+        var layoutId = chartStore.getChartLayoutId().split("_")[0];
+        var layoutsClass = "layouts topnav-item " + layoutId;
+
+        // hacky to touch the dom directly (todo: refacor)
+        var ticker = chartStore.getTicker();
+        setTimeout(function () {
+            $("#ticker").val(ticker).focus().select();
+        });
+
+
         return (
             <section id="topnav" style={topNavStyle} className="clearfix">
-                <input id="ticker" ref="tickerInput" className="topnav-item ticker" placeholder="(e.g. msft)" onKeyPress={this.onTickerChanged}></input>
+                <input id="ticker" ref="tickerInput" className="topnav-item ticker" defaultValue={ticker} placeholder="(e.g. msft)" onKeyPress={this.onTickerChanged}></input>
                 <div className="topnav-item range" ref="rangeItem" onClick={this.toggleDurationOptions}>
                     <i className="fa fa-chevron-down"></i>
                     <span className="value">{currentDuraionStr}</span>
@@ -161,30 +188,30 @@ var TopNav = React.createClass({
                     <i className="fa fa-chevron-down"></i>
                     <span className="value">{timeframeDisplayStr}</span>
                 </div>
-                <div className="layouts topnav-item layout-1a" ref="layoutItem" onClick={this.toggleLayoutOptions}>
+                <div className={layoutsClass} ref="layoutItem" onClick={this.toggleLayoutOptions}>
                     <i className="fa fa-chevron-down"></i>
-                    <div className="layoutbutton" data-layout="1a">
+                    <div className="layoutbutton" data-layout="chartslayout1a">
                         <span className="box box1"></span>
                     </div>
-                    <div className="layoutbutton" data-layout="2a">
-                        <span className="box box1"></span>
-                        <span className="box box2"></span>
-                    </div>
-                    <div className="layoutbutton" data-layout="2b">
+                    <div className="layoutbutton" data-layout="chartslayout2a">
                         <span className="box box1"></span>
                         <span className="box box2"></span>
                     </div>
-                    <div className="layoutbutton" data-layout="3a">
+                    <div className="layoutbutton" data-layout="chartslayout2b">
                         <span className="box box1"></span>
                         <span className="box box2"></span>
-                        <span className="box box3"></span>
                     </div>
-                    <div className="layoutbutton" data-layout="3b">
+                    <div className="layoutbutton" data-layout="chartslayout3a">
                         <span className="box box1"></span>
                         <span className="box box2"></span>
                         <span className="box box3"></span>
                     </div>
-                    <div className="layoutbutton" data-layout="3c">
+                    <div className="layoutbutton" data-layout="chartslayout3b">
+                        <span className="box box1"></span>
+                        <span className="box box2"></span>
+                        <span className="box box3"></span>
+                    </div>
+                    <div className="layoutbutton" data-layout="chartslayout3c">
                         <span className="box box1"></span>
                         <span className="box box2"></span>
                         <span className="box box3"></span>

@@ -19,7 +19,7 @@ function VolumeModel(chartInfo) {
 
     var margin = chartInfo.margin;
     var canvas = chartInfo.canvas;
-    var positionRect = chartInfo.positionRect;
+    //var positionRect = chartInfo.positionRect;
     var priceData = chartInfo.priceData;
 
     var barHeight = formatNumber(canvas.height * 30 / 100);

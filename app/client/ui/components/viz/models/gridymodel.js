@@ -21,7 +21,7 @@ function GridYModel(chartInfo) {
     var canvas = chartInfo.canvas;
     var positionRect = chartInfo.positionRect;
     var datetimeMarkers = chartInfo.datetimeMarkers;
-    var extendedPrices = chartInfo.extendedPrices;
+    //var extendedPrices = chartInfo.extendedPrices;
     var scaleRatio = chartInfo.scaleRatio;
     var tickMargin = chartInfo.tickMargin;
 
@@ -53,7 +53,7 @@ function GridYModel(chartInfo) {
             case 3: labelPullBack = 10; break;
             case 2: labelPullBack = 7; break;
             case 1: labelPullBack = 4; break;
-        };
+        }
 
         var path = PathHelper()
                         .moveto(toPlotX(dataIndex), margin.top)

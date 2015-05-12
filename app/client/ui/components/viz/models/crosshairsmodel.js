@@ -28,14 +28,18 @@ function generateElements(chartInfo, mousePosition, events) {
 
     mousePosition = mousePosition || {x: -50, y: -50};
 
-    var elements = [];
+    // Adjust mouse position based on the chartlayout position
+    mousePosition.x = mousePosition.x - positionRect.left;
+    mousePosition.y = mousePosition.y - positionRect.top;
+
+    var elements = [], path;
 
     var price = getPrice(chartInfo, mousePosition.y);
     var dateAndPosition = getDateAndAxisPosition(chartInfo, mousePosition.x);
 
     // X-axis cross-hair (price)
     if (_.isFinite(price)) {
-        var path = PathHelper()
+        path = PathHelper()
                 .moveto(0, 0)
                 .lineto(canvas.width, 0)
                 .closepath();
@@ -83,10 +87,10 @@ function generateElements(chartInfo, mousePosition, events) {
 
     // y-axis cross-hair (date)
     if (dateAndPosition && dateAndPosition.date && _.isFinite(dateAndPosition.position)) {
-        var path = PathHelper()
-                    .moveto(0, canvas.height)
-                    .lineto(0, 0)
-                    .closepath();
+        path = PathHelper()
+                .moveto(0, canvas.height)
+                .lineto(0, 0)
+                .closepath();
 
         elements.push({
             type: "g",
@@ -110,7 +114,7 @@ function generateElements(chartInfo, mousePosition, events) {
                     props: {
                         x: -35,
                         y: canvas.height + 4,
-                        width: 70,
+                        width: 80,
                         height: 20,
                         className: "label-box"
                     }
@@ -164,7 +168,7 @@ function getPrice(chartInfo, mouseY) {
     var translateY = (canvas.height + margin.top) - mouseY;
 
     return formatNumber(extendedPrices.min + (translateY * pricePerPixel));
-};
+}
 
 function getDateAndAxisPosition(chartInfo, mouseX) {
     var margin = chartInfo.margin;
@@ -194,8 +198,8 @@ function getDateAndAxisPosition(chartInfo, mouseX) {
     return {
         position: position,
         date: dateStr
-    }
-};
+    };
+}
 
 
 function formatNumber(number, digits) {
