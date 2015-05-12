@@ -28,6 +28,10 @@ function generateElements(chartInfo, mousePosition, events) {
 
     mousePosition = mousePosition || {x: -50, y: -50};
 
+    // Adjust mouse position based on the chartlayout position
+    mousePosition.x = mousePosition.x - positionRect.left;
+    mousePosition.y = mousePosition.y - positionRect.top;
+
     var elements = [], path;
 
     var price = getPrice(chartInfo, mousePosition.y);
@@ -110,7 +114,7 @@ function generateElements(chartInfo, mousePosition, events) {
                     props: {
                         x: -35,
                         y: canvas.height + 4,
-                        width: 70,
+                        width: 80,
                         height: 20,
                         className: "label-box"
                     }
