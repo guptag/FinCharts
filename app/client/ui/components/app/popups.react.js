@@ -18,13 +18,29 @@ var Popups = React.createClass({
     onTimeframeChanged: function (evt) {
         var timeframeInMonths = $(evt.target).attr("value");
         var toDate = moment().toDate();
-        var fromDate = moment(toDate).subtract(timeframeInMonths, 'months').toDate()
+        var fromDate = moment(toDate).subtract(timeframeInMonths, 'months').toDate();
 
         var chartStore = AppContext.stores.chartStore;
         var chartDuration = chartStore.getDuration();
         chartDuration =  (timeframeInMonths > 84) ? "monthly" : (timeframeInMonths > 18 ? "weekly" : "daily");
 
         ChartActions.updateTimeframe(fromDate, toDate, chartDuration);
+    },
+    onChartLayoutChanged: function (evt) {
+        var $target = $(evt.target);
+
+        var index = 0, chartLayoutId;
+        for (index = 0; index < 5; ++index) {
+            chartLayoutId = $target.attr("value") || $target.attr("data-layout");
+            if (chartLayoutId) break;
+            $target = $target.parent();
+        }
+
+        console.log("LAYOUT CHANGED", chartLayoutId);
+
+        if (chartLayoutId) {
+            ChartActions.updateChartLayout(chartLayoutId);
+        }
     },
     getDurationPopupDOM: function (popupStyle) {
         var chartStore = AppContext.stores.chartStore;
@@ -44,7 +60,7 @@ var Popups = React.createClass({
             }
 
             return className;
-        }
+        };
 
         return  <div className="range-options nav-options popup" style={popupStyle} onClick={this.onDurationChanged}>
                     <div className={getCssForOptionItem('daily')} value="daily">Daily</div>
@@ -65,7 +81,7 @@ var Popups = React.createClass({
             }
 
             return className;
-        }
+        };
 
         return <div className="timeframe-options nav-options popup" style={popupStyle} onClick={this.onTimeframeChanged}>
                     <div className={getCssForOptionItem(3)} value="3">3M</div>
@@ -92,40 +108,40 @@ var Popups = React.createClass({
 
     },
     getChartLayoutPopupDOM: function (popupStyle) {
-        return <div className="layouts-options nav-options popup" style={popupStyle}>
-                    <div className="option selected" value="1a">
-                        <div className="layoutbutton" data-layout="1a">
+        return <div className="layouts-options nav-options popup" style={popupStyle} onClick={this.onChartLayoutChanged}>
+                    <div className="option selected" value="chartslayout1a">
+                        <div className="layoutbutton" data-layout="chartslayout1a">
                             <span className="box box1"></span>
                         </div>
                     </div>
-                    <div className="option" value="2a">
-                        <div className="layoutbutton" data-layout="2a">
-                            <span className="box box1"></span>
-                            <span className="box box2"></span>
-                        </div>
-                    </div>
-                    <div className="option" value="2b">
-                        <div className="layoutbutton" data-layout="2b">
+                    <div className="option" value="chartslayout2a">
+                        <div className="layoutbutton" data-layout="chartslayout2a">
                             <span className="box box1"></span>
                             <span className="box box2"></span>
                         </div>
                     </div>
-                    <div className="option" value="3a">
-                        <div className="layoutbutton" data-layout="3a">
+                    <div className="option" value="chartslayout2b">
+                        <div className="layoutbutton" data-layout="chartslayout2b">
                             <span className="box box1"></span>
                             <span className="box box2"></span>
-                            <span className="box box3"></span>
                         </div>
                     </div>
-                    <div className="option" value="3b">
-                        <div className="layoutbutton" data-layout="3b">
+                    <div className="option" value="chartslayout3a">
+                        <div className="layoutbutton" data-layout="chartslayout3a">
                             <span className="box box1"></span>
                             <span className="box box2"></span>
                             <span className="box box3"></span>
                         </div>
                     </div>
-                    <div className="option" value="3c">
-                        <div className="layoutbutton" data-layout="3c">
+                    <div className="option" value="chartslayout3b">
+                        <div className="layoutbutton" data-layout="chartslayout3b">
+                            <span className="box box1"></span>
+                            <span className="box box2"></span>
+                            <span className="box box3"></span>
+                        </div>
+                    </div>
+                    <div className="option" value="chartslayout3c">
+                        <div className="layoutbutton" data-layout="chartslayout3c">
                             <span className="box box1"></span>
                             <span className="box box2"></span>
                             <span className="box box3"></span>

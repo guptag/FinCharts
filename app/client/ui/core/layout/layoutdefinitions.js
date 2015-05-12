@@ -2,7 +2,7 @@ var LayoutEngine =  require('./layoutengine');
 
 var LayoutDefinitions = {
     init: function () {
-        LayoutEngine.addLayout("appheaderlayout", function(w, h, W, H) {
+        LayoutEngine.addLayout("appheaderlayout", function(w/*/*, h, W, H*/) {
             return {
                 width: w,
                 height: 40,
@@ -11,7 +11,7 @@ var LayoutDefinitions = {
             };
         });
 
-        LayoutEngine.addLayout("topnavlayout", function(w, h, W, H) {
+        LayoutEngine.addLayout("topnavlayout", function(w/*, h, W, H*/) {
             return {
                 width: 0.75 * w,
                 height: 40,
@@ -20,7 +20,7 @@ var LayoutDefinitions = {
             };
         }, "appheaderlayout");
 
-        LayoutEngine.addLayout("mainlayout", function(w, h, W, H) {
+        LayoutEngine.addLayout("mainlayout", function(w, h/*, W, H*/) {
             return {
                 width: w,
                 height: h - 40,
@@ -29,7 +29,7 @@ var LayoutDefinitions = {
             };
         });
 
-        LayoutEngine.addLayout("chartslayout1a_1", function(w, h, W, H) {
+        LayoutEngine.addLayout("chartslayout1a_1", function(w, h/*, W, H*/) {
             return {
                 width: w,
                 height: h,
@@ -38,7 +38,7 @@ var LayoutDefinitions = {
             };
         }, "mainlayout");
 
-        LayoutEngine.addLayout("chartslayout2a_1", function(w, h, W, H) {
+        LayoutEngine.addLayout("chartslayout2a_1", function(w, h/*, W, H*/) {
             return {
                 width: w/2,
                 height: h,
@@ -47,7 +47,7 @@ var LayoutDefinitions = {
             };
         }, "mainlayout");
 
-        LayoutEngine.addLayout("chartslayout2a_2", function(w, h, W, H) {
+        LayoutEngine.addLayout("chartslayout2a_2", function(w, h/*, W, H*/) {
             return {
                 width: w/2,
                 height: h,
@@ -56,7 +56,7 @@ var LayoutDefinitions = {
             };
         }, "mainlayout");
 
-        LayoutEngine.addLayout("chartslayout2b_1", function(w, h, W, H) {
+        LayoutEngine.addLayout("chartslayout2b_1", function(w, h/*, W, H*/) {
             return {
                 width: w,
                 height: h/2,
@@ -65,7 +65,7 @@ var LayoutDefinitions = {
             };
         }, "mainlayout");
 
-        LayoutEngine.addLayout("chartslayout2b_2", function(w, h, W, H) {
+        LayoutEngine.addLayout("chartslayout2b_2", function(w, h/*, W, H*/) {
             return {
                 width: w,
                 height: h/2,
@@ -74,7 +74,7 @@ var LayoutDefinitions = {
             };
         }, "mainlayout");
 
-        LayoutEngine.addLayout("chartslayout3a_1", function(w, h, W, H) {
+        LayoutEngine.addLayout("chartslayout3a_1", function(w, h/*, W, H*/) {
             return {
                 width: w/3,
                 height: h,
@@ -83,7 +83,7 @@ var LayoutDefinitions = {
             };
         }, "mainlayout");
 
-        LayoutEngine.addLayout("chartslayout3a_2", function(w, h, W, H) {
+        LayoutEngine.addLayout("chartslayout3a_2", function(w, h/*, W, H*/) {
             return {
                 width: w/3,
                 height: h,
@@ -92,7 +92,7 @@ var LayoutDefinitions = {
             };
         }, "mainlayout");
 
-        LayoutEngine.addLayout("chartslayout3a_3", function(w, h, W, H) {
+        LayoutEngine.addLayout("chartslayout3a_3", function(w, h/*, W, H*/) {
             return {
                 width: w/3,
                 height: h,
@@ -102,7 +102,7 @@ var LayoutDefinitions = {
         }, "mainlayout");
 
 
-        LayoutEngine.addLayout("chartslayout3b_1", function(w, h, W, H) {
+        LayoutEngine.addLayout("chartslayout3b_1", function(w, h/*, W, H*/) {
             return {
                 width: w,
                 height: h/3,
@@ -111,7 +111,7 @@ var LayoutDefinitions = {
             };
         }, "mainlayout");
 
-        LayoutEngine.addLayout("chartslayout3b_2", function(w, h, W, H) {
+        LayoutEngine.addLayout("chartslayout3b_2", function(w, h/*, W, H*/) {
             return {
                 width: w,
                 height: h/3,
@@ -120,7 +120,7 @@ var LayoutDefinitions = {
             };
         }, "mainlayout");
 
-        LayoutEngine.addLayout("chartslayout3b_3", function(w, h, W, H) {
+        LayoutEngine.addLayout("chartslayout3b_3", function(w, h/*, W, H*/) {
             return {
                 width: w,
                 height: h/3,
@@ -129,7 +129,7 @@ var LayoutDefinitions = {
             };
         }, "mainlayout");
 
-        LayoutEngine.addLayout("chartslayout3c_1", function(w, h, W, H) {
+        LayoutEngine.addLayout("chartslayout3c_1", function(w, h/*, W, H*/) {
             return {
                 width: w/2,
                 height: h,
@@ -138,7 +138,7 @@ var LayoutDefinitions = {
             };
         }, "mainlayout");
 
-        LayoutEngine.addLayout("chartslayout3c_2", function(w, h, W, H) {
+        LayoutEngine.addLayout("chartslayout3c_2", function(w, h/*, W, H*/) {
             return {
                 width: w/2,
                 height: h/2,
@@ -147,7 +147,7 @@ var LayoutDefinitions = {
             };
         }, "mainlayout");
 
-        LayoutEngine.addLayout("chartslayout3c_3", function(w, h, W, H) {
+        LayoutEngine.addLayout("chartslayout3c_3", function(w, h/*, W, H*/) {
             return {
                 width: w/2,
                 height: h/2,

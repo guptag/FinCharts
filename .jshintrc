@@ -10,7 +10,7 @@
     "camelcase": true,
     "eqeqeq": true,
     "immed": true,
-    "latedef": true,
+    "latedef": false,
     "undef": true,
     "unused": true,
     "trailing": true,
