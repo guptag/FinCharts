@@ -46,8 +46,8 @@ Chart Components
 * [x] Volume bars
 * [x] Crosshairs
 * [ ] Split view (compare ticker, RSI, ADX etc)
-* [ ] Multi chart layout (3H, 3V, 2H, 2V)
-* [ ] Animate chart
+* [x] Multi chart layout (3H, 3V, 2H, 2V)
+* [x] Animate chart
 * [ ] Listing of added modules on the chart (with remove option)
 
 Settings
