@@ -1,4 +1,3 @@
-var _ = require("lodash");
 var Q = require("q");
 
 function DeferredEvents() {
@@ -26,11 +25,11 @@ DeferredEvents.prototype.trigger = function (id, payload) {
   }
 
   this.events[id].promise.fcall(payload);
-}
+};
 
 DeferredEvents.prototype.clear = function (id) {
   this.events[id] = null;
-}
+};
 
 // singleton
 module.exports = new DeferredEvents();

@@ -5,7 +5,6 @@ var Immutable = require('immutable');
 
 var BaseStore = require("./basestore");
 var Commands = require("ui/core/atomconstants").commands;
-var AtomState = require("ui/core/atomstate");
 var LayoutEngine = require("ui/core/layout/layoutengine");
 
 var commandHandlers = {
@@ -17,7 +16,7 @@ var commandHandlers = {
     updateTicker: function (payload) {
         this.atom.transact(function (state) {
             var activeChartIndex = this.getActiveChartIndex();
-            return state.updateIn(['chartStore', 'charts', activeChartIndex, 'keys', 'ticker'], function (value) {
+            return state.updateIn(['chartStore', 'charts', activeChartIndex, 'keys', 'ticker'], function (/*value*/) {
                 return payload.ticker;
             });
         }.bind(this));
@@ -31,7 +30,7 @@ var commandHandlers = {
     updateTimeFrame: function (payload) {
         this.atom.transact(function (state) {
             var activeChartIndex = this.getActiveChartIndex();
-            return state.updateIn(['chartStore', 'charts', activeChartIndex, 'keys', 'timeframe'], function (value) {
+            return state.updateIn(['chartStore', 'charts', activeChartIndex, 'keys', 'timeframe'], function (/*value*/) {
                 return Immutable.fromJS(payload.timeframe); //remove fromJS() ??
             });
         }.bind(this));
@@ -45,7 +44,7 @@ var commandHandlers = {
     updateDuration: function (payload) {
         this.atom.transact(function (state) {
             var activeChartIndex = this.getActiveChartIndex();
-            return state.updateIn(['chartStore', 'charts', activeChartIndex, 'keys', 'duration'], function (value) {
+            return state.updateIn(['chartStore', 'charts', activeChartIndex, 'keys', 'duration'], function (/*value*/) {
                 return payload.duration;
             });
         }.bind(this));
@@ -58,8 +57,7 @@ var commandHandlers = {
      */
     updateActiveChart: function (payload) {
         this.atom.transact(function (state) {
-            var activeChartIndex = this.getActiveChartIndex();
-            return state.updateIn(['chartStore', 'activeChartId'], function (value) {
+            return state.updateIn(['chartStore', 'activeChartId'], function (/*value*/) {
                 return payload.chartId;
             });
         }.bind(this));
@@ -90,7 +88,7 @@ var commandHandlers = {
     updatePriceData: function (payload) {
         this.atom.transact(function (state) {
             var activeChartIndex = this.getActiveChartIndex();
-            return state.updateIn(['chartStore', 'charts', activeChartIndex, 'data'], function (value) {
+            return state.updateIn(['chartStore', 'charts', activeChartIndex, 'data'], function (/*value*/) {
                 return payload.data; //set raw json (immutable map not needed, also speeeds up the lookup)
             });
         }.bind(this));
@@ -121,7 +119,7 @@ var commandHandlers = {
     setDataToLoading: function (/*payload*/) {
         this.atom.transact(function (state) {
             var activeChartIndex = this.getActiveChartIndex();
-            return state.updateIn(['chartStore', 'charts', activeChartIndex, 'data'], function (value) {
+            return state.updateIn(['chartStore', 'charts', activeChartIndex, 'data'], function (/*value*/) {
                 return {
                           status: "loading",
                           series: [],
@@ -142,9 +140,9 @@ var commandHandlers = {
     updateChartLayout: function (payload) {
         var _this = this;
         // TODO: CLEANUP
-        this.atom.transact(function (state) {
+        this.atom.transact(function (/*state*/) {
             // debugger;
-            var totalChartsToRender = parseInt(payload.layoutId.replace("chartslayout", ""));
+            var totalChartsToRender = parseInt(payload.layoutId.replace("chartslayout", ""), 10);
 
             var atomState = _this.atom.getState();
             var currentCharts = atomState.getIn(['chartStore', 'charts']);
@@ -156,7 +154,7 @@ var commandHandlers = {
               // update layoutids, chartid
               // set ticker, keys, data from active charts
               var chartsToAdd = totalChartsToRender - currentChartCount;
-              _.times(chartsToAdd, function (index) {
+              _.times(chartsToAdd, function (/*index*/) {
                   var chart = _this.getActiveChart();
                   chart.id = new Date().getTime() + Math.floor(Math.random() * (1000 - 50)) + 50;
                   chart.data = null;
@@ -181,8 +179,8 @@ var commandHandlers = {
                     validActiveChartId = true;
                   }
 
-                  return chart.updateIn(['keys', 'layoutId'], function (value) {
-                      return payload.layoutId + "_" + (index + 1)
+                  return chart.updateIn(['keys', 'layoutId'], function (/*value*/) {
+                      return payload.layoutId + "_" + (index + 1);
                   });
               });
 
@@ -191,14 +189,12 @@ var commandHandlers = {
 
             return atomState.updateIn(['chartStore', 'charts'], function () {
                   return currentCharts;
-              }).updateIn(['chartStore', 'activeChartId'], function (value) {
+              }).updateIn(['chartStore', 'activeChartId'], function (/*value*/) {
                 return newActiveChartId;
               });
 
         }.bind(this));
-
-
-    },
+    }
 };
 
 
@@ -234,7 +230,7 @@ ChartsStore.prototype = _.create(BaseStore.prototype, {
         return this._getActiveChart(id).getIn(['keys']);
     },
 
-    getActiveChartId: function (id) {
+    getActiveChartId: function (/*id*/) {
         var atomState = this.atom.getState();
         return atomState.getIn(['chartStore', 'activeChartId']);
     },

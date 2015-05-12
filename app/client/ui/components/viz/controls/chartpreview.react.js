@@ -2,7 +2,6 @@
 
 var React = require("react/addons"),
     DeferredEvents = require("ui/core/events/deferredevents");
-    AtomConstants = require("ui/core/atomconstants");
 
 var ChartPreview = React.createClass({
     getInitialState: function () {
@@ -45,7 +44,7 @@ var ChartPreview = React.createClass({
             previewState: "pause"
         });
     },
-    componentWillReceiveProps: function (nextProps) {
+    componentWillReceiveProps: function (/*nextProps*/) {
         this.stopPreview();
     },
     configureAnimate: function () {

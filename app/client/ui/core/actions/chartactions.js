@@ -1,6 +1,5 @@
 var AppContext = require("ui/core/appcontext"),
     AtomCommand = require("ui/core/atomcommand"),
-    AtomConstants = require("ui/core/atomconstants"),
     PriceDataApi = require("data/api/pricedata"),
     DeferredEvents = require("ui/core/events/deferredevents");
 

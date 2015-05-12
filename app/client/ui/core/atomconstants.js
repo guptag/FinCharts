@@ -1,5 +1,3 @@
-var Q = require("q");
-
 module.exports = {
     commands: {
         APP_WINDOW_RESIZE: 'APP_WINDOW_RESIZE',
