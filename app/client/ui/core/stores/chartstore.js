@@ -283,6 +283,10 @@ ChartsStore.prototype = _.create(BaseStore.prototype, {
        return this._getChartKeys(id).getIn(['layoutId']);
     },
 
+    getRenderer: function (id) {
+      return this._getChartKeys(id).getIn(['renderer']);
+    },
+
     getPositionRect: function (id) {
       var chartRect = LayoutEngine.getLayoutRect(this.getChartLayoutId(id));
       return {

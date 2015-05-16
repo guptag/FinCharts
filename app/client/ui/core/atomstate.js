@@ -57,7 +57,13 @@ module.exports =  {
               },
               duration: "daily",
               layoutId: options.layoutId || "chartslayout1a_1",
-              timestamp : new Date().getTime()
+              timestamp : new Date().getTime(),
+              renderer: "candlestick", //candlestick, ohlc, hlc
+              axis: {
+                value: {
+                  scale: 'linear'
+                }
+              }
             },
             data: {
               status: "loading",
@@ -68,12 +74,6 @@ module.exports =  {
               maxVolume: 0
             },
             settings: {
-              renderer: "candlestick",
-              axis: {
-                value: {
-                  scale: 'linear'
-                }
-              },
               showGrid: true,
               showCrosshair: true
             },

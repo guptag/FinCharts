@@ -2,16 +2,7 @@ var _ = require("lodash");
 var PathHelper = require("paths-js/path");
 
 /*
-    <svg width="90%" height="90%"><g>
-    <path id="k9ffd8001"
-          d="M10 10 H 90"
-          stroke="#808600"
-          stroke-width="3"
-          transform="rotate(0 0 0)"
-          stroke-linecap="square"
-          stroke-linejoin="round"
-          fill="#a0a700"></path>
-    </g></svg>
+   http://stockcharts.com/school/doku.php?id=chart_school:overview:technical_analysis_4
  */
 
 /**
@@ -25,7 +16,7 @@ var PathHelper = require("paths-js/path");
  *           scaleRatio: {}
  * }
  */
-function OHLCModel(chartInfo) {
+function OHLCModel(chartInfo, showOpen) {
     var self = this;
 
     this.elements = [];
@@ -36,7 +27,8 @@ function OHLCModel(chartInfo) {
     var extendedPrices = chartInfo.extendedPrices;
     var scaleRatio = chartInfo.scaleRatio;
 
-    var barMargin = (scaleRatio.x * 15/100.0); // leave 15% margin on either side of the ohlc box
+    var barLeftMargin = (scaleRatio.x * 10/100.0); // leave x% margin on left side of the ohlc box
+    var barRightMargin = (scaleRatio.x * 90/100.0); // leave x% margin on right side of the ohlc box
     var barCenter  = (scaleRatio.x * 50/100.0); // center of the ohlc box
 
     var toPlotY = _.curry(function (margin, canvas, extendedPrices, scaleRatio, dataY) {
@@ -48,29 +40,35 @@ function OHLCModel(chartInfo) {
     })(margin, scaleRatio);
 
     _.forEach(priceData.series, function(data, index) {
-        var above, below;
-        if (data.open > data.close) {
-            above = data.open;
-            below = data.close;
-        } else {
-            above = data.close;
-            below = data.open;
-        }
-
-        var path = PathHelper()
+        var path;
+        if (showOpen) {
+            path = PathHelper()
                     .moveto(toPlotX(barCenter, index), toPlotY(data.high))
                     .lineto(toPlotX(barCenter, index), toPlotY(data.low)) //high-low vertical line
-                    .moveto(toPlotX(barMargin, index), toPlotY(above))
-                    .lineto(toPlotX(barCenter + barMargin, index), toPlotY(above)) //open/close (above) right tick
-                    .moveto(toPlotX(barCenter, index), toPlotY(below))
-                    .lineto(toPlotX(barMargin, index), toPlotY(below)) //open/close (below) left tick
+                    .moveto(toPlotX(barCenter, index), toPlotY(data.close))
+                    .lineto(toPlotX(barRightMargin, index), toPlotY(data.close)) //(close) right tick
+                    .moveto(toPlotX(barCenter, index), toPlotY(data.open))
+                    .lineto(toPlotX(barLeftMargin, index), toPlotY(data.open)) //(open) left tick
                     .closepath();
+        } else {
+            path = PathHelper()
+                    .moveto(toPlotX(barCenter, index), toPlotY(data.high))
+                    .lineto(toPlotX(barCenter, index), toPlotY(data.low)) //high-low vertical line
+                    .moveto(toPlotX(barCenter, index), toPlotY(data.close))
+                    .lineto(toPlotX(barRightMargin, index), toPlotY(data.close)) //(close) right tick
+                    .closepath();
+
+        }
+
+        var color = (index === 0) ? (data.open > data.close ? "down" : "up")
+                                  : (data.close < priceData.series[index-1].close ? "down" : "up");
+
 
         self.elements.push({
                     type: "path",
                     props: {
                         d : path.print(),
-                        className: data.open > data.close ? "down" : "up"
+                        className: color
                     }
                 });
 
