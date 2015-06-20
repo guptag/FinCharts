@@ -176,6 +176,7 @@ var TopNav = React.createClass({
             $("#ticker").val(ticker).focus().select();
         });
 
+        var useOhlcIcon = '<use xlink:href="assets/icon-sprite.svg#icon-area" />';
 
         return (
             <section id="topnav" style={topNavStyle} className="clearfix">
@@ -216,6 +217,10 @@ var TopNav = React.createClass({
                         <span className="box box2"></span>
                         <span className="box box3"></span>
                     </div>
+                </div>
+                <div className="charttype topnav-item">
+                    <i className="fa fa-chevron-down"></i>
+                    <svg width="40px" height="30px" dangerouslySetInnerHTML={{__html: useOhlcIcon }} />
                 </div>
                 <div className="preview topnav-item">
                     <i className="fa fa-chevron-down"></i>
