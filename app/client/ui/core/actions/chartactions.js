@@ -137,8 +137,21 @@ var chartActions = {
               )]);
     },
 
-    updateRenderer: function (/*renderer*/) {
-
+    updateRenderer: function (renderer) {
+        AppContext.publishBatchCommands([
+              new AtomCommand(
+                AtomCommand.commands.APP_TOGGLE_RENDERER_OPTIONS,
+                {
+                    show: false,
+                    rect: {
+                        top: -50,
+                        left: -50
+                    }
+                }),
+              new AtomCommand(
+                AtomCommand.commands.CHART_UPDATE_RENDERER,
+                {renderer: renderer}
+              )]);
     },
 
     updateValueAxisScale: function (/*scale*/) { /* log, auto, linear */

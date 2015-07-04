@@ -17,6 +17,7 @@ function PriceChartModel(chartId) {
     var duration = chartStore.getDuration(chartId);
     var ticker = chartStore.getTicker(chartId);
     var timeframe = chartStore.getTimeframe(chartId);
+    var renderer = chartStore.getRenderer(chartId);
 
     var canvas =  {
             width: positionRect.width - chartMargin.left - chartMargin.right,
@@ -46,6 +47,7 @@ function PriceChartModel(chartId) {
         ticker: ticker,
         duration: duration,
         timeframe: timeframe,
+        renderer: renderer,
         margin: chartMargin,
         positionRect: positionRect,
         canvas: canvas,
@@ -57,7 +59,7 @@ function PriceChartModel(chartId) {
         tickMargin: scaleRatio.x / 2
     };
 
-    console.log("ChartInfo:", this.chartInfo);
+    // console.log("ChartInfo:", this.chartInfo);
 }
 
 module.exports = PriceChartModel;

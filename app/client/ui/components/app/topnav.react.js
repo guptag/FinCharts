@@ -7,6 +7,12 @@ var AtomCommand = require("ui/core/atomcommand");
 var ChartActions = require("ui/core/actions/chartactions");
 var DeferredEvents = require("ui/core/events/deferredevents");
 
+var IconOhlc = require('./icons/icon-ohlc.react');
+var IconHlc = require('./icons/icon-hlc.react');
+var IconArea = require('./icons/icon-area.react');
+var IconLine  = require('./icons/icon-line.react');
+var IconCandleSticks = require('./icons/icon-candlesticks.react');
+
 
 var TopNav = React.createClass({
     getInitialState: function () {
@@ -101,6 +107,29 @@ var TopNav = React.createClass({
             })
         );
     },
+    toggleRendererOptions: function () {
+        var appUIStore = AppContext.stores.appUIStore;
+        var isShowing = appUIStore.isRendererPopupOpen();
+
+        var showPopup = !isShowing;
+        var navItemRect = showPopup ? this.refs.rendererItem.getDOMNode().getBoundingClientRect() : {
+            left: -50,
+            top: -50,
+            height: 0,
+            width: 0
+        };
+
+        AppContext.publishCommand(new AtomCommand(
+            AtomCommand.commands.APP_TOGGLE_RENDERER_OPTIONS,
+            {
+                show: showPopup,
+                rect: {
+                    top: navItemRect.height + 10,
+                    left: navItemRect.left
+                }
+            })
+        );
+    },
     startPreview: function () {
         if ($(this.refs.playButton.getDOMNode()).hasClass("disabled")) {
             return;
@@ -156,7 +185,7 @@ var TopNav = React.createClass({
 
         var playButtonCSS = "play " + (this.state.previewState === "start" ? "disabled" : "");
         var pauseButtonCSS = "pause " + (this.state.previewState === "pause" ||
-                                            this.state.previewState === "stop" ? "disabled" : "");
+                                         this.state.previewState === "stop" ? "disabled" : "");
         var stopButtonCSS = "stop " + (this.state.previewState === "stop" ? "disabled" : "");
 
         var chartStore = AppContext.stores.chartStore;
@@ -169,6 +198,17 @@ var TopNav = React.createClass({
 
         var layoutId = chartStore.getChartLayoutId().split("_")[0];
         var layoutsClass = "layouts topnav-item " + layoutId;
+
+
+        var renderer = chartStore.getRenderer();
+
+        var RendererIcon =  (function (renderer) {
+            if (renderer === "hlc") return IconHlc;
+            if (renderer === "ohlc") return IconOhlc;
+            if (renderer === "area") return IconArea;
+            if (renderer === "line") return IconLine;
+            if (renderer === "candlesticks") return IconCandleSticks;
+        })(renderer);
 
         // hacky to touch the dom directly (todo: refacor)
         var ticker = chartStore.getTicker();
@@ -216,6 +256,10 @@ var TopNav = React.createClass({
                         <span className="box box2"></span>
                         <span className="box box3"></span>
                     </div>
+                </div>
+                <div className="renderer topnav-item" ref="rendererItem" onClick={this.toggleRendererOptions}>
+                    <i className="fa fa-chevron-down"></i>
+                    <RendererIcon/>
                 </div>
                 <div className="preview topnav-item">
                     <i className="fa fa-chevron-down"></i>
