@@ -21,7 +21,8 @@ module.exports =  {
             flags: {
               timeframeOptions: false,
               durationOptions: false,
-              chartLayoutOptions: false
+              chartLayoutOptions: false,
+              rendererOptions: false
             },
             rect: {
               top: 0,
@@ -58,7 +59,7 @@ module.exports =  {
               duration: "daily",
               layoutId: options.layoutId || "chartslayout1a_1",
               timestamp : new Date().getTime(),
-              renderer: "candlestick", //candlestick, ohlc, hlc
+              renderer: "candlesticks", //candlesticks, ohlc, hlc, area, line
               axis: {
                 value: {
                   scale: 'linear'
@@ -191,7 +192,7 @@ var defaultState = {
               top: 50,
               left: 0
             },
-            renderer: "candlestick",
+            renderer: "candlesticks",
             axis: {
               value: {
                 scale: 'linear'

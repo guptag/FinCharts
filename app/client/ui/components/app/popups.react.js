@@ -6,6 +6,12 @@ var moment = require("moment");
 var AppContext = require("ui/core/appcontext");
 var ChartActions = require("ui/core/actions/chartactions");
 
+var IconOhlc = require('./icons/icon-ohlc.react');
+var IconHlc = require('./icons/icon-hlc.react');
+var IconArea = require('./icons/icon-area.react');
+var IconLine  = require('./icons/icon-line.react');
+var IconCandleSticks = require('./icons/icon-candlesticks.react');
+
 var Popups = React.createClass({
     onDurationChanged: function (evt) {
         var $target = $(evt.target);
@@ -40,6 +46,22 @@ var Popups = React.createClass({
 
         if (chartLayoutId) {
             ChartActions.updateChartLayout(chartLayoutId);
+        }
+    },
+    onRendererChanged: function (evt) {
+        var $target = $(evt.target);
+
+        var index = 0, renderer;
+        for (index = 0; index < 5; ++index) {
+            renderer = $target.attr("value");
+            if (renderer) break;
+            $target = $target.parent();
+        }
+
+        console.log("Renderer CHANGED", renderer);
+
+        if (renderer) {
+            ChartActions.updateRenderer(renderer);
         }
     },
     getDurationPopupDOM: function (popupStyle) {
@@ -107,40 +129,44 @@ var Popups = React.createClass({
                 </div>;
 
     },
-    getChartLayoutPopupDOM: function (popupStyle) {
+    getChartLayoutPopupDOM: function (popupStyle, currentLayout) {
+        var getCssForOptionItem = function (value) {
+            return (value === currentLayout) ? "selected option" : "option";
+        };
+
         return <div className="layouts-options nav-options popup" style={popupStyle} onClick={this.onChartLayoutChanged}>
-                    <div className="option selected" value="chartslayout1a">
+                    <div className={getCssForOptionItem('chartslayout1a')} value="chartslayout1a">
                         <div className="layoutbutton" data-layout="chartslayout1a">
                             <span className="box box1"></span>
                         </div>
                     </div>
-                    <div className="option" value="chartslayout2a">
+                    <div className={getCssForOptionItem('chartslayout2a')} value="chartslayout2a">
                         <div className="layoutbutton" data-layout="chartslayout2a">
                             <span className="box box1"></span>
                             <span className="box box2"></span>
                         </div>
                     </div>
-                    <div className="option" value="chartslayout2b">
+                    <div className={getCssForOptionItem('chartslayout2b')} value="chartslayout2b">
                         <div className="layoutbutton" data-layout="chartslayout2b">
                             <span className="box box1"></span>
                             <span className="box box2"></span>
                         </div>
                     </div>
-                    <div className="option" value="chartslayout3a">
+                    <div className={getCssForOptionItem('chartslayout3a')} value="chartslayout3a">
                         <div className="layoutbutton" data-layout="chartslayout3a">
                             <span className="box box1"></span>
                             <span className="box box2"></span>
                             <span className="box box3"></span>
                         </div>
                     </div>
-                    <div className="option" value="chartslayout3b">
+                    <div className={getCssForOptionItem('chartslayout3b')} value="chartslayout3b">
                         <div className="layoutbutton" data-layout="chartslayout3b">
                             <span className="box box1"></span>
                             <span className="box box2"></span>
                             <span className="box box3"></span>
                         </div>
                     </div>
-                    <div className="option" value="chartslayout3c">
+                    <div className={getCssForOptionItem('chartslayout3c')} value="chartslayout3c">
                         <div className="layoutbutton" data-layout="chartslayout3c">
                             <span className="box box1"></span>
                             <span className="box box2"></span>
@@ -149,8 +175,29 @@ var Popups = React.createClass({
                     </div>
                 </div>;
     },
+    getRendererPopupDOM: function (popupStyle) {
+        return <div className="renderer-options nav-options popup" style={popupStyle}  onClick={this.onRendererChanged}>
+                    <div className="option" value="candlesticks">
+                        <IconCandleSticks/>
+                    </div>
+                    <div className="option selected" value="ohlc">
+                        <IconOhlc/>
+                    </div>
+                    <div className="option" value="hlc">
+                        <IconHlc/>
+                    </div>
+                    <div className="option" value="area">
+                        <IconArea/>
+                    </div>
+                    <div className="option" value="line">
+                        <IconLine/>
+                    </div>
+                </div>;
+
+    },
     render: function() {
         var appUIStore = AppContext.stores.appUIStore;
+        var chartStore = AppContext.stores.chartStore;
         var popupFlags = appUIStore.getPopupFlags();
         var popupRect = appUIStore.getPopupRect();
         var popupStyle = {
@@ -165,7 +212,10 @@ var Popups = React.createClass({
         } else if (popupFlags.timeframeOptions) {
             popupDOM =  this.getTimeframePopupDOM(popupStyle);
         } else if (popupFlags.chartLayoutOptions) {
-            popupDOM =  this.getChartLayoutPopupDOM(popupStyle);
+            var layoutId = chartStore.getChartLayoutId().split("_")[0];
+            popupDOM =  this.getChartLayoutPopupDOM(popupStyle, layoutId);
+        } else if (popupFlags.rendererOptions) {
+            popupDOM =  this.getRendererPopupDOM(popupStyle);
         }
 
         return (

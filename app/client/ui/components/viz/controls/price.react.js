@@ -11,7 +11,7 @@ var Price = React.createClass({
 
         var RendererType;
         switch (renderer) {
-            case "candlestick": RendererType = CandleStickRenderer; break;
+            case "candlesticks": RendererType = CandleStickRenderer; break;
             case "ohlc": RendererType = OHLCRenderer; break;
             case "hlc": RendererType = OHLCRenderer; break;
             default: RendererType = CandleStickRenderer; break;

@@ -64,6 +64,20 @@ var commandHandlers = {
     },
 
     /**
+     * [updateActiveChart description]
+     * @param  {[type]} payload {renderer: 'ohlc'}
+     * @return {[type]}         [description]
+     */
+    updateRenderer: function (payload) {
+        this.atom.transact(function (state) {
+          var activeChartIndex = this.getActiveChartIndex();
+          return state.updateIn(['chartStore', 'charts', activeChartIndex, 'keys', 'renderer'], function (/*value*/) {
+              return payload.renderer;
+          });
+        }.bind(this));
+    },
+
+    /**
      * [updatePriceData description]
      * @param  {[type]} payload {
      *   data: {
@@ -204,6 +218,7 @@ function ChartsStore(atom) {
         { key: Commands.CHART_UPDATE_TICKER,         value: commandHandlers.updateTicker.bind(this) },
         { key: Commands.CHART_UPDATE_DURATION,       value: commandHandlers.updateDuration.bind(this) },
         { key: Commands.CHART_UPDATE_TIMEFRAME,      value: commandHandlers.updateTimeFrame.bind(this) },
+        { key: Commands.CHART_UPDATE_RENDERER,      value: commandHandlers.updateRenderer.bind(this) },
         { key: Commands.CHART_DATA_LOADING,          value: commandHandlers.setDataToLoading.bind(this) },
         { key: Commands.CHART_DATA_FETCHED,          value: commandHandlers.updatePriceData.bind(this) },
         { key: Commands.CHART_UPDATE_LAYOUT,         value: commandHandlers.updateChartLayout.bind(this)},

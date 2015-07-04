@@ -15,8 +15,13 @@ var OHLCBars = React.createClass({
             return React.DOM[element.type](element.props, element.children);
         });
 
+        var classStr = showOpen ? "ohlcbars" : "hlcbars";
+        if (childElements.length < 150) {
+            classStr += " thick";
+        }
+
         return (
-            <g className="ohlcbars">
+            <g className={classStr}>
                 {childElements}
             </g>
         );

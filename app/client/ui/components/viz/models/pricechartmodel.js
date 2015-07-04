@@ -59,7 +59,7 @@ function PriceChartModel(chartId) {
         tickMargin: scaleRatio.x / 2
     };
 
-    console.log("ChartInfo:", this.chartInfo);
+    // console.log("ChartInfo:", this.chartInfo);
 }
 
 module.exports = PriceChartModel;

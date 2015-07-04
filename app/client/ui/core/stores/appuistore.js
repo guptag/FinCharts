@@ -63,6 +63,26 @@ var commandHandlers = {
                 return true;
             });
 
+            console.log(setFlagState);
+
+            return setFlagState.updateIn(['appUIStore', 'popup', 'rect'], function (/*value*/) {
+                return Immutable.fromJS(payload.rect);
+            });
+        }.bind(this));
+    },
+
+    toggleRendererOptions: function (payload) {
+        this.atom.transact(function (state) {
+            var resetFlagsState = this._resetPopupFlags(state);
+
+            if (!payload.show) {
+                return resetFlagsState;
+            }
+
+            var setFlagState = resetFlagsState.updateIn(['appUIStore', 'popup', 'flags', 'rendererOptions'], function (/*value*/) {
+                return true;
+            });
+
             return setFlagState.updateIn(['appUIStore', 'popup', 'rect'], function (/*value*/) {
                 return Immutable.fromJS(payload.rect);
             });
@@ -83,7 +103,8 @@ function AppUIStore(atom) {
         { key: Commands.APP_WINDOW_RESIZE,              value: _.debounce(commandHandlers.onWindowResize.bind(this), 600) },
         { key: Commands.APP_TOGGLE_TIMEFRAME_OPTIONS,   value: commandHandlers.toggleTimeframeOptions.bind(this) },
         { key: Commands.APP_TOGGLE_DURATION_OPTIONS,    value: commandHandlers.toggleDurationOptions.bind(this) },
-        { key: Commands.APP_TOGGLE_CHARTLAYOUT_OPTIONS, value: commandHandlers.toggleChartLayoutOptions.bind(this) }
+        { key: Commands.APP_TOGGLE_CHARTLAYOUT_OPTIONS, value: commandHandlers.toggleChartLayoutOptions.bind(this) },
+        { key: Commands.APP_TOGGLE_RENDERER_OPTIONS,    value: commandHandlers.toggleRendererOptions.bind(this) }
     ]);
 }
 
@@ -110,6 +131,11 @@ AppUIStore.prototype = _.create(BaseStore.prototype, {
     isLayoutPopupOpen: function () {
         var atomState = this.atom.getState();
         return atomState.getIn(['appUIStore', 'popup', 'flags', 'chartLayoutOptions']);
+    },
+
+    isRendererPopupOpen: function () {
+        var atomState = this.atom.getState();
+        return atomState.getIn(['appUIStore', 'popup', 'flags', 'rendererOptions']);
     },
 
     getPopupFlags: function () {
