@@ -68,7 +68,7 @@ var ChartPreview = React.createClass({
                 // reset top nav preview options
                 DeferredEvents.trigger(DeferredEvents.Keys.ResetPreviewOptions);
             }
-        }, 700);
+        }, 500);
     },
     render: function() {
         var chartInfo = this.props.chartModel.chartInfo;
