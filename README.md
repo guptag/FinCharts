@@ -1,9 +1,9 @@
-UI
+A node webkit application to render stock charts using immutable.js and react.js
 ------
 
-![screen shot 2015-05-11 at 11 30 43 pm](https://cloud.githubusercontent.com/assets/1994225/7581274/ce7929fc-f835-11e4-8a2b-5c5331e8414e.png)
+![screen shot 2015-07-03 at 6 41 24 pm](https://cloud.githubusercontent.com/assets/1994225/8506015/6451129a-21b3-11e5-8f2a-4fd266274be6.png)
 
-![screen shot 2015-05-11 at 11 30 18 pm](https://cloud.githubusercontent.com/assets/1994225/7581275/cff3625c-f835-11e4-8cba-d6d5ccf77caf.png)
+![screen shot 2015-07-03 at 6 42 16 pm](https://cloud.githubusercontent.com/assets/1994225/8506016/657f1f7c-21b3-11e5-8a81-691a781f6a07.png)
 
 Perf metrics
 ------------
