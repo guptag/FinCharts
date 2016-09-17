@@ -18,7 +18,7 @@ var gulp        = require('gulp'),
     react       = require('gulp-react'),
     //reactify    = require('reactify');
     exec        = require('child_process').exec,
-    NwBuilder   = require('nw-builder'),
+    NwBuilder   = require('node-webkit-builder'),
     gutil       = require('gulp-util'),
     Notifier    = new require('node-notifier')();
 
@@ -164,9 +164,9 @@ gulp.task('open', ['build'], function (cb) {
 // https://github.com/mllrsohn/node-webkit-builder
 gulp.task('package-app', ['build'], function () {
     var nw = new NwBuilder({
-        version: '0.17.3',
+        version: '0.10.4',
         files: [ bases.appTarget + "**"],
-        platforms: ['osx64'],
+        platforms: ['osx'],
         appName: "FinCharts",
         appVersion: "0.0.1",
         buildDir: bases.packageTarget,
