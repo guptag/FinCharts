@@ -28,7 +28,7 @@ var Popups = React.createClass({
 
         var chartStore = AppContext.stores.chartStore;
         var chartDuration = chartStore.getDuration();
-        chartDuration =  (timeframeInMonths > 84) ? "monthly" : (timeframeInMonths > 18 ? "weekly" : "daily");
+        chartDuration =  (timeframeInMonths > 84) ? "monthly" : (timeframeInMonths > 24 ? "weekly" : "daily");
 
         ChartActions.updateTimeframe(fromDate, toDate, chartDuration);
     },
@@ -76,7 +76,7 @@ var Popups = React.createClass({
                 className += " selected";
             }
 
-            if ( (timeframeInMonths > 18 && value === "daily") ||
+            if ( (timeframeInMonths > 24 && value === "daily") ||
                  (timeframeInMonths > 84 && value === "weekly")){
                 className += " disabled";
             }
