@@ -1,4 +1,4 @@
-Electron.js based Stock charts desktop application using immutable.js and react.js
+Stock Charts (Electron.js) desktop application using immutable.js and react.js
 ------
 
 ![screen shot 2015-07-03 at 6 41 24 pm](https://cloud.githubusercontent.com/assets/1994225/8506015/6451129a-21b3-11e5-8f2a-4fd266274be6.png)
