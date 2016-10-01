@@ -9,10 +9,9 @@ serverContext.requireNode = require;
 serverContext.node_dirname = __dirname;
 
 // More Node-context stuff that might be needed in "window" code
-serverContext.argv = window.require('nw.gui').App.argv;
 serverContext.node_proc = process;
 
-// Import the node-space modules that need to be available in all windows
+// Import the node modules that need to be available in all windows
 serverContext.fs      = require('fs');
 serverContext.path    = require('path');
 serverContext.request = require('request');

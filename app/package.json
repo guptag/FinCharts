@@ -3,7 +3,7 @@
   "version" : "0.0.1",
   "author" : "Gupta Garuda",
   "description" : "Node webkit application for stock charts",
-  "main": "index.html",
+  "main": "main.js",
   "dependencies": {
     "react": "^0.12.1",
     "lodash": "^2.4.1",

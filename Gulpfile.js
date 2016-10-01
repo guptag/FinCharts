@@ -17,7 +17,9 @@ var gulp        = require('gulp'),
     symlink     = require('gulp-symlink'),
     react       = require('gulp-react'),
     //reactify    = require('reactify');
+    electron    = require('electron'),
     exec        = require('child_process').exec,
+    spawn       = require('child_process').spawn,
     NwBuilder   = require('node-webkit-builder'),
     gutil       = require('gulp-util'),
     Notifier    = new require('node-notifier')();
@@ -154,11 +156,18 @@ gulp.task('watch', ['post-build-cleanup'], function() {
 });
 
 gulp.task('open', ['build'], function (cb) {
-  exec('node_modules/.bin/nodewebkit target/app --remote-debugging-port=9222', {
+  exec('node_modules/electron/dist/Electron.app/Contents/MacOS/Electron target/app', {
     cwd: paths.root
   }, function (err, stdout, stderr) {
       //upon complete
   });
+
+  /*child = spawn(electron, {cwd: paths.appTarget});
+  child.on("error", function(err)
+  {
+    gutil.log(err);
+  });*/
+
 });
 
 // https://github.com/mllrsohn/node-webkit-builder
