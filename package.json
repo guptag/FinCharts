@@ -1,14 +1,15 @@
 {
   "name" : "FinCharts",
-  "version" : "0.0.1",
+  "version" : "0.0.5",
   "author" : "Gupta Garuda",
-  "description" : "Node webkit application for stock charts",
+  "description" : "Electron.js application for stock charts",
   "devDependencies": {
     "browserify": "^13.1.0",
     "browserify-shim": "^3.8.12",
     "watchify": "^3.7.0",
     "electron": "^1.4.1",
-    "gulp": "^3.6.2",
+    "electron-packager": "^8.1.0",
+    "gulp": "^3.9.1",
     "gulp-stylus": "^1.0.0",
     "gulp-jshint": "^1.5.5",
     "gulp-concat": "^2.2.0",

@@ -11,16 +11,14 @@ var gulp        = require('gulp'),
     preprocess  = require('gulp-preprocess'),
     minifyCSS   = require('gulp-minify-css'),
     browserify  = require('browserify'),
-    //watchify    = require('watchify');
     uglify      = require('gulp-uglify')
     seq         = require('run-sequence'),
     symlink     = require('gulp-symlink'),
     react       = require('gulp-react'),
-    //reactify    = require('reactify');
     electron    = require('electron'),
     exec        = require('child_process').exec,
     spawn       = require('child_process').spawn,
-    //NwBuilder   = require('node-webkit-builder'),
+    packager     = require('electron-packager'),
     gutil       = require('gulp-util'),
     Notifier    = new require('node-notifier')();
 
@@ -161,36 +159,24 @@ gulp.task('open', ['build'], function (cb) {
   }, function (err, stdout, stderr) {
       //upon complete
   });
-
-  /*child = spawn(electron, {cwd: paths.appTarget});
-  child.on("error", function(err)
-  {
-    gutil.log(err);
-  });*/
-
 });
 
 // https://github.com/mllrsohn/node-webkit-builder
-/*gulp.task('package-app', ['build'], function () {
-    var nw = new NwBuilder({
-        version: '0.10.4',
-        files: [ bases.appTarget + "**"],
-        platforms: ['osx'],
-        appName: "FinCharts",
-        appVersion: "0.0.1",
-        buildDir: bases.packageTarget,
-        cacheDir: bases.target + "cache"
-    });
-
-    nw.on('log', function (msg) {
-        gutil.log('node-webkit-builder', msg);
-    });
-
-     // return promise
-    return nw.build().catch(function (err) {
-        gutil.log('node-webkit-builder', err);
-    });
-});*/
+gulp.task('package-app', ['build'], function () {
+  packager({
+      dir: bases.appTarget,
+      out: bases.packageTarget,
+      download: {
+        cache: bases.target + "cache"
+      }
+  }, function cb(err, appPaths) {
+    if (err) {
+      gutil.log('FinCharts package error', err);
+    } else {
+      gutil.log('FinCharts package completed');
+    }
+  });
+});
 
 
 gulp.task('build', ['copy', 'symlink', 'stylus', 'jshint-react', 'browserify', 'post-build-cleanup', 'post-process-files', 'notify']);
