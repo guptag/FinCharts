@@ -42,7 +42,7 @@ function fetchData(chartKeys) {
                                         toDate.getFullYear(),
                                         duration);
 
-    var fileName = sprintf("../../tempdb/%s_%s_%s_%s.csv", ticker.toLowerCase(), duration, moment(toDate).format('YYYYMMDD'), moment(fromDate).format('YYYYMMDD'));
+    var fileName = sprintf("./tempdb/%s_%s_%s_%s.csv", ticker.toLowerCase(), duration, moment(toDate).format('YYYYMMDD'), moment(fromDate).format('YYYYMMDD'));
 
     fs.exists(fileName, function (exists) {
         console.log("loading cached data from", fileName);

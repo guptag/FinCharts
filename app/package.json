@@ -1,9 +1,9 @@
 {
   "name" : "FinCharts",
-  "version" : "0.0.1",
+  "version" : "0.0.5",
   "author" : "Gupta Garuda",
-  "description" : "Node webkit application for stock charts",
-  "main": "index.html",
+  "description" : "Electron.js application for stock charts",
+  "main": "main.js",
   "dependencies": {
     "react": "^0.12.1",
     "lodash": "^2.4.1",

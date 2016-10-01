@@ -1,4 +1,4 @@
-A node webkit application to render stock charts using immutable.js and react.js
+Electron.js based Stock charts desktop application using immutable.js and react.js
 ------
 
 ![screen shot 2015-07-03 at 6 41 24 pm](https://cloud.githubusercontent.com/assets/1994225/8506015/6451129a-21b3-11e5-8f2a-4fd266274be6.png)
@@ -20,10 +20,11 @@ Architecture (draft)
 Run
 ---
 (from root)
- * npm install (once)
+ * nvm use (current v6.6.0)
+ * npm install
  * gulp (builds and opens the app)
  * gulp dev (builds, adds file watchers and opens the app)
- 
+
 Build
 -----
 * [x] gulp
@@ -62,4 +63,5 @@ Settings
     * [ ] Bollingar Bands
     * [ ] ADX
     * [ ] Avg Volume
+    * [ ] Fib ranges
 * [ ] Themes (light/dark)
