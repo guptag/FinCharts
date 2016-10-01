@@ -4,9 +4,9 @@
   "author" : "Gupta Garuda",
   "description" : "Node webkit application for stock charts",
   "devDependencies": {
-    "browserify": "^5.10.1",
-    "browserify-shim": "^3.6.0",
-    "watchify": "^1.0.6",
+    "browserify": "^13.1.0",
+    "browserify-shim": "^3.8.12",
+    "watchify": "^3.7.0",
     "electron": "^1.4.1",
     "gulp": "^3.6.2",
     "gulp-stylus": "^1.0.0",

@@ -20,7 +20,7 @@ var gulp        = require('gulp'),
     electron    = require('electron'),
     exec        = require('child_process').exec,
     spawn       = require('child_process').spawn,
-    NwBuilder   = require('node-webkit-builder'),
+    //NwBuilder   = require('node-webkit-builder'),
     gutil       = require('gulp-util'),
     Notifier    = new require('node-notifier')();
 
@@ -171,7 +171,7 @@ gulp.task('open', ['build'], function (cb) {
 });
 
 // https://github.com/mllrsohn/node-webkit-builder
-gulp.task('package-app', ['build'], function () {
+/*gulp.task('package-app', ['build'], function () {
     var nw = new NwBuilder({
         version: '0.10.4',
         files: [ bases.appTarget + "**"],
@@ -190,7 +190,7 @@ gulp.task('package-app', ['build'], function () {
     return nw.build().catch(function (err) {
         gutil.log('node-webkit-builder', err);
     });
-});
+});*/
 
 
 gulp.task('build', ['copy', 'symlink', 'stylus', 'jshint-react', 'browserify', 'post-build-cleanup', 'post-process-files', 'notify']);
