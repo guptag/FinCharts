@@ -1,8 +1,7 @@
 var request = window.server.request,
-    fs = window.server.fs,
-    csv = window.server.csv,
     Q = require("q"),
     moment = require('moment'),
+    _ = require("lodash"),
     sprintf = require("sprintf-js").sprintf;
 
 var PriceDataApi = {
@@ -42,7 +41,18 @@ function fetchData(chartKeys) {
                                         toDate.getFullYear(),
                                         duration);
 
-    var fileName = sprintf("./tempdb/%s_%s_%s_%s.csv", ticker.toLowerCase(), duration, moment(toDate).format('YYYYMMDD'), moment(fromDate).format('YYYYMMDD'));
+
+    //var cacheKey = sprintf("%s_%s_%s_%s", ticker.toLowerCase(), duration, moment(toDate).format('YYYYMMDD'), moment(fromDate).format('YYYYMMDD'));
+    console.log("loading data from", dataUrl);
+    request(dataUrl, function (error, response, body) {
+      if (!error && response.statusCode === 200) {
+        console.log("data downloaded");
+        fetchDeferred.resolve({priceData: body.split('\n'), ticker: ticker});
+      }
+    });
+
+
+    /*var fileName = sprintf("./tempdb/%s_%s_%s_%s.csv", ticker.toLowerCase(), duration, moment(toDate).format('YYYYMMDD'), moment(fromDate).format('YYYYMMDD'));
 
     fs.exists(fileName, function (exists) {
         console.log("loading cached data from", fileName);
@@ -57,7 +67,7 @@ function fetchData(chartKeys) {
         } else {
             fetchDeferred.resolve({fileName: fileName, ticker: ticker});
         }
-    });
+    });*/
 
     return fetchDeferred.promise;
 }
@@ -78,53 +88,52 @@ function parseData(data) {
     };
 
     var parseDeferred = Q.defer();
-    csv()
-        .from
-        .stream(fs.createReadStream(data.fileName))
-        .on('record', function (record/*, index*/) {
-            if (record.length !== 7 || isNaN(record[1]) || isNaN(record[2]) ||
-                isNaN(record[3]) || isNaN(record[4]) || isNaN(record[5]) ||
-                isNaN(record[6])) {
-                return;
-            }
 
-            var data = {
-                date: Date.parse(record[0]),
-                open: +parseFloat(record[1]).toFixed(2),
-                high: +parseFloat(record[2]).toFixed(2),
-                low: +parseFloat(record[3]).toFixed(2),
-                close: +parseFloat(record[4]).toFixed(2),
-                volume: +parseFloat(record[5]).toFixed(2),
-                adjClose: +parseFloat(record[6]).toFixed(2)
-            };
+    _.each(data.priceData, function (dataRow) {
+        var record = (dataRow || "").split(',');
 
-            // adjust prices for splits (unfortunately yahoo includes dividends in adjClose)
-            // the prices displayed in this tool will be off by a bit
-            /*var adjRatio = data.adjClose / data.close;
-            data.open = formatNumber(data.open * adjRatio);
-            data.high = formatNumber(data.high * adjRatio);
-            data.low = formatNumber(data.low * adjRatio);
-            data.close = formatNumber(data.close * adjRatio);*/
+        if (record.length !== 7 || isNaN(record[1]) || isNaN(record[2]) ||
+            isNaN(record[3]) || isNaN(record[4]) || isNaN(record[5]) ||
+            isNaN(record[6])) {
+            return;
+          }
 
-            returnData.series.unshift(data);
+        var data = {
+            date: Date.parse(record[0]),
+            open: +parseFloat(record[1]).toFixed(2),
+            high: +parseFloat(record[2]).toFixed(2),
+            low: +parseFloat(record[3]).toFixed(2),
+            close: +parseFloat(record[4]).toFixed(2),
+            volume: +parseFloat(record[5]).toFixed(2),
+            adjClose: +parseFloat(record[6]).toFixed(2)
+        };
 
-            if (data.low < returnData.min)
-                returnData.min = data.low;
+        // adjust prices for splits (unfortunately yahoo includes dividends in adjClose)
+        // the prices displayed in this tool will be off by a bit
+        /*var adjRatio = data.adjClose / data.close;
+        data.open = formatNumber(data.open * adjRatio);
+        data.high = formatNumber(data.high * adjRatio);
+        data.low = formatNumber(data.low * adjRatio);
+        data.close = formatNumber(data.close * adjRatio);*/
 
-            if (data.high > returnData.max)
-                returnData.max = data.high;
+        returnData.series.unshift(data);
 
-            if (data.volume < returnData.minVolume)
-                returnData.minVolume = data.volume;
+        if (data.low < returnData.min)
+            returnData.min = data.low;
 
-            if (data.volume > returnData.maxVolume)
-                returnData.maxVolume = data.volume;
-        })
-        .on('end', function(/*count*/) {
-            parseDeferred.resolve(returnData);
-        });
+        if (data.high > returnData.max)
+            returnData.max = data.high;
 
-    return parseDeferred.promise;
+        if (data.volume < returnData.minVolume)
+            returnData.minVolume = data.volume;
+
+        if (data.volume > returnData.maxVolume)
+            returnData.maxVolume = data.volume;
+      });
+
+      parseDeferred.resolve(returnData);
+
+      return parseDeferred.promise;
 }
 
 /*function formatNumber(number) {
