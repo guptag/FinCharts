@@ -29,6 +29,7 @@ var bases = {
  root: '.',
  src: 'app/',
  target: 'target/',
+ cache: 'cache/',
  appTarget: 'target/app/',
  packageTarget: 'target/package/'
 };
@@ -167,7 +168,7 @@ gulp.task('package-app', ['build'], function () {
       dir: bases.appTarget,
       out: bases.packageTarget,
       download: {
-        cache: bases.target + "cache"
+        cache: bases.cache
       }
   }, function cb(err, appPaths) {
     if (err) {

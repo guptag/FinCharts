@@ -9,13 +9,13 @@
     "lodash": "^2.4.1",
     "request": "^2.33",
     "jquery": "^2.1.0",
-    "csv": "^0.3.7",
     "q": "^1.0.0",
     "moment":"^2.8.3",
     "sprintf-js":"^0.0.7",
     "immutable":"^3.2.1",
     "d3":"^3.5.2",
-    "paths-js": "^0.3.0"
+    "paths-js": "^0.3.0",
+    "dexie": "^1.4.2"
   },
   "repository": {
     "type": "git",
