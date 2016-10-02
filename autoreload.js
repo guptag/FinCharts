@@ -1,6 +1,6 @@
 // target will be recreated for every change
 // just watch for a change in a small dir
-var path = process.cwd() + '/css';
+var path = process.cwd() + '/target/app/client.js';
 var fs = window.server.fs;
 
 // Attach the watcher only once per app restart

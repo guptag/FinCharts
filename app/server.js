@@ -12,6 +12,7 @@ serverContext.node_dirname = __dirname;
 serverContext.node_proc = process;
 
 // Import the node modules that need to be available in all windows
+serverContext.fs      = require('fs'); //for auto-reload
 serverContext.path    = require('path');
 serverContext.request = require('request');
 serverContext.util    = require("util");
