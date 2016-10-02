@@ -14,7 +14,8 @@
     "sprintf-js":"^0.0.7",
     "immutable":"^3.2.1",
     "d3":"^3.5.2",
-    "paths-js": "^0.3.0"
+    "paths-js": "^0.3.0",
+    "dexie": "^1.4.2"
   },
   "repository": {
     "type": "git",

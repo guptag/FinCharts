@@ -2,7 +2,8 @@ var request = window.server.request,
     Q = require("q"),
     moment = require('moment'),
     _ = require("lodash"),
-    sprintf = require("sprintf-js").sprintf;
+    sprintf = require("sprintf-js").sprintf,
+    db = require("data/db/finchartsdb");
 
 var PriceDataApi = {
     /**
@@ -20,7 +21,6 @@ var PriceDataApi = {
                  .then(parseData);
     }
 };
-
 
 function fetchData(chartKeys) {
     var fetchDeferred = Q.defer(), ticker = chartKeys.ticker;
@@ -42,40 +42,69 @@ function fetchData(chartKeys) {
                                         duration);
 
 
-    //var cacheKey = sprintf("%s_%s_%s_%s", ticker.toLowerCase(), duration, moment(toDate).format('YYYYMMDD'), moment(fromDate).format('YYYYMMDD'));
-    console.log("loading data from", dataUrl);
-    request(dataUrl, function (error, response, body) {
-      if (!error && response.statusCode === 200) {
-        console.log("data downloaded");
-        fetchDeferred.resolve({priceData: body.split('\n'), ticker: ticker});
-      }
-    });
+    var cacheKey = sprintf("%s_%s_%s_%s", ticker.toLowerCase(), duration, moment(toDate).format('YYYYMMDD'), moment(fromDate).format('YYYYMMDD'));
 
-
-    /*var fileName = sprintf("./tempdb/%s_%s_%s_%s.csv", ticker.toLowerCase(), duration, moment(toDate).format('YYYYMMDD'), moment(fromDate).format('YYYYMMDD'));
-
-    fs.exists(fileName, function (exists) {
-        console.log("loading cached data from", fileName);
-        if (!exists) {
-            console.log("loading data from", dataUrl);
-            request(dataUrl) //apr 2014 - sep 2014
-                .pipe(fs.createWriteStream(fileName))
-                .on('finish', function () {
-                    console.log("data downloaded");
-                    fetchDeferred.resolve({fileName: fileName, ticker: ticker});
-                });
+    getFromCache(cacheKey)
+      .then(function (rowData /* {key: "", data: ""} */) {
+        if (rowData) {
+          fetchDeferred.resolve({priceData: rowData.data, ticker: ticker});
         } else {
-            fetchDeferred.resolve({fileName: fileName, ticker: ticker});
+          getDataFromServer(dataUrl)
+            .then(function (priceData) {
+              addToCache(cacheKey, priceData)
+                .then(function () {
+                  fetchDeferred.resolve({priceData: priceData, ticker: ticker});
+                });
+            });
         }
-    });*/
+      });
 
     return fetchDeferred.promise;
+}
+
+function getFromCache(cacheKey) {
+  return db.pricetable
+          .where('key')
+          .equals(cacheKey)
+          .first()
+          .then(function (priceData) {
+            console.log("data loaded from indexDb", priceData);
+            return priceData;
+          }).catch(function (error) {
+            console.log("IndexDb error:", error);
+            return "";
+          });
+}
+
+
+function getDataFromServer(dataUrl) {
+  console.log("loading data from", dataUrl);
+  var serverDataDeferred = Q.defer();
+  request(dataUrl, function (error, response, body) {
+    if (!error && response.statusCode === 200) {
+      console.log("data downloaded");
+      serverDataDeferred.resolve(body);
+    }
+  });
+  return serverDataDeferred.promise;
+}
+
+function addToCache(cacheKey, priceData) {
+  console.log("adding data to indexdb", cacheKey);
+  return db.pricetable
+          .add({key: cacheKey, data: priceData})
+          .catch(function (error) {
+            console.log("IndexDb add error:", error, cacheKey);
+            return "";
+          });
 }
 
 // Jan12 - Jan7 - daily - http://finance.yahoo.com/q/hp?s=YHOO&a=00&b=12&c=1996&d=00&e=7&f=2014&g=d
 // Dec12 - Dec7 - daily - http://finance.yahoo.com/q/hp?s=YHOO&a=11&b=12&c=1996&d=11&e=7&f=2014&g=d
 // Dec12 - Dec7 - weekly - http://finance.yahoo.com/q/hp?s=YHOO&a=11&b=12&c=1996&d=11&e=7&f=2014&g=w
 // Dec12 - Dec7 - montly - http://finance.yahoo.com/q/hp?s=YHOO&a=11&b=12&c=1996&d=11&e=7&f=2014&g=m
+
+// data - {priceData: "string", ticker: "ticker"}
 
 function parseData(data) {
     var returnData = {
@@ -89,7 +118,9 @@ function parseData(data) {
 
     var parseDeferred = Q.defer();
 
-    _.each(data.priceData, function (dataRow) {
+    var dateRecords = data.priceData.split('\n');
+
+    _.each(dateRecords, function (dataRow) {
         var record = (dataRow || "").split(',');
 
         if (record.length !== 7 || isNaN(record[1]) || isNaN(record[2]) ||
