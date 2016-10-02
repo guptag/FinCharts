@@ -37,6 +37,11 @@ function LineModel(chartInfo) {
 
     //console.log(options.data.series.minVolume, options.data.series.maxVolume);
 
+    var pathClass = priceData.series.length > 0 ?
+                       (priceData.series[priceData.series.length - 1].close > priceData.series[0].close ? "up" : "down") :
+                       "up";
+
+    // line path - for stroke
     var path = PathHelper();
     _.forEach(priceData.series, function(data, index) {
         if (index === 0) {
@@ -47,15 +52,28 @@ function LineModel(chartInfo) {
     });
     path.closepath();
 
-    var pathClass = priceData.series.length > 0 ?
-                       (priceData.series[priceData.series.length - 1].close > priceData.series[0].close ? "up" : "down") :
-                       "up";
+    self.elements.push({
+        type: "path",
+        props: {
+            d : path.print(),
+            className: "line-path " + pathClass
+        }
+    });
+
+    // area path - polygon covering the region beneath the price line
+    path = PathHelper();
+    path = path.moveto(toPlotX(0) + center, toPlotY(extendedPrices.min));
+    _.forEach(priceData.series, function(data, index) {
+        path = path.lineto(toPlotX(index) + center, toPlotY(data.close));
+    });
+    path = path.lineto(toPlotX(priceData.series.length - 1) + center, toPlotY(extendedPrices.min));
+    path.closepath();
 
     self.elements.push({
         type: "path",
         props: {
             d : path.print(),
-            className: pathClass
+            className: "area-path " + pathClass
         }
     });
 }
