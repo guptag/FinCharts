@@ -3,6 +3,7 @@
 var React = require("react/addons");
 var CandleStickRenderer = require("ui/components/viz/renderers/candlestick.react");
 var OHLCRenderer = require("ui/components/viz/renderers/ohlc.react");
+var LineRenderer = require("ui/components/viz/renderers/line.react");
 
 var Price = React.createClass({
     render: function() {
@@ -14,6 +15,7 @@ var Price = React.createClass({
             case "candlesticks": RendererType = CandleStickRenderer; break;
             case "ohlc": RendererType = OHLCRenderer; break;
             case "hlc": RendererType = OHLCRenderer; break;
+            case "line": RendererType = LineRenderer; break;
             default: RendererType = CandleStickRenderer; break;
         }
 
