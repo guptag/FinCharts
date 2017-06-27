@@ -17,12 +17,27 @@ var PriceDataApi = {
      *  }
      */
     getTickerDataAsync: function (chartKeys) {
-        return fetchData(chartKeys)
+        return getCookieCrumb()
+                 .then(function (crumb) {
+                    return fetchData(crumb, chartKeys);
+                  })
                  .then(parseData);
     }
 };
 
-function fetchData(chartKeys) {
+function getCookieCrumb() {
+     var re = /CrumbStore\":{\"crumb\":\"(.*?)\"}/gi;
+     return getResponseFromServer("https://finance.yahoo.com/quote/MSFT/history")
+                .then((data) => {
+                  var matches = re.exec(data.body);
+                  return {
+                    cookie: data.response.headers['set-cookie'][0] || "",
+                    crumb: matches[1] || ""
+                  };
+                });
+   }
+
+function fetchData(cookieData, chartKeys) {
     var fetchDeferred = Q.defer(), ticker = chartKeys.ticker;
 
     var toDate = chartKeys.timeframe.to;
@@ -31,15 +46,23 @@ function fetchData(chartKeys) {
     // var fromDate = moment(toDate).subtract(chartKeys.timeframe.from, 'months').toDate();
     var duration = chartKeys.duration === "daily" ? "d" : (chartKeys.duration === "weekly" ? "w" : "m");
 
-    var dataUrl = sprintf("http://ichart.finance.yahoo.com/table.csv?s=%s&a=%d&b=%d&c=%d&d=%d&e=%d&f=%d&g=%s&ignore=.csv",
+    var interval = (function (period) {
+          switch (period) {
+            case "daily": return "1d";
+            case "weekly": return "1wk";
+            case "monthly": return "1mo";
+            default: return "1d";
+          }
+        })(chartKeys.duration);
+
+    //https://query1.finance.yahoo.com/v7/finance/download/MSFT?period1=1466191294&period2=1497727294&interval=1mo&events=history&crumb=wQMXQHsHwRC
+
+    var dataUrl = sprintf("https://query1.finance.yahoo.com/v7/finance/download/%s?period1=%s&period2=%s&interval=%s&events=history&crumb=%s",
                                         ticker,
-                                        fromDate.getMonth(),
-                                        fromDate.getDate(),
-                                        fromDate.getFullYear(),
-                                        toDate.getMonth(),
-                                        toDate.getDate(),
-                                        toDate.getFullYear(),
-                                        duration);
+                                        Math.floor((fromDate.getTime()) / 1000),
+                                        Math.floor((toDate.getTime()) / 1000),
+                                        interval,
+                                        cookieData.crumb);
 
 
     var cacheKey = sprintf("%s_%s_%s_%s", ticker.toLowerCase(), duration, moment(toDate).format('YYYYMMDD'), moment(fromDate).format('YYYYMMDD'));
@@ -49,7 +72,7 @@ function fetchData(chartKeys) {
         if (rowData) {
           fetchDeferred.resolve({priceData: rowData.data, ticker: ticker});
         } else {
-          getDataFromServer(dataUrl)
+          getDataFromServer(dataUrl, { cookie: cookieData.cookie })
             .then(function (priceData) {
               addToCache(cacheKey, priceData)
                 .then(function () {
@@ -77,13 +100,31 @@ function getFromCache(cacheKey) {
 }
 
 
-function getDataFromServer(dataUrl) {
+function getDataFromServer(dataUrl, headers) {
+  console.log("loading data from", dataUrl, headers);
+  var serverDataDeferred = Q.defer();
+  request({
+    url: dataUrl,
+    headers: headers
+    }, function (error, response, body) {
+      if (!error && response.statusCode === 200) {
+        console.log("data downloaded");
+        serverDataDeferred.resolve(body);
+      }
+    });
+  return serverDataDeferred.promise;
+}
+
+function getResponseFromServer(dataUrl) {
   console.log("loading data from", dataUrl);
   var serverDataDeferred = Q.defer();
   request(dataUrl, function (error, response, body) {
     if (!error && response.statusCode === 200) {
       console.log("data downloaded");
-      serverDataDeferred.resolve(body);
+      serverDataDeferred.resolve({
+        response: response,
+        body: body
+      });
     }
   });
   return serverDataDeferred.promise;
@@ -134,9 +175,9 @@ function parseData(data) {
             open: +parseFloat(record[1]).toFixed(2),
             high: +parseFloat(record[2]).toFixed(2),
             low: +parseFloat(record[3]).toFixed(2),
-            close: +parseFloat(record[4]).toFixed(2),
-            volume: +parseFloat(record[5]).toFixed(2),
-            adjClose: +parseFloat(record[6]).toFixed(2)
+            close: +parseFloat(record[5]).toFixed(2),
+            volume: +parseFloat(record[6]).toFixed(2),
+            adjClose: +parseFloat(record[5]).toFixed(2)
         };
 
         // adjust prices for splits (unfortunately yahoo includes dividends in adjClose)
@@ -147,7 +188,7 @@ function parseData(data) {
         data.low = formatNumber(data.low * adjRatio);
         data.close = formatNumber(data.close * adjRatio);*/
 
-        returnData.series.unshift(data);
+        returnData.series.push(data);
 
         if (data.low < returnData.min)
             returnData.min = data.low;
