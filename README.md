@@ -1,4 +1,4 @@
-Stock Charts (Electron.js) desktop application using immutable.js and react.js
+Stock Charts (Electron.js) desktop application using React and Immutable.js
 ------
 
 ![screen shot 2015-07-03 at 6 41 24 pm](https://cloud.githubusercontent.com/assets/1994225/8506015/6451129a-21b3-11e5-8f2a-4fd266274be6.png)
@@ -13,7 +13,7 @@ Architecture (draft)
 --------------------
 
 * Application leverages [React's Flux](http://fluxxor.com/what-is-flux.html) architecture where the data/state changes flow in an uni-directional way making the application easy to reason about.
-* Describes the entire state of the application in an immutable data structure (using immutable.js) similar to OM's style of global atom state. Any user action creates an action message which updates the app state creating a new state reference and triggers a re-render of the app. React components leverage "canComponentUpdate" to compare the state references to speed up the rendering (by skipping the render step when not needed) on top of virtual dom comparision provided by React.
+* Describes the entire state of the application in an immutable persistent data structure (using immutable.js) similar to OM's style of global atom state. Any user action creates an action message which updates the app state creating a new state reference and triggers a re-render of the app. Due to the immutable nature of the state, React components can leverage "canComponentUpdate" just by comparing the state references. This speeds up the rendering (by skipping the render step when not needed) on top of virtual dom comparision provided by React.
 * Q promises for coordinating async tasks.
 * Downloaded ticker data will be stored on disk (for now).
 
