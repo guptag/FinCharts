@@ -25,16 +25,31 @@ var PriceDataApi = {
     }
 };
 
+var yahooSessionCache;
+
 function getCookieCrumb() {
-     var re = /CrumbStore\":{\"crumb\":\"(.*?)\"}/gi;
-     return getResponseFromServer("https://finance.yahoo.com/quote/MSFT/history")
-                .then((data) => {
-                  var matches = re.exec(data.body);
-                  return {
-                    cookie: data.response.headers['set-cookie'][0] || "",
-                    crumb: matches[1] || ""
-                  };
-                });
+     if (yahooSessionCache) {
+        return Q.resolve(yahooSessionCache);
+     } else {
+       var re = /CrumbStore\":{\"crumb\":\"(.*?)\"}/gi;
+       return getResponseFromServer("https://finance.yahoo.com/quote/MSFT/history")
+                  .then((data) => {
+                    var matches = re.exec(data.body);
+
+                    // cache session data
+                    yahooSessionCache = {
+                      cookie: data.response.headers['set-cookie'][0] || "",
+                      crumb: matches[1] || ""
+                    };
+
+                    // clear the cache after an hour
+                    setTimeout(function () {
+                      yahooSessionCache = null;
+                    }, 1000 * 60 * 60);
+
+                    return yahooSessionCache;
+                  });
+      }
    }
 
 function fetchData(cookieData, chartKeys) {
@@ -160,6 +175,7 @@ function parseData(data) {
     var parseDeferred = Q.defer();
 
     var dateRecords = data.priceData.split('\n');
+    // console.log(dateRecords);
 
     _.each(dateRecords, function (dataRow) {
         var record = (dataRow || "").split(',');
@@ -175,10 +191,15 @@ function parseData(data) {
             open: +parseFloat(record[1]).toFixed(2),
             high: +parseFloat(record[2]).toFixed(2),
             low: +parseFloat(record[3]).toFixed(2),
-            close: +parseFloat(record[5]).toFixed(2),
+            close: +parseFloat(record[4]).toFixed(2),
             volume: +parseFloat(record[6]).toFixed(2),
             adjClose: +parseFloat(record[5]).toFixed(2)
         };
+
+        // Patch the data issues
+        if (data.close < data.low) {
+          data.close = data.adjClose;
+        }
 
         // adjust prices for splits (unfortunately yahoo includes dividends in adjClose)
         // the prices displayed in this tool will be off by a bit
