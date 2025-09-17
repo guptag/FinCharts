@@ -5,24 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coming Soon</title>
     <style>
+        /* General reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body and Background */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #3a7bd5, #00d2ff);
+            color: #fff;
             text-align: center;
-            padding: 100px;
+            padding: 0 20px;
         }
+
+        /* Container */
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        /* Main Heading */
         h1 {
-            color: #333;
-            font-size: 50px;
+            font-size: 60px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            animation: fadeInUp 1s ease-out;
         }
+
+        /* Subheading */
         p {
             font-size: 20px;
-            color: #555;
+            font-weight: 300;
+            margin-bottom: 40px;
+            animation: fadeInUp 1.2s ease-out;
+            opacity: 0;
         }
+
+        /* Fade-in-up animation */
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+       
     </style>
 </head>
 <body>
-    <h1>Coming Soon!</h1>
-    <p>We're working hard to bring you something amazing. Stay tuned!</p>
+
+    <div class="container">
+        <h1>Coming Soon</h1>
+        <p>We're working hard to bring you something amazing. Stay tuned for updates!</p>
+    </div>
+
 </body>
 </html>
